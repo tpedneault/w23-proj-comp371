@@ -15,6 +15,8 @@
 #include <GLFW/glfw3.h>
 #include <entt/entt.hpp>
 
+#include "systems/Gui.h"
+
 namespace sc {
 
 class Engine {
@@ -27,6 +29,9 @@ class Engine {
  private:
   entt::registry m_Registry;
   GLFWwindow* m_Window;
+
+  // Add managers here
+  GuiManager m_GuiManager;
 };
 
 };

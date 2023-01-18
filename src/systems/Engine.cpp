@@ -57,15 +57,21 @@ void Engine::Start() {
   glEnable(GL_DEBUG_OUTPUT);
   glDebugMessageCallback(ErrorCallbackOpenGL, nullptr);
 
+  // Initialize modules.
+  m_GuiManager.Start(m_Window);
+
   while(!glfwWindowShouldClose(m_Window)) {
     glClearColor(0.05, 0.1f, 0.15f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-
-    // Perform tasks.
-
     glfwSwapBuffers(m_Window);
     glfwPollEvents();
+
+    // Perform tasks.
+    m_GuiManager.Update();
   }
+
+  // Free all running modules.
+  m_GuiManager.Close();
 
   glfwDestroyWindow(m_Window);
   glfwTerminate();

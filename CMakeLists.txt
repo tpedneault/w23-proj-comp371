@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.20)
 project(spacecraft-tracker)
 
 set(CMAKE_BUILD_TYPE Debug)
@@ -23,6 +23,13 @@ add_subdirectory(extern/entt)
 # Include the ImGui library.
 file(GLOB imgui_srcs "extern/imgui/*.cpp")
 include_directories(extern/imgui)
+file(GLOB imgui_backends
+        "extern/imgui/backends/imgui_impl_glfw.cpp"
+        "extern/imgui/backends/imgui_impl_glfw.h"
+        "extern/imgui/backends/imgui_impl_opengl3.cpp"
+        "extern/imgui/backends/imgui_impl_opengl3.h"
+        "extern/imgui/backends/imgui_impl_opengl3_loader.h"
+        )
 
 # Include header files.
 include_directories(src)
@@ -31,7 +38,7 @@ include_directories(src)
 file(GLOB_RECURSE SRCS "src/**.cpp")
 
 # Create executable and link libraries.
-add_executable(spacecraft-tracker ${SRCS} ${imgui_srcs} src/systems/Gui.h src/systems/Gui.h)
+add_executable(spacecraft-tracker ${SRCS} ${imgui_srcs} ${imgui_backends})
 target_link_libraries(spacecraft-tracker ${OPENGL_LIBRARIES} glfw libglew_static glm EnTT::EnTT)
 
 # Copy the shaders directory to the build directory.
