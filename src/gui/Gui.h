@@ -16,7 +16,7 @@
 #include "backends/imgui_impl_opengl3.h"
 #include "backends/imgui_impl_glfw.h"
 
-#include "engine/SystemManager.h"
+#include "core/SystemManager.h"
 
 namespace sc {
 
@@ -33,6 +33,9 @@ class GuiManager : public SystemManager {
 
   // All individual UI components should be rendered within their own function.
   void CreateViewportWindow();
+  void CreateSceneWindow();
+  void CreateConsoleWindow();
+  void CreatePropertiesWindow();
 };
 
 };

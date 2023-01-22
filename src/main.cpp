@@ -7,7 +7,7 @@
  * @return error code
  */
 int main(int argc, char **argv) {
-    sc::Engine engine;
-    engine.Start();
-    return EXIT_SUCCESS;
+  sc::Engine engine;
+  engine.Start();
+  return EXIT_SUCCESS;
 }

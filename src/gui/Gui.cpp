@@ -2,7 +2,7 @@
 
 namespace sc {
 
-GuiManager::GuiManager(GLFWwindow* window) : m_Window(window) {}
+GuiManager::GuiManager(GLFWwindow *window) : m_Window(window) {}
 
 GuiManager::~GuiManager() = default;
 
@@ -11,7 +11,11 @@ void GuiManager::Start() {
 
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
-  ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+  /** Configure ImGui **/
+  ImGuiIO &io = ImGui::GetIO();
+  io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+  io.Fonts->AddFontFromFileTTF("resources/fonts/space-mono.ttf", 18.0f);
 
   ImGui::StyleColorsDark();
 
@@ -23,8 +27,12 @@ void GuiManager::Update() {
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
+  ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
 
   CreateViewportWindow();
+  CreateConsoleWindow();
+  CreateSceneWindow();
+  CreatePropertiesWindow();
 
   ImGui::EndFrame();
   ImGui::Render();
@@ -38,20 +46,45 @@ void GuiManager::Close() {
 }
 
 void GuiManager::CreateViewportWindow() {
-  ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_MenuBar);
+  ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_AlwaysAutoResize);
+  {
+    ImGui::Text("Hello, world!");
+  }
+  ImGui::End();
+}
 
-  // Generate samples and plot them
-  float samples[100];
-  for (int n = 0; n < 100; n++)
-    samples[n] = sinf(n * 0.2f + ImGui::GetTime() * 1.5f);
-  ImGui::PlotLines("Samples", samples, 100);
+void GuiManager::CreateSceneWindow() {
+  ImGui::Begin("Scene", nullptr, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_AlwaysAutoResize);
+  {
+    // Generate samples and plot them
+    float samples[100];
+    for (int n = 0; n < 100; n++)
+      samples[n] = sinf(n * 0.2f + ImGui::GetTime() * 1.5f);
+    ImGui::PlotLines("Samples", samples, 100);
 
-  // Display contents in a scrolling region
-  ImGui::TextColored(ImVec4(1,1,0,1), "Important Stuff");
-  ImGui::BeginChild("Scrolling");
-  for (int n = 0; n < 50; n++)
-    ImGui::Text("%04d: Some text", n);
-  ImGui::EndChild();
+    // Display contents in a scrolling region
+    ImGui::TextColored(ImVec4(1, 1, 0, 1), "Important Stuff");
+    ImGui::BeginChild("Scrolling");
+    for (int n = 0; n < 50; n++)
+      ImGui::Text("%04d: Some text", n);
+    ImGui::EndChild();
+  }
+  ImGui::End();
+}
+
+void GuiManager::CreateConsoleWindow() {
+  ImGui::Begin("Console", nullptr, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_AlwaysAutoResize);
+  {
+    ImGui::Text("Hello, world!");
+  }
+  ImGui::End();
+}
+
+void GuiManager::CreatePropertiesWindow() {
+  ImGui::Begin("Properties", nullptr, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_AlwaysAutoResize);
+  {
+
+  }
   ImGui::End();
 }
 

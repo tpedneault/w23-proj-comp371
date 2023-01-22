@@ -38,7 +38,7 @@ Engine::Engine() {};
 void Engine::Start() {
   /** Initialize the GLFW library. **/
   glfwSetErrorCallback(ErrorCallbackGLFW);
-  if(!glfwInit()) {
+  if (!glfwInit()) {
     LogLibraryError("GLFW", -1, "Failed to initialize GLFW.");
     return;
   }
@@ -55,21 +55,21 @@ void Engine::Start() {
 
   /** Initialize the GLEW library. **/
   GLenum glewInitResult = glewInit();
-  if(glewInitResult) {
+  if (glewInitResult) {
     LogLibraryError("GLEW", -1, reinterpret_cast<const char *>(glewGetErrorString(glewInitResult)));
   }
 
   /** Enable debug messages for OpenGL and set the default callback. **/
-  glEnable(GL_DEBUG_OUTPUT);
-  glDebugMessageCallback(ErrorCallbackOpenGL, nullptr);
+  // glEnable(GL_DEBUG_OUTPUT);
+  // glDebugMessageCallback(ErrorCallbackOpenGL, nullptr);
 
-  //glViewport(0, 0, 1920, 1080);
+  glViewport(0, 0, 1920, 1080);
 
   /** Initialize the subsystems. **/
   m_GuiManager = std::make_unique<GuiManager>(m_Window);
   m_GuiManager->Start();
 
-  while(!glfwWindowShouldClose(m_Window)) {
+  while (!glfwWindowShouldClose(m_Window)) {
     /** Clear the rendering area. **/
     glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);

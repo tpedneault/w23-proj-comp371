@@ -28,7 +28,7 @@ class Engine {
 
  private:
   entt::registry m_Registry;
-  GLFWwindow* m_Window;
+  GLFWwindow *m_Window;
   GLint m_FramebufferWidth, m_FramebufferHeight;
 
   std::unique_ptr<GuiManager> m_GuiManager;

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "engine/SystemManager.h"
+#include "core/SystemManager.h"
 
 namespace sc {
 
-class RendererManager : public SystemManager {
+class RenderingManager : public SystemManager {
 
 };
 
