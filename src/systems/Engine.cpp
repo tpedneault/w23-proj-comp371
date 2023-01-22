@@ -48,6 +48,7 @@ void Engine::Start() {
 
   m_Window = glfwCreateWindow(1920, 1080, "Spacecraft Tracker", nullptr, nullptr);
   glfwMakeContextCurrent(m_Window);
+  glfwSwapInterval(1); // enables v-sync
 
   GLenum glewInitResult = glewInit();
   if(glewInitResult) {
@@ -57,17 +58,21 @@ void Engine::Start() {
   glEnable(GL_DEBUG_OUTPUT);
   glDebugMessageCallback(ErrorCallbackOpenGL, nullptr);
 
+  glViewport(0, 0, 1920, 1080);
+
   // Initialize modules.
+  IMGUI_CHECKVERSION();
   m_GuiManager.Start(m_Window);
 
   while(!glfwWindowShouldClose(m_Window)) {
-    glClearColor(0.05, 0.1f, 0.15f, 1.0f);
+    glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-    glfwSwapBuffers(m_Window);
-    glfwPollEvents();
 
     // Perform tasks.
     m_GuiManager.Update();
+
+    glfwSwapBuffers(m_Window);
+    glfwPollEvents();
   }
 
   // Free all running modules.

@@ -2,15 +2,22 @@
 
 namespace sc {
 
-GuiManager::GuiManager() = default;
+GuiManager::GuiManager() : m_Window(nullptr) {}
+
 GuiManager::~GuiManager() = default;
 
 void GuiManager::Start(GLFWwindow *window) {
-  std::cout << "started GUI manager" << std::endl;
-  m_Context = ImGui::CreateContext();
   m_Window = window;
+
+  std::cout << "started GUI manager" << std::endl;
+  IMGUI_CHECKVERSION();
+  ImGui::CreateContext();
+  ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+  ImGui::StyleColorsDark();
+
   ImGui_ImplGlfw_InitForOpenGL(window, true);
-  ImGui_ImplOpenGL3_Init("#version 400");
+  ImGui_ImplOpenGL3_Init("#version 330");
 }
 
 void GuiManager::Update() {
@@ -18,22 +25,21 @@ void GuiManager::Update() {
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
 
-  // Draw items here.
   CreateViewportWindow();
 
-  ImGui::End();
+  ImGui::EndFrame();
   ImGui::Render();
-
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-  ImGui::SetCurrentContext(m_Context);
 }
 
 void GuiManager::Close() {
+  ImGui_ImplOpenGL3_Shutdown();
+  ImGui_ImplGlfw_Shutdown();
+  ImGui::DestroyContext();
 }
 
 void GuiManager::CreateViewportWindow() {
-  ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_None);
+  ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_MenuBar);
 
   // Generate samples and plot them
   float samples[100];

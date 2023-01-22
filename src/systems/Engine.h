@@ -29,6 +29,7 @@ class Engine {
  private:
   entt::registry m_Registry;
   GLFWwindow* m_Window;
+  GLint m_FramebufferWidth, m_FramebufferHeight;
 
   // Add managers here
   GuiManager m_GuiManager;

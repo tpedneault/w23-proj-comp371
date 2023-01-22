@@ -27,8 +27,7 @@ class GuiManager {
   void Update();
   void Close();
  private:
-  GLFWwindow *m_Window{};
-  ImGuiContext *m_Context{};
+  GLFWwindow *m_Window;
 
   // All individual UI components should be rendered within their own function.
   void CreateViewportWindow();
