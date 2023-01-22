@@ -33,50 +33,57 @@ void GLAPIENTRY ErrorCallbackOpenGL(GLenum source,
 
 namespace sc {
 
-Engine::Engine() = default;
+Engine::Engine() {};
 
 void Engine::Start() {
+  /** Initialize the GLFW library. **/
   glfwSetErrorCallback(ErrorCallbackGLFW);
   if(!glfwInit()) {
     LogLibraryError("GLFW", -1, "Failed to initialize GLFW.");
     return;
   }
 
+  /** Set the OpenGL version to use. **/
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+  /** Create the GLFW window and set it as the current context. **/
   m_Window = glfwCreateWindow(1920, 1080, "Spacecraft Tracker", nullptr, nullptr);
   glfwMakeContextCurrent(m_Window);
   glfwSwapInterval(1); // enables v-sync
 
+  /** Initialize the GLEW library. **/
   GLenum glewInitResult = glewInit();
   if(glewInitResult) {
     LogLibraryError("GLEW", -1, reinterpret_cast<const char *>(glewGetErrorString(glewInitResult)));
   }
 
+  /** Enable debug messages for OpenGL and set the default callback. **/
   glEnable(GL_DEBUG_OUTPUT);
   glDebugMessageCallback(ErrorCallbackOpenGL, nullptr);
 
-  glViewport(0, 0, 1920, 1080);
+  //glViewport(0, 0, 1920, 1080);
 
-  // Initialize modules.
-  IMGUI_CHECKVERSION();
-  m_GuiManager.Start(m_Window);
+  /** Initialize the subsystems. **/
+  m_GuiManager = std::make_unique<GuiManager>(m_Window);
+  m_GuiManager->Start();
 
   while(!glfwWindowShouldClose(m_Window)) {
+    /** Clear the rendering area. **/
     glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    // Perform tasks.
-    m_GuiManager.Update();
+    /** Update each subsystems. **/
+    m_GuiManager->Update();
 
+    /** Handle GLFW events. **/
     glfwSwapBuffers(m_Window);
     glfwPollEvents();
   }
 
-  // Free all running modules.
-  m_GuiManager.Close();
+  /** Cleanly exit the program. **/
+  m_GuiManager->Close();
 
   glfwDestroyWindow(m_Window);
   glfwTerminate();

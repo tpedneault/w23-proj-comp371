@@ -1,14 +1,4 @@
-#include <glm/glm.hpp>
-#include <entt/entt.hpp>
-
-#include <iostream>
-
-#include "systems/Engine.h"
-
-struct Transform {
-    glm::vec3 position;
-    glm::vec3 scale;
-};
+#include "engine/Engine.h"
 
 /**
  * Entry point of the program.
@@ -19,6 +9,5 @@ struct Transform {
 int main(int argc, char **argv) {
     sc::Engine engine;
     engine.Start();
-
     return EXIT_SUCCESS;
 }

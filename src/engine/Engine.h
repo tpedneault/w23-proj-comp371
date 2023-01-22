@@ -11,11 +11,12 @@
 #include <iostream>
 #include <string>
 #include <sstream>
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-#include <entt/entt.hpp>
+#include "GL/glew.h"
+#include "GLFW/glfw3.h"
+#include "entt/entt.hpp"
 
-#include "systems/Gui.h"
+#include "gui/Gui.h"
+#include "rendering/Renderer.h"
 
 namespace sc {
 
@@ -23,7 +24,6 @@ class Engine {
  public:
   Engine();
   virtual ~Engine() = default;
-
   void Start();
 
  private:
@@ -31,8 +31,7 @@ class Engine {
   GLFWwindow* m_Window;
   GLint m_FramebufferWidth, m_FramebufferHeight;
 
-  // Add managers here
-  GuiManager m_GuiManager;
+  std::unique_ptr<GuiManager> m_GuiManager;
 };
 
 };

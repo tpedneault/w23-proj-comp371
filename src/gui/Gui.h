@@ -9,23 +9,25 @@
 #pragma once
 
 #include <iostream>
-#include <GLFW/glfw3.h>
+#include "GLFW/glfw3.h"
 
 #include "imgui.h"
 #include "imgui_internal.h"
 #include "backends/imgui_impl_opengl3.h"
 #include "backends/imgui_impl_glfw.h"
 
+#include "engine/SystemManager.h"
+
 namespace sc {
 
-class GuiManager {
+class GuiManager : public SystemManager {
  public:
-  GuiManager();
+  explicit GuiManager(GLFWwindow *window);
   virtual ~GuiManager();
 
-  void Start(GLFWwindow *window);
-  void Update();
-  void Close();
+  void Start() override;
+  void Update() override;
+  void Close() override;
  private:
   GLFWwindow *m_Window;
 

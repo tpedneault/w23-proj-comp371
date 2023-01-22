@@ -2,21 +2,20 @@
 
 namespace sc {
 
-GuiManager::GuiManager() : m_Window(nullptr) {}
+GuiManager::GuiManager(GLFWwindow* window) : m_Window(window) {}
 
 GuiManager::~GuiManager() = default;
 
-void GuiManager::Start(GLFWwindow *window) {
-  m_Window = window;
-
+void GuiManager::Start() {
   std::cout << "started GUI manager" << std::endl;
+
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
   ImGuiIO& io = ImGui::GetIO(); (void)io;
 
   ImGui::StyleColorsDark();
 
-  ImGui_ImplGlfw_InitForOpenGL(window, true);
+  ImGui_ImplGlfw_InitForOpenGL(m_Window, true);
   ImGui_ImplOpenGL3_Init("#version 330");
 }
 
