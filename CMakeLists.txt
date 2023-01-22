@@ -20,14 +20,14 @@ add_subdirectory(extern/glm)
 add_subdirectory(extern/entt)
 
 # Include the ImGui library.
-file(GLOB imgui_srcs "extern/imgui/*.cpp")
-include_directories(extern/imgui)
+file(GLOB imgui_srcs "extern/imgui-docking/*.cpp")
+include_directories(extern/imgui-docking)
 file(GLOB imgui_backends
-        "extern/imgui/backends/imgui_impl_glfw.cpp"
-        "extern/imgui/backends/imgui_impl_glfw.h"
-        "extern/imgui/backends/imgui_impl_opengl3.cpp"
-        "extern/imgui/backends/imgui_impl_opengl3.h"
-        "extern/imgui/backends/imgui_impl_opengl3_loader.h"
+        "extern/imgui-docking/backends/imgui_impl_glfw.cpp"
+        "extern/imgui-docking/backends/imgui_impl_glfw.h"
+        "extern/imgui-docking/backends/imgui_impl_opengl3.cpp"
+        "extern/imgui-docking/backends/imgui_impl_opengl3.h"
+        "extern/imgui-docking/backends/imgui_impl_opengl3_loader.h"
         )
 
 # Include header files.
