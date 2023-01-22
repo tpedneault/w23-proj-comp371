@@ -29,6 +29,9 @@ class GuiManager : public SystemManager {
   void Update() override;
   void Close() override;
  private:
+  static void ConfigureIO();
+  static void ConfigureStyle();
+
   GLFWwindow *m_Window;
 
   // All individual UI components should be rendered within their own function.

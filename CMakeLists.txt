@@ -42,4 +42,4 @@ target_link_libraries(spacecraft-tracker ${OPENGL_LIBRARIES} glfw libglew_static
 
 # Copy the shaders directory to the build directory.
 file(COPY shaders DESTINATION .)
-file(COPY resources DESTINATION .)
+file(COPY assets DESTINATION .)
