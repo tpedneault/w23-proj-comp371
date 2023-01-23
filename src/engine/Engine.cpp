@@ -77,6 +77,7 @@ void Engine::Start() {
   m_RenderManager = std::make_shared<RenderingManager>();
   m_RenderManager->Start();
 
+  /** Start the main loop **/
   while (!glfwWindowShouldClose(m_Window)) {
     /** Clear the rendering area. **/
     glClearColor(0.07f, 0.13f, 0.17f, 1.0f);

@@ -38,7 +38,7 @@ include_directories(src)
 file(GLOB_RECURSE SRCS "src/**.cpp")
 
 # Create executable and link libraries.
-add_executable(spacecraft-tracker ${SRCS} ${imgui_srcs} ${imgui_backends} src/core/Image.cpp src/core/Image.h)
+add_executable(spacecraft-tracker ${SRCS} ${imgui_srcs} ${imgui_backends} src/core/Image.cpp src/core/Image.h src/rendering/Shader.cpp src/rendering/Shader.h)
 target_link_libraries(spacecraft-tracker ${OPENGL_LIBRARIES} glfw libglew_static glm EnTT::EnTT)
 
 # Copy the shaders directory to the build directory.
