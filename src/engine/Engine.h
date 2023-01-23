@@ -15,8 +15,10 @@
 #include "GLFW/glfw3.h"
 #include "entt/entt.hpp"
 
+#include "Codes.h"
 #include "gui/Gui.h"
 #include "rendering/Renderer.h"
+#include "core/Image.h"
 
 namespace sc {
 
@@ -29,9 +31,8 @@ class Engine {
  private:
   entt::registry m_Registry;
   GLFWwindow *m_Window;
-  GLint m_FramebufferWidth, m_FramebufferHeight;
-
-  std::unique_ptr<GuiManager> m_GuiManager;
+  std::shared_ptr<GuiManager> m_GuiManager;
+  std::shared_ptr<RenderingManager> m_RenderManager;
 };
 
 };

@@ -28,15 +28,21 @@ class GuiManager : public SystemManager {
   void Start() override;
   void Update() override;
   void Close() override;
+
+  void AssignSceneFBO(GLuint fbo);
+  void AssignCameraFBO(GLuint fbo);
+
  private:
   static void ConfigureIO();
   static void ConfigureStyle();
 
   GLFWwindow *m_Window;
+  GLuint sceneFBO, cameraFBO;
 
   // All individual UI components should be rendered within their own function.
-  void CreateViewportWindow();
   void CreateSceneWindow();
+  void CreateSceneViewWindow();
+  void CreateCameraViewWindow();
   void CreateConsoleWindow();
   void CreatePropertiesWindow();
 };

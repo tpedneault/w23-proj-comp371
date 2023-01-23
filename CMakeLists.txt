@@ -18,6 +18,7 @@ add_subdirectory(extern/glfw)
 add_subdirectory(extern/glew-cmake)
 add_subdirectory(extern/glm)
 add_subdirectory(extern/entt)
+include_directories(extern/stb)
 
 # Include the ImGui library.
 file(GLOB imgui_srcs "extern/imgui-docking/*.cpp")
@@ -37,7 +38,7 @@ include_directories(src)
 file(GLOB_RECURSE SRCS "src/**.cpp")
 
 # Create executable and link libraries.
-add_executable(spacecraft-tracker ${SRCS} ${imgui_srcs} ${imgui_backends} src/core/EventBus.cpp src/core/EventBus.h)
+add_executable(spacecraft-tracker ${SRCS} ${imgui_srcs} ${imgui_backends} src/core/Image.cpp src/core/Image.h)
 target_link_libraries(spacecraft-tracker ${OPENGL_LIBRARIES} glfw libglew_static glm EnTT::EnTT)
 
 # Copy the shaders directory to the build directory.

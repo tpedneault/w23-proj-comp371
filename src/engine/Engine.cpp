@@ -1,5 +1,7 @@
 #include "Engine.h"
 
+namespace sc {
+
 #pragma region ERROR_CALLBACKS
 /**
  * Base error callback for all libraries.
@@ -31,8 +33,6 @@ void GLAPIENTRY ErrorCallbackOpenGL(GLenum source,
 }
 #pragma endregion
 
-namespace sc {
-
 Engine::Engine() {};
 
 void Engine::Start() {
@@ -59,6 +59,11 @@ void Engine::Start() {
     LogLibraryError("GLEW", -1, reinterpret_cast<const char *>(glewGetErrorString(glewInitResult)));
   }
 
+  /** Set the window icon. **/
+  Image windowIcon;
+  windowIcon.Load("assets/images/spacecraft.png");
+  glfwSetWindowIcon(m_Window, 1, windowIcon.GetGLFWImage());
+
   /** Enable debug messages for OpenGL and set the default callback. **/
   // glEnable(GL_DEBUG_OUTPUT);
   // glDebugMessageCallback(ErrorCallbackOpenGL, nullptr);
@@ -66,8 +71,11 @@ void Engine::Start() {
   glViewport(0, 0, 1920, 1080);
 
   /** Initialize the subsystems. **/
-  m_GuiManager = std::make_unique<GuiManager>(m_Window);
+  m_GuiManager = std::make_shared<GuiManager>(m_Window);
   m_GuiManager->Start();
+
+  m_RenderManager = std::make_shared<RenderingManager>();
+  m_RenderManager->Start();
 
   while (!glfwWindowShouldClose(m_Window)) {
     /** Clear the rendering area. **/
@@ -76,6 +84,7 @@ void Engine::Start() {
 
     /** Update each subsystems. **/
     m_GuiManager->Update();
+    m_RenderManager->Update();
 
     /** Handle GLFW events. **/
     glfwSwapBuffers(m_Window);

@@ -25,9 +25,10 @@ void GuiManager::Update() {
   ImGui::NewFrame();
   ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
 
-  CreateViewportWindow();
-  CreateConsoleWindow();
   CreateSceneWindow();
+  CreateSceneViewWindow();
+  CreateCameraViewWindow();
+  CreateConsoleWindow();
   CreatePropertiesWindow();
 
   ImGui::EndFrame();
@@ -41,43 +42,40 @@ void GuiManager::Close() {
   ImGui::DestroyContext();
 }
 
-void GuiManager::CreateViewportWindow() {
-  ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-  {
-    ImGui::Text("Hello, world!");
-  }
-  ImGui::End();
-}
-
 void GuiManager::CreateSceneWindow() {
   ImGui::Begin("Scene", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
   {
-    // Generate samples and plot them
-    float samples[100];
-    for (int n = 0; n < 100; n++)
-      samples[n] = sinf(n * 0.2f + ImGui::GetTime() * 1.5f);
-    ImGui::PlotLines("Samples", samples, 100);
-
-    // Display contents in a scrolling region
-    ImGui::TextColored(ImVec4(1, 1, 0, 1), "Important Stuff");
-    ImGui::BeginChild("Scrolling");
-    for (int n = 0; n < 50; n++)
-      ImGui::Text("%04d: Some text", n);
-    ImGui::EndChild();
-  }
-  ImGui::End();
-}
-
-void GuiManager::CreateConsoleWindow() {
-  ImGui::Begin("Console", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-  {
-
+    // Display elements in the scene.
   }
   ImGui::End();
 }
 
 void GuiManager::CreatePropertiesWindow() {
   ImGui::Begin("Properties", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+  {
+    // Display components in the scene and their properties.
+  }
+  ImGui::End();
+}
+
+void GuiManager::CreateSceneViewWindow() {
+  ImGui::Begin("Scene View", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+  {
+    // Render the Scene FBO to the window.
+  }
+  ImGui::End();
+}
+
+void GuiManager::CreateCameraViewWindow() {
+  ImGui::Begin("Camera View", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+  {
+    // Render the Camera FBO to the window.
+  }
+  ImGui::End();
+}
+
+void GuiManager::CreateConsoleWindow() {
+  ImGui::Begin("Console", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
   {
 
   }
@@ -170,6 +168,14 @@ void GuiManager::ConfigureStyle() {
   style.PopupRounding = 0.0f;
   style.ScrollbarRounding = 0.0f;
   style.TabRounding = 0.0f;
+}
+
+void GuiManager::AssignSceneFBO(GLuint fbo) {
+  sceneFBO = fbo;
+}
+
+void GuiManager::AssignCameraFBO(GLuint fbo) {
+  cameraFBO = fbo;
 }
 
 };
