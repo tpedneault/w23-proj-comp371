@@ -1,11 +1,9 @@
 cmake_minimum_required(VERSION 3.20)
-project(spacecraft-tracker)
+project(zoom-engine)
+include_directories(src)
 
+# Set the C++ version to use.
 set(CMAKE_CXX_STANDARD 20)
-
-# Add OpenGL.
-find_package(OpenGL REQUIRED)
-include_directories(${OPENGL_INCLUDE_DIRS})
 
 # Only build the GLFW library.
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
@@ -13,16 +11,19 @@ set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
 
-# Add dependencies.
+# Find OpenGL
+find_package(OpenGL REQUIRED)
+include_directories(${OPENGL_INCLUDE_DIRS})
+
+# Build dependencies.
 add_subdirectory(extern/glfw)
 add_subdirectory(extern/glew-cmake)
 add_subdirectory(extern/glm)
-add_subdirectory(extern/entt)
 include_directories(extern/stb)
 
-# Include the ImGui library.
-file(GLOB imgui_srcs "extern/imgui-docking/*.cpp")
+# Add the ImGui library with the appropriate backends.
 include_directories(extern/imgui-docking)
+file(GLOB imgui_src "extern/imgui-docking/*.cpp")
 file(GLOB imgui_backends
         "extern/imgui-docking/backends/imgui_impl_glfw.cpp"
         "extern/imgui-docking/backends/imgui_impl_glfw.h"
@@ -31,16 +32,11 @@ file(GLOB imgui_backends
         "extern/imgui-docking/backends/imgui_impl_opengl3_loader.h"
         )
 
-# Include header files.
+# Add Zoom Engine source files.
 include_directories(src)
+file(GLOB_RECURSE zoom_src "src/**.cpp")
 
-# Find source files.
-file(GLOB_RECURSE SRCS "src/**.cpp")
+add_executable(zoom-engine ${zoom_src} ${imgui_src} ${imgui_backends})
+target_link_libraries(zoom-engine ${OPENGL_LIBRARIES} glfw libglew_static glm)
 
-# Create executable and link libraries.
-add_executable(spacecraft-tracker ${SRCS} ${imgui_srcs} ${imgui_backends} src/core/Image.cpp src/core/Image.h src/rendering/Shader.cpp src/rendering/Shader.h)
-target_link_libraries(spacecraft-tracker ${OPENGL_LIBRARIES} glfw libglew_static glm EnTT::EnTT)
-
-# Copy the shaders directory to the build directory.
-file(COPY shaders DESTINATION .)
 file(COPY assets DESTINATION .)
