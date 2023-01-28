@@ -14,6 +14,8 @@ public:
   void Update() override;
   void Destroy() override;
 
+  ImGuiIO& GetIO();
+
 private:
   std::vector<Widget*> m_Widgets;
 

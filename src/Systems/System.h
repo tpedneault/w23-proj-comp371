@@ -7,7 +7,7 @@ namespace Zoom {
 class System;
 
 template<typename T>
-class SystemLoader final
+class SystemLocator final
 {
 public:
   static_assert(std::is_base_of<System, T>::value,
@@ -20,15 +20,15 @@ public:
   }
 
 protected:
-  SystemLoader() = default;
-  virtual ~SystemLoader() = default;
+  SystemLocator() = default;
+  virtual ~SystemLocator() = default;
 
 public:
   /** Disable copy and move constructors and operators. **/
-  SystemLoader(SystemLoader const&) = delete;
-  SystemLoader(SystemLoader&&) = delete;
-  SystemLoader& operator=(SystemLoader const&) = delete;
-  SystemLoader& operator=(SystemLoader&&) = delete;
+  SystemLocator(SystemLocator const&) = delete;
+  SystemLocator(SystemLocator&&) = delete;
+  SystemLocator& operator=(SystemLocator const&) = delete;
+  SystemLocator& operator=(SystemLocator&&) = delete;
 };
 
 class System
@@ -45,8 +45,13 @@ public:
   System& operator=(System const&) = default;
   System& operator=(System&&) = default;
 
-  /** Enables the System to be globally accessible through the SystemLoader. **/
-  friend class SystemLoader<System>;
+  /**
+   * TODO: Add a system dependency check for initialization.
+   * i.e: FontManager should be initialized after Gui.
+   */
+
+  /** Enables the System to be globally accessible through the SystemLocator. **/
+  friend class SystemLocator<System>;
 };
 
 };

@@ -52,6 +52,9 @@ Window::Initialize(void* specs)
               << std::endl;
     exit(EXIT_FAILURE);
   }
+
+  glEnable(GL_DEBUG_OUTPUT);
+  glDebugMessageCallback(ErrorCallbackOpenGL, nullptr);
 }
 
 void

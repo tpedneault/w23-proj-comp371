@@ -20,8 +20,8 @@ public:
   void Update() override;
   void Destroy() override;
 
-  bool IsOpen() const;
-  GLFWwindow* GetWindow() const;
+  [[nodiscard]] bool IsOpen() const;
+  [[nodiscard]] GLFWwindow* GetWindow() const;
 
 private:
   GLFWwindow* m_Window = nullptr;
