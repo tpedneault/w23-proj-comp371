@@ -1,5 +1,7 @@
 #include "Systems/Window/Window.h"
 
+#include "Systems/Renderer/Renderer.h"
+
 namespace Zoom {
 
 void
@@ -25,7 +27,7 @@ ErrorCallbackOpenGL(GLenum source,
 void
 FramebufferSizeCallback(GLFWwindow* window, const I32 width, const I32 height)
 {
-  glViewport(0, 0, width, height);
+  SystemLocator<Renderer>::Get().SetViewportSize(width, height);
 }
 
 void

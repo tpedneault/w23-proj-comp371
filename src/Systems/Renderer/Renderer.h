@@ -2,6 +2,7 @@
 
 #include <Gl/glew.h>
 
+#include "Systems/ECS/ECS.h"
 #include "Systems/Renderer/Framebuffer.h"
 #include "Systems/System.h"
 
@@ -12,14 +13,15 @@ class Renderer final : public System {
   void Initialize(void* specs) override;
   void Update() override;
   void Destroy() override;
+  void Invalidate();
 
-  void SetViewportSize(U16 width, U16 height);
+  void SetViewportSize(I32 width, I32 height);
 
   [[nodiscard]] U32 GetFramebufferTextureID() const;
 
-private:
+ private:
   U32 m_VBO, m_VAO, m_ShaderProgram;
-  U16 m_ViewportWidth, m_ViewportHeight;
+  I32 m_ViewportWidth, m_ViewportHeight;
   Framebuffer m_Framebuffer;
 };
 

@@ -5,8 +5,8 @@ namespace Zoom {
 void ECS::Initialize(void* specs) {
   // This is for testing purposes only.
   const std::vector vertices = {
-      glm::vec3(-0.5f, -0.5f, 0.0f),  // left
-      glm::vec3(0.5f, -0.5f, 0.0f),   // right
+      glm::vec3(-1.0f, -1.0f, 0.0f),  // left
+      glm::vec3(1.0f, -1.0f, 0.0f),   // right
       glm::vec3(0.0f, 1.0f, 0.0f),    // top
   };
 

@@ -1,6 +1,5 @@
 #include "Systems/Renderer/Renderer.h"
 
-#include "Systems/ECS/ECS.h"
 
 namespace Zoom {
 
@@ -37,7 +36,7 @@ void Renderer::Initialize(void* specs) {
   glDeleteShader(vertexShader);
   glDeleteShader(fragmentShader);
 
-  SetViewportSize(1920, 1080);
+  SetViewportSize(800, 600);
 }
 
 void Renderer::Update() {
@@ -63,7 +62,7 @@ void Renderer::Update() {
 
 void Renderer::Destroy() {}
 
-void Renderer::SetViewportSize(const U16 width, const U16 height) {
+void Renderer::SetViewportSize(const I32 width, const I32 height) {
   glViewport(0, 0, width, height);
 
   m_Framebuffer.SetSize(width, height);
