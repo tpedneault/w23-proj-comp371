@@ -1,19 +1,14 @@
 #include "Systems/Renderer/Framebuffer.h"
 
 namespace Zoom {
+
 Framebuffer::~Framebuffer() {
   glDeleteFramebuffers(1, &m_FBO);
   glDeleteTextures(1, &m_ColorAttachment);
+  glDeleteTextures(1, &m_DepthAttachment);
 }
 
 void Framebuffer::Invalidate() {
-  if (m_Initialized)
-  {
-    glDeleteFramebuffers(1, &m_FBO);
-    glDeleteTextures(1, &m_ColorAttachment);
-    glDeleteTextures(1, &m_DepthAttachment);
-  }
-  
   glGenFramebuffers(1, &m_FBO);
   glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);
 
@@ -51,4 +46,5 @@ void Framebuffer::SetSize(U16 width, U16 height) {
 }
 
 U32 Framebuffer::GetColorAttachmentID() const { return m_ColorAttachment; }
+
 };  // namespace Zoom

@@ -37,15 +37,13 @@ void Renderer::Initialize(void* specs) {
   glDeleteShader(vertexShader);
   glDeleteShader(fragmentShader);
 
-  SetViewportSize(800, 600);
+  SetViewportSize(1920, 1080);
 }
 
 void Renderer::Update() {
   // Clear the main window.
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT);
-
-  glViewport(0, 0, m_ViewportWidth, m_ViewportHeight);
 
   // !! ANYTHING FROM THIS POINT ON IS RENDERED TO THE FRAMEBUFFER !!.
   m_Framebuffer.Bind();
@@ -66,8 +64,8 @@ void Renderer::Update() {
 void Renderer::Destroy() {}
 
 void Renderer::SetViewportSize(const U16 width, const U16 height) {
-  m_ViewportWidth = width;
-  m_ViewportHeight = height;
+  glViewport(0, 0, width, height);
+
   m_Framebuffer.SetSize(width, height);
   m_Framebuffer.Invalidate();
 }
