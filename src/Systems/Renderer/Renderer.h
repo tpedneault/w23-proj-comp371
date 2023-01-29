@@ -13,10 +13,13 @@ class Renderer final : public System {
   void Update() override;
   void Destroy() override;
 
-  [[nodiscard]] U32 GetFramebufferTextureID() const { return m_Framebuffer.GetTextureID(); }
+  void SetViewportSize(U16 width, U16 height);
 
- private:
+  [[nodiscard]] U32 GetFramebufferTextureID() const;
+
+private:
   U32 m_VBO, m_VAO, m_ShaderProgram;
+  U16 m_ViewportWidth, m_ViewportHeight;
   Framebuffer m_Framebuffer;
 };
 

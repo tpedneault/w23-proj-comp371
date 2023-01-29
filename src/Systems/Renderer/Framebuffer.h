@@ -8,15 +8,19 @@ namespace Zoom {
 
 class Framebuffer {
  public:
-  void Initialize();
+  Framebuffer() = default;
+  virtual ~Framebuffer();
+  void Invalidate();
   void Bind() const;
   void Unbind() const;
-  void Destroy();
 
-  [[nodiscard]] U32 GetTextureID() const { return m_Texture; }
+  void SetSize(U16 width, U16 height);
+  [[nodiscard]] U32 GetColorAttachmentID() const;
 
- private:
-  U32 m_FBO{}, m_RBO{}, m_Texture{};
+private:
+  U32 m_FBO{}, m_DepthAttachment{}, m_ColorAttachment{};
+  U16 m_Width{}, m_Height{};
+  bool m_Initialized = false;
 };
 
 };  // namespace Zoom

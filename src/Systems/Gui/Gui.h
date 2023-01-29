@@ -4,6 +4,10 @@
 #include "Systems/Window/Window.h"
 #include "Systems/Gui/Widget.h"
 #include "Systems/Gui/Widgets/ViewportWidget.h"
+#include "Systems/Gui/Widgets/SceneWidget.h"
+#include "Systems/Gui/Widgets/PropertiesWidget.h"
+#include "Systems/Gui/Widgets/AssetsWidget.h"
+
 
 namespace Zoom {
 
@@ -14,7 +18,7 @@ public:
   void Update() override;
   void Destroy() override;
 
-  ImGuiIO& GetIO();
+   ImGuiIO& GetIO();
 
 private:
   std::vector<Widget*> m_Widgets;

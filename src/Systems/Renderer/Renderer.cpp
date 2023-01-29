@@ -37,9 +37,7 @@ void Renderer::Initialize(void* specs) {
   glDeleteShader(vertexShader);
   glDeleteShader(fragmentShader);
 
-  glViewport(0, 0, 800, 600);
-
-  m_Framebuffer.Initialize();
+  SetViewportSize(800, 600);
 }
 
 void Renderer::Update() {
@@ -47,6 +45,9 @@ void Renderer::Update() {
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT);
 
+  glViewport(0, 0, m_ViewportWidth, m_ViewportHeight);
+
+  // !! ANYTHING FROM THIS POINT ON IS RENDERED TO THE FRAMEBUFFER !!.
   m_Framebuffer.Bind();
 
   glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -64,4 +65,14 @@ void Renderer::Update() {
 
 void Renderer::Destroy() {}
 
+void Renderer::SetViewportSize(const U16 width, const U16 height) {
+  m_ViewportWidth = width;
+  m_ViewportHeight = height;
+  m_Framebuffer.SetSize(width, height);
+  m_Framebuffer.Invalidate();
+}
+
+U32 Renderer::GetFramebufferTextureID() const {
+  return m_Framebuffer.GetColorAttachmentID();
+}
 };  // namespace Zoom

@@ -19,6 +19,9 @@ Gui::Initialize(void* specs)
 
   // Create the widgets.
   m_Widgets.push_back(new ViewportWidget());
+  m_Widgets.push_back(new SceneWidget());
+  m_Widgets.push_back(new PropertiesWidget());
+  m_Widgets.push_back(new AssetsWidget());
 }
 
 void
