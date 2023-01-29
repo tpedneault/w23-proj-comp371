@@ -4,9 +4,9 @@ namespace Zoom {
 
 void FontManager::Initialize(void* specs) {
   LoadFont(FontID::SourceSansProRegular,
-           "assets/fonts/SourceSansPro/SourceSansPro-Regular.ttf", 18);
+           "assets/fonts/SourceSansPro/SourceSansPro-Regular.ttf", 19);
   LoadFont(FontID::SourceSansProBold,
-           "assets/fonts/SourceSansPro/SourceSansPro-Bold.ttf", 18);
+           "assets/fonts/SourceSansPro/SourceSansPro-Bold.ttf", 19);
 }
 
 void FontManager::Update() {}

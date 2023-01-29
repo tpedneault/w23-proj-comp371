@@ -38,9 +38,17 @@ void Renderer::Initialize(void* specs) {
   glDeleteShader(fragmentShader);
 
   glViewport(0, 0, 800, 600);
+
+  m_Framebuffer.Initialize();
 }
 
 void Renderer::Update() {
+  // Clear the main window.
+  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT);
+
+  m_Framebuffer.Bind();
+
   glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT);
 
@@ -50,6 +58,8 @@ void Renderer::Update() {
     glBindVertexArray(actor.mesh.GetVAO());
     glDrawArrays(GL_TRIANGLES, 0, actor.mesh.GetSize());
   }
+
+  m_Framebuffer.Unbind();
 }
 
 void Renderer::Destroy() {}
