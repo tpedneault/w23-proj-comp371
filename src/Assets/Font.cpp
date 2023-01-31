@@ -1,8 +1,8 @@
-#include "Systems/Assets/Font.h"
+#include "Assets/Font.h"
 
 namespace Zoom {
 
-void FontManager::Initialize(void* specs) {
+void FontManager::Initialization(void* specs) {
   LoadFont(FontID::SourceSansProRegular,
            "assets/fonts/SourceSansPro/SourceSansPro-Regular.ttf", 19);
   LoadFont(FontID::SourceSansProBold,

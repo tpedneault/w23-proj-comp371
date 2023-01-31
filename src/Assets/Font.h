@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Systems/Gui/Gui.h"
-#include "Systems/System.h"
+#include "Gui/Gui.h"
+#include "Core/System.h"
 
 namespace Zoom {
 
@@ -18,7 +18,7 @@ struct Font {
 
 class FontManager final : public System {
  public:
-  void Initialize(void* specs) override;
+  void Initialization(void* specs) override;
   void Update() override;
   void Destroy() override;
 

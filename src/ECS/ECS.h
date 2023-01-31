@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Systems/ECS/Components/Mesh.h"
-#include "Systems/ECS/Components/Transform.h"
-#include "Systems/System.h"
+#include "ECS/Components/Mesh.h"
+#include "ECS/Components/Transform.h"
+#include "Core/System.h"
 
 namespace Zoom {
 
@@ -13,7 +13,7 @@ struct Actor {
 
 class ECS final : public System {
  public:
-  void Initialize(void* specs) override;
+  void Initialization(void* specs) override;
   void Update() override;
   void Destroy() override;
 

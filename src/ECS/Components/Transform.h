@@ -2,7 +2,7 @@
 
 #include <glm/glm.hpp>
 
-#include "Systems/ECS/ECS.h"
+#include "ECS/ECS.h"
 
 namespace Zoom {
 

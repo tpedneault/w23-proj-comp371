@@ -1,5 +1,6 @@
-#include "Systems/Renderer/Renderer.h"
+#include "Renderer/Renderer.h"
 
+#include "ECS/ECS.h"
 
 namespace Zoom {
 
@@ -19,7 +20,9 @@ const char* fragmentShaderSource =
     "  FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
     "}\0";
 
-void Renderer::Initialize(void* specs) {
+void Renderer::Initialization(void* specs) {
+  m_Specs = *(static_cast<RendererSystemSpecifications*>(specs));
+
   const U32 vertexShader = glCreateShader(GL_VERTEX_SHADER);
   glShaderSource(vertexShader, 1, &vertexShaderSource, nullptr);
   glCompileShader(vertexShader);
@@ -36,7 +39,7 @@ void Renderer::Initialize(void* specs) {
   glDeleteShader(vertexShader);
   glDeleteShader(fragmentShader);
 
-  SetViewportSize(800, 600);
+  SetViewportSize(m_Specs.viewportWidth, m_Specs.viewportHeight);
 }
 
 void Renderer::Update() {
@@ -45,7 +48,9 @@ void Renderer::Update() {
   glClear(GL_COLOR_BUFFER_BIT);
 
   // !! ANYTHING FROM THIS POINT ON IS RENDERED TO THE FRAMEBUFFER !!.
-  m_Framebuffer.Bind();
+  if (m_Specs.useFramebuffer) {
+    m_Framebuffer.Bind();
+  }
 
   glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT);
@@ -57,7 +62,9 @@ void Renderer::Update() {
     glDrawArrays(GL_TRIANGLES, 0, actor.mesh.GetSize());
   }
 
-  m_Framebuffer.Unbind();
+  if (m_Specs.useFramebuffer) {
+    m_Framebuffer.Unbind();
+  }
 }
 
 void Renderer::Destroy() {}
@@ -66,7 +73,7 @@ void Renderer::SetViewportSize(const I32 width, const I32 height) {
   glViewport(0, 0, width, height);
 
   m_Framebuffer.SetSize(width, height);
-  m_Framebuffer.Invalidate();
+  m_Framebuffer.Initialize();
 }
 
 U32 Renderer::GetFramebufferTextureID() const {

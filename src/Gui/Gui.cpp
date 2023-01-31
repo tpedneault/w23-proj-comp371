@@ -1,11 +1,9 @@
-#include "Systems/Gui/Gui.h"
+#include "Gui/Gui.h"
 
 namespace Zoom {
 
-void
-Gui::Initialize(void* specs)
-{
-  // Initialize the ImGui library here.
+void Gui::Initialization(void* specs) {
+  // Initialization the ImGui library here.
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
 
@@ -24,15 +22,13 @@ Gui::Initialize(void* specs)
   m_Widgets.push_back(new AssetsWidget());
 }
 
-void
-Gui::Update()
-{
+void Gui::Update() {
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
   ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(),
                                ImGuiDockNodeFlags_PassthruCentralNode);
-  
+
   for (const auto& widget : m_Widgets) {
     widget->Render();
   }
@@ -42,9 +38,7 @@ Gui::Update()
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void
-Gui::Destroy()
-{
+void Gui::Destroy() {
   for (const auto& widget : m_Widgets) {
     delete widget;
   }
@@ -56,9 +50,7 @@ Gui::Destroy()
 
 ImGuiIO& Gui::GetIO() { return ImGui::GetIO(); }
 
-void
-Gui::ConfigureIO()
-{
+void Gui::ConfigureIO() {
   ImGuiIO& io = ImGui::GetIO();
   io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 }
@@ -68,12 +60,10 @@ Gui::ConfigureIO()
  * https://github.com/ocornut/imgui/issues/707#issuecomment-670976818
  */
 
-void
-Gui::ConfigureStyle()
-{
+void Gui::ConfigureStyle() {
   constexpr auto ColorFromBytes = [](uint8_t r, uint8_t g, uint8_t b) {
-    return ImVec4(
-      (float)r / 255.0f, (float)g / 255.0f, (float)b / 255.0f, 1.0f);
+    return ImVec4((float)r / 255.0f, (float)g / 255.0f, (float)b / 255.0f,
+                  1.0f);
   };
 
   auto& style = ImGui::GetStyle();
@@ -147,4 +137,4 @@ Gui::ConfigureStyle()
   style.TabRounding = 0.0f;
 }
 
-}
+}  // namespace Zoom

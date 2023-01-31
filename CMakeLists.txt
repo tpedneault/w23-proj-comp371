@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
 project(zoom-engine)
-include_directories(src)
 
 # Set the C++ version to use.
 set(CMAKE_CXX_STANDARD 20)
@@ -36,7 +35,7 @@ file(GLOB imgui_backends
 include_directories(src)
 file(GLOB_RECURSE zoom_src "src/**.cpp")
 
-add_executable(zoom-engine ${zoom_src} ${imgui_src} ${imgui_backends} "src/Systems/ECS/ECS.h" "src/Systems/Gui/Widgets/AssetsWidget.h")
+add_executable(zoom-engine ${zoom_src} ${imgui_src} ${imgui_backends})
 target_link_libraries(zoom-engine ${OPENGL_LIBRARIES} glfw libglew_static glm)
 
 file(COPY assets DESTINATION .)

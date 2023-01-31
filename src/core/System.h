@@ -6,24 +6,22 @@ namespace Zoom {
 
 class System;
 
-template<typename T>
-class SystemLocator final
-{
-public:
+template <typename T>
+class SystemLocator final {
+ public:
   static_assert(std::is_base_of<System, T>::value,
                 "Class T must inherit from the System class.");
 
-  static T& Get()
-  {
+  static T& Get() {
     static T instance;
     return instance;
   }
 
-protected:
+ protected:
   SystemLocator() = default;
   virtual ~SystemLocator() = default;
 
-public:
+ public:
   /** Disable copy and move constructors and operators. **/
   SystemLocator(SystemLocator const&) = delete;
   SystemLocator(SystemLocator&&) = delete;
@@ -31,12 +29,21 @@ public:
   SystemLocator& operator=(SystemLocator&&) = delete;
 };
 
-class System
-{
-public:
-  virtual void Initialize(void* specifications) = 0;
+class System {
+ public:
+  virtual void Initialize(void* specifications) {
+    PreInitialization();
+    Initialization(specifications);
+    PostInitialization();
+  }
+
+  virtual void Initialization(void* specifications) = 0;
   virtual void Update() = 0;
   virtual void Destroy() = 0;
+
+  virtual void PreInitialization() {}
+  virtual void PostInitialization() { m_Initialized = true; }
+  virtual bool IsInitialized() { return m_Initialized; }
 
   System() = default;
   virtual ~System() = default;
@@ -50,8 +57,12 @@ public:
    * i.e: FontManager should be initialized after Gui.
    */
 
-  /** Enables the System to be globally accessible through the SystemLocator. **/
+  /** Enables the System to be globally accessible through the SystemLocator.
+   * **/
   friend class SystemLocator<System>;
+
+ protected:
+  bool m_Initialized = false;
 };
 
-};
+};  // namespace Zoom

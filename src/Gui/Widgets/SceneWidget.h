@@ -1,4 +1,4 @@
-#include "Systems/Gui/Widget.h"
+#include "Gui/Widget.h"
 
 namespace Zoom {
 
