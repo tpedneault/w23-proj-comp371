@@ -27,8 +27,6 @@ struct RendererSystemSpecifications {
  */
 class Renderer : public System {
  public:
-  static Renderer& Create(const RendererSystemSpecifications& specs);
-
   /**
    * \brief Initializes the Renderer subsystem with the given specifications.
    * \param specs Any specifications to be passed to the Renderer, nullptr if

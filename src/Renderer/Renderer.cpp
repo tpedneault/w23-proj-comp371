@@ -57,7 +57,7 @@ void Renderer::Update() {
 
   glUseProgram(m_ShaderProgram);
 
-  for (const auto& actor : SystemLocator<ECS>::Get().actors) {
+  for (const auto& actor : SystemLocator<ECS>::Get()->actors) {
     glBindVertexArray(actor.mesh.GetVAO());
     glDrawArrays(GL_TRIANGLES, 0, actor.mesh.GetSize());
   }

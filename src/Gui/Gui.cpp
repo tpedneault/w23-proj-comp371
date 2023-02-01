@@ -12,7 +12,7 @@ void Gui::Initialization(void* specs) {
 
   // Initializes the ImGui backends for GLFW and OpenGL 3.3
   const auto& window = SystemLocator<Window>::Get();
-  ImGui_ImplGlfw_InitForOpenGL(window.GetWindow(), true);
+  ImGui_ImplGlfw_InitForOpenGL(window->GetWindow(), true);
   ImGui_ImplOpenGL3_Init("#version 330");
 
   // Create the widgets.
@@ -46,6 +46,10 @@ void Gui::Destroy() {
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplGlfw_Shutdown();
   ImGui::DestroyContext();
+}
+
+std::vector<std::shared_ptr<System>> Gui::GetDependencies() const {
+  return {SystemLocator<Window>::Get(), SystemLocator<Renderer>::Get()};
 }
 
 ImGuiIO& Gui::GetIO() { return ImGui::GetIO(); }

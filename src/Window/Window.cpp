@@ -19,7 +19,7 @@ void GLAPIENTRY ErrorCallbackOpenGL(GLenum source, GLenum type, GLuint id,
 
 void FramebufferSizeCallback(GLFWwindow* window, const I32 width,
                              const I32 height) {
-  SystemLocator<Renderer>::Get().SetViewportSize(width, height);
+  SystemLocator<Renderer>::Get()->SetViewportSize(width, height);
 }
 
 void Window::Initialization(void* specs) {
@@ -30,7 +30,7 @@ void Window::Initialization(void* specs) {
   }
 
   /** Create the GLFW window and set it as the current OpenGL context. **/
-  const auto data = *(static_cast<WindowSystemSpecifications*>(specs));
+  const WindowSystemSpecifications data = *(static_cast<WindowSystemSpecifications*>(specs));
   m_Window = glfwCreateWindow(data.width, data.height, data.title.c_str(),
                               nullptr, nullptr);
   glfwMakeContextCurrent(m_Window);

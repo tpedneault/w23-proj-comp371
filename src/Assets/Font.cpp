@@ -14,7 +14,7 @@ void FontManager::Update() {}
 void FontManager::Destroy() {}
 
 Font FontManager::LoadFont(const FontID id, const String& path, const U8 size) {
-  const auto& io = SystemLocator<Gui>::Get().GetIO();
+  const auto& io = SystemLocator<Gui>::Get()->GetIO();
 
   /** Ensure that the requested font is not already loaded. **/
   for (auto& font : m_Fonts) {
