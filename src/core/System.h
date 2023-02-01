@@ -34,39 +34,16 @@ class SystemLocator final {
 
 class System {
  public:
-  virtual void Initialize(void* specifications) {
-    PreInitialization();
-    Initialization(specifications);
-    PostInitialization();
-  }
+  virtual void Initialize(void* specifications);
 
   virtual void Update() = 0;
   virtual void Destroy() = 0;
 
-  virtual void PreInitialization() {
-    if (!VerifyDependenciesInit()) {
-      std::cerr
-          << "FATAL ERROR : System dependencies not initialized, exiting..."
-          << std::endl;
-      exit(1);
-    }
-  }
-  virtual void PostInitialization() { m_Initialized = true; }
-  virtual bool IsInitialized() { return m_Initialized; }
+  virtual void PreInitialization();
+  virtual void PostInitialization();
+  virtual bool IsInitialized();
 
-  [[nodiscard]] virtual bool VerifyDependenciesInit() const {
-		std::vector<std::shared_ptr<System>> dependencies = GetDependencies();
-    bool initialized = true;
-    for (std::shared_ptr<System> dependency : dependencies) {
-      if (!dependency->IsInitialized()) {
-        // TODO: Output the name of the component which is not initialized.
-        std::cerr << "FATAL ERROR : Dependency '" << typeid(*dependency).name()
-                  << "' is not initialized." << std::endl;
-        initialized = false;
-      }
-    }
-    return initialized;
-  }
+  [[nodiscard]] virtual bool VerifyDependenciesInit() const;
 
   /**
    * TODO: Add a system dependency check for initialization.
@@ -80,9 +57,7 @@ class System {
  protected:
   virtual void Initialization(void* specifications) = 0;
   [[nodiscard]] virtual std::vector<std::shared_ptr<System>> GetDependencies()
-      const {
-    return {};
-  }
+      const;
 
   bool m_Initialized = false;
 
@@ -94,4 +69,5 @@ class System {
   System& operator=(System const&) = default;
   System& operator=(System&&) = default;
 };
+
 };  // namespace Zoom
