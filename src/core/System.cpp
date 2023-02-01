@@ -19,7 +19,7 @@ void System::PreInitialization() {
 
 void System::PostInitialization() { m_Initialized = true; }
 
-bool System::IsInitialized() { return m_Initialized; }
+bool System::IsInitialized() const { return m_Initialized; }
 
 bool System::VerifyDependenciesInit() const {
   const auto dependencies = GetDependencies();
