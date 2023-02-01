@@ -3,6 +3,7 @@
 #include <Gl/glew.h>
 #include "Core/System.h"
 #include "Renderer/Modules/Framebuffer.h"
+#include "Renderer/Modules/Shader.h"
 
 namespace Zoom {
 
@@ -58,8 +59,12 @@ class Renderer : public System {
    */
   [[nodiscard]] U32 GetFramebufferTextureID() const;
 
+  [[nodiscard]] std::vector<std::shared_ptr<System>> GetDependencies()
+      const override;
+
  private:
-  U32 m_VBO{}, m_VAO{}, m_ShaderProgram{};
+  U32 m_VBO{}, m_VAO{};
+  std::shared_ptr<ShaderProgram> m_ShaderProgram;
   Framebuffer m_Framebuffer;
   RendererSystemSpecifications m_Specs{};
 };

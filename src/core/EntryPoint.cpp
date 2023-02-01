@@ -18,8 +18,8 @@ int main(int argc, char** argv) {
   /** Initialization all systems in the proper order. **/
   window->Initialize(&windowSpecs);
   ecs->Initialize(nullptr);
-  gui->Initialize(nullptr);
   renderer->Initialize(&rendererSpecs);
+  gui->Initialize(nullptr);
 
   /** Load assets. **/
   Zoom::SystemLocator<Zoom::FontManager>::Get()->Initialize(nullptr);

@@ -6,6 +6,9 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <fstream>
+
+#include "Core/Logger.h"
 
 namespace Zoom {
 typedef uint8_t U8;
