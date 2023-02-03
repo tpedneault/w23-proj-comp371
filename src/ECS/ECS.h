@@ -24,7 +24,7 @@ class ECS final : public System {
    * \brief Processes the received event.
    * \param e event to handle
    */
-  void ProcessEvent(const Event& e) override {}
+  void ProcessEvent(const Event& e) override;
 
   std::vector<Actor> m_Actors;
 };

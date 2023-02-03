@@ -43,4 +43,9 @@ std::vector<std::shared_ptr<System>> FontManager::GetDependencies() const
 {
 	return { SystemLocator<Gui>::Get() };
 }
+
+void FontManager::ProcessEvent(const Event& e)
+{
+}
+
 };  // namespace Zoom

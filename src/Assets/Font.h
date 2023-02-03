@@ -31,7 +31,7 @@ class FontManager final : public System {
    * \brief Processes the received event.
    * \param e event to handle
    */
-  void ProcessEvent(const Event& e) override {}
+  void ProcessEvent(const Event& e) override;
 
 private:
   std::vector<Font> m_Fonts;

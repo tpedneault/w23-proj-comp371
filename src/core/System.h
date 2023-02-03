@@ -1,15 +1,11 @@
 #pragma once
 
 #include "Core/Base.h"
+#include "Core/Events.h"
 
 namespace Zoom {
 
 class System;
-
-struct Event {
-  U16 id;
-  void* data;
-};
 
 template <typename T>
 class SystemLocator final {

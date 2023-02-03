@@ -64,7 +64,7 @@ class Renderer : public System {
    * \brief Processes the received event.
    * \param e event to handle
    */
-  void ProcessEvent(const Event& e) override {}
+  void ProcessEvent(const Event& e) override;
 
  private:
   U32 m_VBO{}, m_VAO{};

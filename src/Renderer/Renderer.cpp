@@ -73,4 +73,5 @@ U32 Renderer::GetFramebufferTextureID() const {
 std::vector<std::shared_ptr<System>> Renderer::GetDependencies() const {
   return {SystemLocator<ECS>::Get()};
 }
+void Renderer::ProcessEvent(const Event& e) {}
 };  // namespace Zoom

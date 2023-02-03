@@ -27,17 +27,15 @@ void Application::Start() {
   Destroy();
 }
 
-bool Application::IsRunning() const { return true; }
+bool Application::IsRunning() const { return m_IsRunning; }
 
 void Application::Initialize() {}
 
 void Application::Update() {
   // Retrieved events posted by the systems.
-  for (const auto& system : m_Systems)
-  {
+  for (const auto& system : m_Systems) {
     auto events = system->ForwardEvents();
-    for (const auto& event : events)
-    {
+    for (const auto& event : events) {
       m_EventQueue.push(event);
     }
   }
@@ -45,6 +43,7 @@ void Application::Update() {
   // Clear the event queue.
   while (!m_EventQueue.empty()) {
     const Event& e = m_EventQueue.front();
+    ProcessEvent(e);
     for (const auto& system : m_Systems) {
       system->ProcessEvent(e);
     }
@@ -53,5 +52,13 @@ void Application::Update() {
 }
 
 void Application::Destroy() {}
+
+void Application::ProcessEvent(const Event& e) {
+  switch (e.code) {
+    case EventCode::ExitApplication:
+      m_IsRunning = false;
+      break;
+  }
+}
 
 };  // namespace Zoom

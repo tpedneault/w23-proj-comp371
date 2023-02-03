@@ -24,7 +24,8 @@ class Window final : public System {
   /**
    * \brief Initializes the Window subsystem with the given specification.
    * Handles the initialization of GLFW and GLEW.
-   * \param specs Any specifications to be passed to the Window, nullptr if none.
+   * \param specs Any specifications to be passed to the Window, nullptr if
+   * none.
    */
   void OnInitialization(void* specs) override;
 
@@ -38,7 +39,8 @@ class Window final : public System {
    */
   void OnDestroy() override;
 
-  [[nodiscard]] std::vector<std::shared_ptr<System>> GetDependencies() const override;
+  [[nodiscard]] std::vector<std::shared_ptr<System>> GetDependencies()
+      const override;
 
   /**
    * \brief Verifies if the GLFW window should remain opened.
@@ -53,10 +55,10 @@ class Window final : public System {
   [[nodiscard]] GLFWwindow* GetWindow() const;
 
   /**
-   * \brief Processes the received event.
+   * \brief Processes the given event.
    * \param e event to handle
    */
-  void ProcessEvent(const Event& e) override {}
+  void ProcessEvent(const Event& e) override;
 
  private:
   GLFWwindow* m_Window = nullptr;

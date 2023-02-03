@@ -47,6 +47,11 @@ void Window::OnInitialization(void* specs) {
 void Window::OnUpdate() {
   glfwPollEvents();
   glfwSwapBuffers(m_Window);
+
+  // Check if the window has been closed.
+  if (glfwWindowShouldClose(m_Window)) {
+    PublishEvent({EventCode::ExitApplication});
+  }
 }
 
 void Window::OnDestroy() {
@@ -61,5 +66,7 @@ std::vector<std::shared_ptr<System>> Window::GetDependencies() const {
 bool Window::IsOpen() const { return !glfwWindowShouldClose(m_Window); }
 
 GLFWwindow* Window::GetWindow() const { return m_Window; }
+
+void Window::ProcessEvent(const Event& e) {}
 
 };  // namespace Zoom

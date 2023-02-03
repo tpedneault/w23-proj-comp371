@@ -1,7 +1,5 @@
 #pragma once
 
-#include <queue>
-
 #include "Core/System.h"
 
 namespace Zoom {
@@ -16,6 +14,7 @@ class Application {
   virtual void Initialize();
   virtual void Update();
   virtual void Destroy();
+  virtual void ProcessEvent(const Event& e);
 
   bool m_IsRunning = true;
   std::vector<std::shared_ptr<System>> m_Systems;

@@ -54,6 +54,8 @@ std::vector<std::shared_ptr<System>> Gui::GetDependencies() const {
 
 ImGuiIO& Gui::GetIO() { return ImGui::GetIO(); }
 
+void Gui::ProcessEvent(const Event& e) {}
+
 void Gui::ConfigureIO() {
   ImGuiIO& io = ImGui::GetIO();
   io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;

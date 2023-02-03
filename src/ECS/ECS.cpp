@@ -27,4 +27,6 @@ void ECS::OnDestroy() {
 
 std::vector<std::shared_ptr<System>> ECS::GetDependencies() const { return {}; }
 
+void ECS::ProcessEvent(const Event& e) {}
+
 };  // namespace Zoom
