@@ -2,7 +2,7 @@
 
 namespace Zoom {
 
-void Gui::Initialization(void* specs) {
+void Gui::OnInitialization(void* specs) {
   // Initialization the ImGui library here.
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
@@ -22,7 +22,7 @@ void Gui::Initialization(void* specs) {
   m_Widgets.push_back(new AssetsWidget());
 }
 
-void Gui::Update() {
+void Gui::OnUpdate() {
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
@@ -38,7 +38,7 @@ void Gui::Update() {
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void Gui::Destroy() {
+void Gui::OnDestroy() {
   for (const auto& widget : m_Widgets) {
     delete widget;
   }

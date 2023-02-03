@@ -1,16 +1,14 @@
 #pragma once
 
 #include <Gl/glew.h>
+
 #include "Core/System.h"
 #include "Renderer/Modules/Framebuffer.h"
 #include "Renderer/Modules/Shader.h"
 
 namespace Zoom {
 
-enum class RendererImplementation : U8 {
-  OpenGL,
-  Raytracer
-};
+enum class RendererImplementation : U8 { OpenGL, Raytracer };
 
 /**
  * \brief Contains any specifications to be passed to the Renderer during
@@ -33,17 +31,17 @@ class Renderer : public System {
    * \param specs Any specifications to be passed to the Renderer, nullptr if
    * none.
    */
-  void Initialization(void* specs) override;
+  void OnInitialization(void* specs) override;
 
   /**
    * \brief Renders the current frame.
    */
-  void Update() override;
+  void OnUpdate() override;
 
   /**
    * \brief Frees the memory allocated to the renderer subsystem.
    */
-  void Destroy() override;
+  void OnDestroy() override;
 
   /**
    * \brief Updates the current viewport dimensions.
@@ -61,6 +59,12 @@ class Renderer : public System {
 
   [[nodiscard]] std::vector<std::shared_ptr<System>> GetDependencies()
       const override;
+
+  /**
+   * \brief Processes the received event.
+   * \param e event to handle
+   */
+  void ProcessEvent(const Event& e) override {}
 
  private:
   U32 m_VBO{}, m_VAO{};

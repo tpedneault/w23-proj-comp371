@@ -13,7 +13,7 @@ void FramebufferSizeCallback(GLFWwindow* window, const I32 width,
   SystemLocator<Renderer>::Get()->SetViewportSize(width, height);
 }
 
-void Window::Initialization(void* specs) {
+void Window::OnInitialization(void* specs) {
   glfwSetErrorCallback(ErrorCallbackGLFW);
   if (!glfwInit()) {
     std::cerr << "Failed to initialize GLFW." << std::endl;
@@ -24,11 +24,12 @@ void Window::Initialization(void* specs) {
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
   /** Create the GLFW window and set it as the current OpenGL context. **/
-  const auto [width, height, title] = *(static_cast<WindowSystemSpecifications*>(specs));
-  m_Window = glfwCreateWindow(width, height, title.c_str(),
-                              nullptr, nullptr);
+  const auto [width, height, title] =
+      *(static_cast<WindowSystemSpecifications*>(specs));
+  m_Window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
 
   glfwMakeContextCurrent(m_Window);
   glfwSwapInterval(1);  // Enables V-Sync.
@@ -43,14 +44,18 @@ void Window::Initialization(void* specs) {
   }
 }
 
-void Window::Update() {
+void Window::OnUpdate() {
   glfwPollEvents();
   glfwSwapBuffers(m_Window);
 }
 
-void Window::Destroy() {
+void Window::OnDestroy() {
   glfwDestroyWindow(m_Window);
   glfwTerminate();
+}
+
+std::vector<std::shared_ptr<System>> Window::GetDependencies() const {
+  return {};
 }
 
 bool Window::IsOpen() const { return !glfwWindowShouldClose(m_Window); }

@@ -1,8 +1,8 @@
 #pragma once
 
+#include "Core/System.h"
 #include "ECS/Components/Mesh.h"
 #include "ECS/Components/Transform.h"
-#include "Core/System.h"
 
 namespace Zoom {
 
@@ -13,11 +13,20 @@ struct Actor {
 
 class ECS final : public System {
  public:
-  void Initialization(void* specs) override;
-  void Update() override;
-  void Destroy() override;
+  void OnInitialization(void* specs) override;
+  void OnUpdate() override;
+  void OnDestroy() override;
 
-  std::vector<Actor> actors;
+  [[nodiscard]] std::vector<std::shared_ptr<System>> GetDependencies()
+      const override;
+
+  /**
+   * \brief Processes the received event.
+   * \param e event to handle
+   */
+  void ProcessEvent(const Event& e) override {}
+
+  std::vector<Actor> m_Actors;
 };
 
 };  // namespace Zoom

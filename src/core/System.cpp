@@ -4,7 +4,7 @@ namespace Zoom {
 
 void System::Initialize(void* specifications) {
   PreInitialization();
-  Initialization(specifications);
+  OnInitialization(specifications);
   PostInitialization();
   ZOOM_LOG_TRACE(std::format("Initialized {}!", typeid(*this).name()));
 }
@@ -25,7 +25,7 @@ bool System::IsInitialized() const { return m_Initialized; }
 bool System::VerifyDependenciesInit() const {
   const auto dependencies = GetDependencies();
   bool initialized = true;
-  for (auto dependency : dependencies) {
+  for (const auto dependency : dependencies) {
     if (!dependency->IsInitialized()) {
       // TODO: Output the name of the component which is not initialized.
       std::cerr << "[" << typeid(*this).name() << "] "
@@ -37,7 +37,13 @@ bool System::VerifyDependenciesInit() const {
   return initialized;
 }
 
-std::vector<std::shared_ptr<System>> System::GetDependencies() const {
-  return {};
+void System::PublishEvent(const Event& e) { m_EventQueue.push_back(e); }
+
+std::vector<Event> System::ForwardEvents() {
+  std::vector<Event> events;
+  std::ranges::move(m_EventQueue, std::back_inserter(events));
+  m_EventQueue.clear();
+  return events;
 }
+
 };  // namespace Zoom

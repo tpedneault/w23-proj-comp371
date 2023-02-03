@@ -6,6 +6,11 @@ namespace Zoom {
 
 class System;
 
+struct Event {
+  U16 id;
+  void* data;
+};
+
 template <typename T>
 class SystemLocator final {
  public:
@@ -44,12 +49,12 @@ class System {
   /**
    * \brief Runs every frame. Executes any logic that needs to run every frame.
    */
-  virtual void Update() = 0;
+  virtual void OnUpdate() = 0;
 
   /**
    * \brief Frees the memory allocated to the subsystem.
    */
-  virtual void Destroy() = 0;
+  virtual void OnDestroy() = 0;
 
   /**
    * \brief Contains code to run before the initialization.
@@ -78,9 +83,29 @@ class System {
   [[nodiscard]] virtual bool VerifyDependenciesInit() const;
 
   /**
-   * TODO: Add a system dependency check for initialization.
-   * i.e: FontManager should be initialized after Gui.
+   * \brief Gets the list of dependencies this subsystem depends on.
+   * ex: the GUI subsystem relies on the Window and the Renderer subsystem to be
+   * available. \return the list containing pointers to each dependencies.
    */
+  [[nodiscard]] virtual std::vector<std::shared_ptr<System>> GetDependencies()
+      const = 0;
+
+  /**
+   * \brief Processes the events received.
+   */
+  virtual void ProcessEvent(const Event& e) = 0;
+
+  /**
+   * \brief Publishes an event to the other systems.
+   * \param e Publishes an event to the Application event queue.
+   */
+  virtual void PublishEvent(const Event& e);
+
+  /**
+   * \brief Returns the list of queued events and empties the vector.
+   * \return list of queued events.
+   */
+  virtual std::vector<Event> ForwardEvents();
 
   /**
    * Enables the System to be globally accessible through the SystemLocator.
@@ -89,20 +114,13 @@ class System {
 
  protected:
   /**
-   * \brief Initialization logic for the subsystem. Custom to each subsystem implementation.
+   * \brief Triggered whenever the system is initialized.
    * \param specifications system specifications data
    */
-  virtual void Initialization(void* specifications) = 0;
-
-  /**
-   * \brief Gets the list of dependencies this subsystem depends on.
-   * ex: the GUI subsystem relies on the Window and the Renderer subsystem to be available.
-   * \return the list containing pointers to each dependencies.
-   */
-  [[nodiscard]] virtual std::vector<std::shared_ptr<System>> GetDependencies()
-      const;
+  virtual void OnInitialization(void* specifications) = 0;
 
   bool m_Initialized = false;
+  std::vector<Event> m_EventQueue;
 
  public:
   System() = default;

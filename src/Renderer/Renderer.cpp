@@ -4,7 +4,7 @@
 
 namespace Zoom {
 
-void Renderer::Initialization(void* specs) {
+void Renderer::OnInitialization(void* specs) {
   m_Specs = *(static_cast<RendererSystemSpecifications*>(specs));
 
   auto vertex =
@@ -14,29 +14,40 @@ void Renderer::Initialization(void* specs) {
 
   m_ShaderProgram = ShaderProgram::Create({vertex, frag});
 
+  delete vertex;
+  delete frag;
+
+  glEnable(GL_DEPTH_TEST);
+
   SetViewportSize(m_Specs.viewportWidth, m_Specs.viewportHeight);
 }
 
-void Renderer::Update() {
+void Renderer::OnUpdate() {
   // Clear the main window.
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   // !! ANYTHING FROM THIS POINT ON IS RENDERED TO THE FRAMEBUFFER !!.
   if (m_Specs.useFramebuffer) {
     m_Framebuffer.Bind();
   }
 
-  glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT);
+  glClearColor(0.25f, 0.25f, 0.25f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   m_ShaderProgram->Use();
 
-  for (auto& actor : SystemLocator<ECS>::Get()->actors) {
+  const glm::mat4 projection = glm::perspective(
+      glm::radians(45.0f),
+      static_cast<float>(m_Framebuffer.GetWidth()) / m_Framebuffer.GetHeight(),
+      0.1f, 100.0f);
+
+  for (auto& actor : SystemLocator<ECS>::Get()->m_Actors) {
     glm::mat4 transform = Transform::GetTransformationMatrix(actor.transform);
-    U32 uniformID = glGetUniformLocation(m_ShaderProgram->GetID(), "transform");
-    glUniformMatrix4fv(uniformID, 1, GL_FALSE, glm::value_ptr(transform));
-    
+    glm::mat4 mvp = projection * transform;
+    const I32 uniformID = glGetUniformLocation(m_ShaderProgram->GetID(), "mvp");
+    glUniformMatrix4fv(uniformID, 1, GL_FALSE, glm::value_ptr(mvp));
+
     glBindVertexArray(actor.mesh.GetVAO());
     glDrawArrays(GL_TRIANGLES, 0, actor.mesh.GetSize());
   }
@@ -46,7 +57,7 @@ void Renderer::Update() {
   }
 }
 
-void Renderer::Destroy() {}
+void Renderer::OnDestroy() {}
 
 void Renderer::SetViewportSize(const I32 width, const I32 height) {
   glViewport(0, 0, width, height);

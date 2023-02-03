@@ -36,17 +36,22 @@ class Framebuffer {
    * \param width of the framebuffer.
    * \param height of the framebuffer.
    */
-  void SetSize(U16 width, U16 height);
+  void SetSize(U32 width, U32 height);
 
   /**
-   * \brief Gets the Texture ID for the color attachment. This can then be used to render the texture in an ImGui widgets as an example.
-   * \return ID of the color attachment.
+   * \brief Gets the Texture ID for the color attachment. This can then be used
+   * to render the texture in an ImGui widgets as an example. \return ID of the
+   * color attachment.
    */
   [[nodiscard]] U32 GetColorAttachmentID() const;
 
+  [[nodiscard]] U32 GetWidth() const;
+
+  [[nodiscard]] U32 GetHeight() const;
+
  private:
   U32 m_FBO{}, m_DepthAttachment{}, m_ColorAttachment{};
-  U16 m_Width{}, m_Height{};
+  U32 m_Width{}, m_Height{};
 };
 
 };  // namespace Zoom

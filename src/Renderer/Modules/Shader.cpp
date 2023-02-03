@@ -47,6 +47,10 @@ std::shared_ptr<ShaderProgram> ShaderProgram::Create(
   }
   glLinkProgram(program->m_Id);
 
+  for (const auto shader : shaders) {
+    glDetachShader(program->m_Id, shader->GetID());
+  }
+
   GLint isLinked = 0;
   glGetProgramiv(program->m_Id, GL_LINK_STATUS, &isLinked);
   if (isLinked == GL_FALSE) {
@@ -54,26 +58,21 @@ std::shared_ptr<ShaderProgram> ShaderProgram::Create(
     glGetProgramiv(program->m_Id, GL_INFO_LOG_LENGTH, &maxLength);
 
     std::vector<GLchar> infoLog(maxLength);
-    glGetProgramInfoLog(program->m_Id, maxLength, &maxLength, &infoLog[0]);
+    glGetProgramInfoLog(program->m_Id, maxLength, &maxLength, infoLog.data());
 
     glDeleteProgram(program->m_Id);
 
     std::string output(infoLog.begin(), infoLog.end());
     ZOOM_LOG_ERROR(output);
-  }
 
-  for (const auto shader : shaders) {
-    glDetachShader(program->m_Id, shader->GetID());
+    return nullptr;
   }
 
   return program;
 }
 
-void ShaderProgram::Use() { glUseProgram(m_Id); }
+void ShaderProgram::Use() const { glUseProgram(m_Id); }
 
-U32 ShaderProgram::GetID() const
-{
-  return m_Id;
-}
+U32 ShaderProgram::GetID() const { return m_Id; }
 
 }  // namespace Zoom

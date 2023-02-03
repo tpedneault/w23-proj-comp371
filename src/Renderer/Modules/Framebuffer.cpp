@@ -5,9 +5,6 @@ namespace Zoom {
 Framebuffer::Framebuffer() {}
 
 Framebuffer::~Framebuffer() {
-  glDeleteFramebuffers(1, &m_FBO);
-  glDeleteTextures(1, &m_ColorAttachment);
-  glDeleteTextures(1, &m_DepthAttachment);
 }
 
 void Framebuffer::Initialize() {
@@ -42,11 +39,15 @@ void Framebuffer::Bind() const { glBindFramebuffer(GL_FRAMEBUFFER, m_FBO); }
 
 void Framebuffer::Unbind() const { glBindFramebuffer(GL_FRAMEBUFFER, 0); }
 
-void Framebuffer::SetSize(U16 width, U16 height) {
+void Framebuffer::SetSize(U32 width, U32 height) {
   m_Width = width;
   m_Height = height;
 }
 
 U32 Framebuffer::GetColorAttachmentID() const { return m_ColorAttachment; }
+
+U32 Framebuffer::GetWidth() const { return m_Width; }
+
+U32 Framebuffer::GetHeight() const { return m_Height; }
 
 };  // namespace Zoom

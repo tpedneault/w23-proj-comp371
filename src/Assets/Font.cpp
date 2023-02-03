@@ -2,16 +2,16 @@
 
 namespace Zoom {
 
-void FontManager::Initialization(void* specs) {
+void FontManager::OnInitialization(void* specs) {
   LoadFont(FontID::SourceSansProRegular,
            "assets/fonts/SourceSansPro/SourceSansPro-Regular.ttf", 19);
   LoadFont(FontID::SourceSansProBold,
            "assets/fonts/SourceSansPro/SourceSansPro-Bold.ttf", 19);
 }
 
-void FontManager::Update() {}
+void FontManager::OnUpdate() {}
 
-void FontManager::Destroy() {}
+void FontManager::OnDestroy() {}
 
 Font FontManager::LoadFont(const FontID id, const String& path, const U8 size) {
   const auto& io = SystemLocator<Gui>::Get()->GetIO();

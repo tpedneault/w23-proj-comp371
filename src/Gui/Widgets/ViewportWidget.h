@@ -13,7 +13,7 @@ class ViewportWidget : public Widget {
     {
       // Display the rendered viewport in this window.
       const ImVec2 availableRegion = ImGui::GetContentRegionAvail();
-      U32 textureID = SystemLocator<Renderer>::Get()->GetFramebufferTextureID();
+      const U64 textureID = SystemLocator<Renderer>::Get()->GetFramebufferTextureID();
       ImGui::Image(reinterpret_cast<void*>(textureID), availableRegion);
     }
     ImGui::End();

@@ -30,9 +30,9 @@ class Shader {
 class ShaderProgram final {
  public:
   static std::shared_ptr<ShaderProgram> Create(std::vector<Shader*> shaders);
-  void Use();
+  void Use() const;
 
-  [[nodiscard]] U32 GetID() const; 
+  [[nodiscard]] U32 GetID() const;
 
   ShaderProgram() = default;
   virtual ~ShaderProgram() = default;
