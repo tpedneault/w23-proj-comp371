@@ -32,7 +32,11 @@ void Renderer::Update() {
 
   m_ShaderProgram->Use();
 
-  for (const auto& actor : SystemLocator<ECS>::Get()->actors) {
+  for (auto& actor : SystemLocator<ECS>::Get()->actors) {
+    glm::mat4 transform = Transform::GetTransformationMatrix(actor.transform);
+    U32 uniformID = glGetUniformLocation(m_ShaderProgram->GetID(), "transform");
+    glUniformMatrix4fv(uniformID, 1, GL_FALSE, glm::value_ptr(transform));
+    
     glBindVertexArray(actor.mesh.GetVAO());
     glDrawArrays(GL_TRIANGLES, 0, actor.mesh.GetSize());
   }

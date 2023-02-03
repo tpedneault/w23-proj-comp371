@@ -71,4 +71,9 @@ std::shared_ptr<ShaderProgram> ShaderProgram::Create(
 
 void ShaderProgram::Use() { glUseProgram(m_Id); }
 
+U32 ShaderProgram::GetID() const
+{
+  return m_Id;
+}
+
 }  // namespace Zoom

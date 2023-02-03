@@ -8,15 +8,6 @@ void ErrorCallbackGLFW(int error, const char* description) {
   std::cerr << description << std::endl;
 }
 
-void GLAPIENTRY ErrorCallbackOpenGL(GLenum source, GLenum type, GLuint id,
-                                    GLenum severity, GLsizei length,
-                                    const GLchar* message,
-                                    const void* userParam) {
-  std::cerr << ((type == GL_DEBUG_TYPE_ERROR) ? "Error" : "") << " Type=0x"
-            << type << ", severity=0x" << severity << ": " << message
-            << std::endl;
-}
-
 void FramebufferSizeCallback(GLFWwindow* window, const I32 width,
                              const I32 height) {
   SystemLocator<Renderer>::Get()->SetViewportSize(width, height);
@@ -35,8 +26,8 @@ void Window::Initialization(void* specs) {
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
   /** Create the GLFW window and set it as the current OpenGL context. **/
-  const WindowSystemSpecifications data = *(static_cast<WindowSystemSpecifications*>(specs));
-  m_Window = glfwCreateWindow(data.width, data.height, data.title.c_str(),
+  const auto [width, height, title] = *(static_cast<WindowSystemSpecifications*>(specs));
+  m_Window = glfwCreateWindow(width, height, title.c_str(),
                               nullptr, nullptr);
 
   glfwMakeContextCurrent(m_Window);
@@ -50,9 +41,6 @@ void Window::Initialization(void* specs) {
               << std::endl;
     exit(EXIT_FAILURE);
   }
-
-  glEnable(GL_DEBUG_OUTPUT);
-  glDebugMessageCallback(ErrorCallbackOpenGL, nullptr);
 }
 
 void Window::Update() {

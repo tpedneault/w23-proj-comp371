@@ -32,6 +32,8 @@ class ShaderProgram final {
   static std::shared_ptr<ShaderProgram> Create(std::vector<Shader*> shaders);
   void Use();
 
+  [[nodiscard]] U32 GetID() const; 
+
   ShaderProgram() = default;
   virtual ~ShaderProgram() = default;
 
