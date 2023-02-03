@@ -25,6 +25,8 @@ class FontManager final : public System {
   Font LoadFont(const FontID id, const String& path, const U8 size);
   Font GetFont(const FontID id);
 
+  std::vector<std::shared_ptr<System>> GetDependencies() const override;
+
 private:
   std::vector<Font> m_Fonts;
 };

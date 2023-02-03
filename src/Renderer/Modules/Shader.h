@@ -8,7 +8,9 @@ namespace Zoom {
 
 enum class ShaderType : GLenum {
   Vertex = GL_VERTEX_SHADER,
-  Fragment = GL_FRAGMENT_SHADER
+  Fragment = GL_FRAGMENT_SHADER,
+  Geometry = GL_GEOMETRY_SHADER,
+  Compute = GL_COMPUTE_SHADER,
 };
 
 class Shader {
@@ -27,8 +29,7 @@ class Shader {
 
 class ShaderProgram final {
  public:
-  static std::shared_ptr<ShaderProgram> Create(std::vector<Shader*> shaders,
-                                               bool deleteShaders);
+  static std::shared_ptr<ShaderProgram> Create(std::vector<Shader*> shaders);
   void Use();
 
   ShaderProgram() = default;

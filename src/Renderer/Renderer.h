@@ -19,7 +19,7 @@ enum class RendererImplementation : U8 {
 struct RendererSystemSpecifications {
   RendererImplementation implementation;
   bool useFramebuffer;
-  I32 viewportWidth = 800, viewportHeight = 600;
+  I32 viewportWidth, viewportHeight;
 };
 
 /**

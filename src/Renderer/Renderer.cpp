@@ -11,7 +11,8 @@ void Renderer::Initialization(void* specs) {
       Shader::Create(ShaderType::Vertex, "assets/shaders/vertex_shader.glsl");
   auto frag =
       Shader::Create(ShaderType::Fragment, "assets/shaders/frag_shader.glsl");
-  m_ShaderProgram = ShaderProgram::Create({vertex, frag}, true);
+
+  m_ShaderProgram = ShaderProgram::Create({vertex, frag});
 
   SetViewportSize(m_Specs.viewportWidth, m_Specs.viewportHeight);
 }

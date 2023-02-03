@@ -29,10 +29,16 @@ void Window::Initialization(void* specs) {
     exit(EXIT_FAILURE);
   }
 
+  /** Set the OpenGL version to use. **/
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
   /** Create the GLFW window and set it as the current OpenGL context. **/
   const WindowSystemSpecifications data = *(static_cast<WindowSystemSpecifications*>(specs));
   m_Window = glfwCreateWindow(data.width, data.height, data.title.c_str(),
                               nullptr, nullptr);
+
   glfwMakeContextCurrent(m_Window);
   glfwSwapInterval(1);  // Enables V-Sync.
   glfwSetFramebufferSizeCallback(m_Window, FramebufferSizeCallback);

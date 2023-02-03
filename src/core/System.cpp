@@ -6,6 +6,7 @@ void System::Initialize(void* specifications) {
   PreInitialization();
   Initialization(specifications);
   PostInitialization();
+  ZOOM_LOG_TRACE(std::format("Initialized {}!", typeid(*this).name()));
 }
 
 void System::PreInitialization() {

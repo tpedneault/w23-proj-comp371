@@ -38,4 +38,9 @@ Font FontManager::GetFont(const FontID id) {
 
   return {};
 }
+
+std::vector<std::shared_ptr<System>> FontManager::GetDependencies() const
+{
+	return { SystemLocator<Gui>::Get() };
+}
 };  // namespace Zoom

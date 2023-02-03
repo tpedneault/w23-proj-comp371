@@ -3,16 +3,31 @@
 namespace Zoom {
 
 Shader* Shader::Create(ShaderType type, const String& path) {
-  auto* shader = new Shader(type);
+  const auto shader = new Shader(type);
 
-  std::ifstream fin(path);
+  const std::ifstream fin(path);
   std::stringstream buffer;
   buffer << fin.rdbuf();
 
-  const char* source = buffer.str().c_str();
-  shader->m_Id = glCreateShader(GL_VERTEX_SHADER);
+  const String sourceData = buffer.str();
+  const char* source = sourceData.c_str();
+  shader->m_Id = glCreateShader(static_cast<GLenum>(type));
   glShaderSource(shader->m_Id, 1, &source, nullptr);
   glCompileShader(shader->m_Id);
+
+  GLint isCompiled = 0;
+  glGetShaderiv(shader->m_Id, GL_COMPILE_STATUS, &isCompiled);
+  if (isCompiled == GL_FALSE) {
+    GLint maxLength = 0;
+    glGetShaderiv(shader->m_Id, GL_INFO_LOG_LENGTH, &maxLength);
+
+    std::vector<GLchar> errorLog(maxLength);
+    glGetShaderInfoLog(shader->m_Id, maxLength, &maxLength, errorLog.data());
+
+    glDeleteShader(shader->m_Id);
+
+    return nullptr;
+  }
 
   return shader;
 }
@@ -24,7 +39,7 @@ Shader::Shader(ShaderType type) : m_Type(type) {}
 Shader::~Shader() { glDeleteShader(m_Id); }
 
 std::shared_ptr<ShaderProgram> ShaderProgram::Create(
-    std::vector<Shader*> shaders, bool deleteShaders = false) {
+    std::vector<Shader*> shaders) {
   auto program = std::make_shared<ShaderProgram>();
   program->m_Id = glCreateProgram();
   for (const auto shader : shaders) {
@@ -32,14 +47,28 @@ std::shared_ptr<ShaderProgram> ShaderProgram::Create(
   }
   glLinkProgram(program->m_Id);
 
-  if (deleteShaders) {
-    for (Shader* shader : shaders) {
-      delete shader;
-    }
+  GLint isLinked = 0;
+  glGetProgramiv(program->m_Id, GL_LINK_STATUS, &isLinked);
+  if (isLinked == GL_FALSE) {
+    GLint maxLength = 0;
+    glGetProgramiv(program->m_Id, GL_INFO_LOG_LENGTH, &maxLength);
+
+    std::vector<GLchar> infoLog(maxLength);
+    glGetProgramInfoLog(program->m_Id, maxLength, &maxLength, &infoLog[0]);
+
+    glDeleteProgram(program->m_Id);
+
+    std::string output(infoLog.begin(), infoLog.end());
+    ZOOM_LOG_ERROR(output);
+  }
+
+  for (const auto shader : shaders) {
+    glDetachShader(program->m_Id, shader->GetID());
   }
 
   return program;
 }
 
 void ShaderProgram::Use() { glUseProgram(m_Id); }
+
 }  // namespace Zoom
