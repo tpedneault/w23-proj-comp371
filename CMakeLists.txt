@@ -35,7 +35,7 @@ file(GLOB imgui_backends
 include_directories(src)
 file(GLOB_RECURSE zoom_src "src/**.cpp")
 
-add_executable(zoom-engine ${zoom_src} ${imgui_src} ${imgui_backends})
+add_executable(zoom-engine ${zoom_src} ${imgui_src} ${imgui_backends} "src/Assets/Model.cpp")
 target_link_libraries(zoom-engine ${OPENGL_LIBRARIES} glfw libglew_static glm)
 
 file(COPY assets DESTINATION .)

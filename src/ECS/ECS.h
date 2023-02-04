@@ -1,12 +1,16 @@
 #pragma once
 
 #include "Core/System.h"
+
 #include "ECS/Components/Mesh.h"
 #include "ECS/Components/Transform.h"
+
+#include "Assets/Model.h"
 
 namespace Zoom {
 
 struct Actor {
+  String name;
   Transform transform{};
   Mesh mesh{};
 };
@@ -26,7 +30,7 @@ class ECS final : public System {
    */
   void ProcessEvent(const Event& e) override;
 
-  std::vector<Actor> m_Actors;
+  std::vector<std::shared_ptr<Actor>> actors;
 };
 
 };  // namespace Zoom

@@ -24,7 +24,6 @@ void Window::OnInitialization(void* specs) {
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-  glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
   /** Create the GLFW window and set it as the current OpenGL context. **/
   const auto [width, height, title] =

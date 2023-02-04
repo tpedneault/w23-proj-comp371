@@ -37,19 +37,22 @@ void Renderer::OnUpdate() {
 
   m_ShaderProgram->Use();
 
+  // TODO: Move the perspective matrix to the Camera class.
   const glm::mat4 projection = glm::perspective(
       glm::radians(45.0f),
       static_cast<float>(m_Framebuffer.GetWidth()) / m_Framebuffer.GetHeight(),
       0.1f, 100.0f);
 
-  for (auto& actor : SystemLocator<ECS>::Get()->m_Actors) {
-    glm::mat4 transform = Transform::GetTransformationMatrix(actor.transform);
+  // TODO: Move to the ActorRenderer class.
+  for (auto& actor : SystemLocator<ECS>::Get()->actors) {
+    glm::mat4 transform = Transform::GetTransformationMatrix(actor->transform);
+
     glm::mat4 mvp = projection * transform;
     const I32 uniformID = glGetUniformLocation(m_ShaderProgram->GetID(), "mvp");
     glUniformMatrix4fv(uniformID, 1, GL_FALSE, glm::value_ptr(mvp));
 
-    glBindVertexArray(actor.mesh.GetVAO());
-    glDrawArrays(GL_TRIANGLES, 0, actor.mesh.GetSize());
+    glBindVertexArray(actor->mesh.GetVAO());
+    glDrawArrays(GL_TRIANGLES, 0, actor->mesh.GetSize());
   }
 
   if (m_Specs.useFramebuffer) {
@@ -71,7 +74,7 @@ U32 Renderer::GetFramebufferTextureID() const {
 }
 
 std::vector<std::shared_ptr<System>> Renderer::GetDependencies() const {
-  return {SystemLocator<ECS>::Get()};
+  return {SystemLocator<Window>::Get(), SystemLocator<ECS>::Get()};
 }
 void Renderer::ProcessEvent(const Event& e) {}
 };  // namespace Zoom

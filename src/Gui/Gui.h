@@ -1,10 +1,12 @@
 #pragma once
 
 #include "Core/System.h"
+
 #include "Gui/Widgets/AssetsWidget.h"
 #include "Gui/Widgets/PropertiesWidget.h"
 #include "Gui/Widgets/SceneWidget.h"
 #include "Gui/Widgets/ViewportWidget.h"
+
 #include "Window/Window.h"
 
 namespace Zoom {
@@ -26,7 +28,10 @@ class Gui final : public System {
   void ProcessEvent(const Event& e) override;
 
  private:
-  std::vector<Widget*> m_Widgets;
+  AssetsWidget m_AssetsWidget;
+  PropertiesWidget m_PropertiesWidget;
+  SceneWidget m_SceneWidget;
+  ViewportWidget m_ViewportWidget;
 
   static void ConfigureIO();
   static void ConfigureStyle();

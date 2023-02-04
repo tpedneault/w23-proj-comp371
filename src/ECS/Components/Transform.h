@@ -4,7 +4,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "ECS/ECS.h"
+#include "Core/Base.h"
+#include "ECS/Component.h"
 
 namespace Zoom {
 

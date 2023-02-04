@@ -1,9 +1,11 @@
 #pragma once
 
-#include <Core/Base.h>
 #include <GL/glew.h>
 
 #include <glm/glm.hpp>
+
+#include "Core/Base.h"
+#include "ECS/Component.h"
 
 namespace Zoom {
 class Mesh {
@@ -22,11 +24,12 @@ class Mesh {
                           static_cast<void*>(nullptr));
     glEnableVertexAttribArray(0);
 
-    return { VAO, VBO, vertices.size() };
+    return {VAO, VBO, vertices.size()};
   }
 
   Mesh() = default;
-  Mesh(const U32 VAO, const U32 VBO, const U64 size) : m_VAO(VAO), m_VBO(VBO), m_Size(size) {}
+  Mesh(const U32 VAO, const U32 VBO, const U64 size)
+      : m_VAO(VAO), m_VBO(VBO), m_Size(size) {}
 
   [[nodiscard]] U32 GetVAO() const { return m_VAO; }
   [[nodiscard]] U32 GetVBO() const { return m_VBO; }

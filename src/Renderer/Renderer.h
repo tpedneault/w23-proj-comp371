@@ -3,8 +3,11 @@
 #include <Gl/glew.h>
 
 #include "Core/System.h"
+
 #include "Renderer/Modules/Framebuffer.h"
 #include "Renderer/Modules/Shader.h"
+
+#include "Window/Window.h"
 
 namespace Zoom {
 

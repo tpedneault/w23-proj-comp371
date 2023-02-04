@@ -14,12 +14,6 @@ void Gui::OnInitialization(void* specs) {
   const auto& window = SystemLocator<Window>::Get();
   ImGui_ImplGlfw_InitForOpenGL(window->GetWindow(), true);
   ImGui_ImplOpenGL3_Init("#version 330");
-
-  // Create the widgets.
-  m_Widgets.push_back(new ViewportWidget());
-  m_Widgets.push_back(new SceneWidget());
-  m_Widgets.push_back(new PropertiesWidget());
-  m_Widgets.push_back(new AssetsWidget());
 }
 
 void Gui::OnUpdate() {
@@ -29,9 +23,13 @@ void Gui::OnUpdate() {
   ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(),
                                ImGuiDockNodeFlags_PassthruCentralNode);
 
-  for (const auto& widget : m_Widgets) {
-    widget->Render();
-  }
+  m_PropertiesWidget.Render();
+  m_SceneWidget.Render();
+  m_AssetsWidget.Render();
+  m_ViewportWidget.Render();
+
+  U32 selectedActor = m_SceneWidget.GetSelectedActor();
+  m_PropertiesWidget.SetSelectedActor(selectedActor);
 
   ImGui::EndFrame();
   ImGui::Render();
@@ -39,10 +37,6 @@ void Gui::OnUpdate() {
 }
 
 void Gui::OnDestroy() {
-  for (const auto& widget : m_Widgets) {
-    delete widget;
-  }
-
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplGlfw_Shutdown();
   ImGui::DestroyContext();
