@@ -6,8 +6,8 @@
 namespace ambr {
 
 enum class FontID : U8 {
-  SourceSansProRegular,
-  SourceSansProBold,
+  RubikRegular,
+  RubikBold,
 };
 
 struct Font {

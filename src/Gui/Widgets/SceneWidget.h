@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Gui/Widget.h"
 
 #include "ECS/ECS.h"

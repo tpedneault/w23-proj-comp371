@@ -3,10 +3,10 @@
 namespace ambr {
 
 void FontManager::OnInitialization(void* specs) {
-  LoadFont(FontID::SourceSansProRegular,
-           "assets/fonts/SourceSansPro/SourceSansPro-Regular.ttf", 19);
-  LoadFont(FontID::SourceSansProBold,
-           "assets/fonts/SourceSansPro/SourceSansPro-Bold.ttf", 19);
+  LoadFont(FontID::RubikRegular,
+           "assets/fonts/Rubik/Rubik-Regular.ttf", 18);
+  LoadFont(FontID::RubikBold,
+           "assets/fonts/Rubik/Rubik-Bold.ttf", 18);
 }
 
 void FontManager::OnUpdate() {}

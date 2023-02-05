@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Gui/Widget.h"
 
 namespace ambr {
