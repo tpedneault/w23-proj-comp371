@@ -4,7 +4,7 @@
 
 #include "Core/Base.h"
 
-namespace Zoom {
+namespace ambr {
 /**
  * \brief Implementation of the OpenGL framebuffer. Once the framebuffer is
  * bound, any rendering performed is stored as a Texture.
@@ -54,4 +54,4 @@ class Framebuffer {
   U32 m_Width{}, m_Height{};
 };
 
-};  // namespace Zoom
+};  // namespace ambr

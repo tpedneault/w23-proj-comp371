@@ -1,6 +1,6 @@
 #include "Gui/Widget.h"
 
-namespace Zoom {
+namespace ambr {
 
 class AssetsWidget : public Widget {
  public:
@@ -13,4 +13,4 @@ class AssetsWidget : public Widget {
   }
 };
 
-};  // namespace Zoom
+};  // namespace ambr

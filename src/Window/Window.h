@@ -5,7 +5,7 @@
 
 #include "Core/System.h"
 
-namespace Zoom {
+namespace ambr {
 /**
  * \brief Contains any specifications to be passed to the Window during
  * initialization.
@@ -64,4 +64,4 @@ class Window final : public System {
   GLFWwindow* m_Window = nullptr;
 };
 
-};  // namespace Zoom
+};  // namespace ambr

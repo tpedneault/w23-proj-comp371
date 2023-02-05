@@ -1,6 +1,6 @@
 #include "Assets/Model.h"
 
-namespace Zoom {
+namespace ambr {
 
 Model* ModelManager::FromOBJ(const String& name, const String& path) {
   std::ifstream fin(path);
@@ -12,4 +12,4 @@ Model* ModelManager::FromOBJ(const String& name, const String& path) {
   return new Model;
 }
 
-};  // namespace Zoom
+};  // namespace ambr

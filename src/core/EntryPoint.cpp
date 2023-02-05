@@ -7,19 +7,19 @@
 #include "Assets/Font.h"
 
 int main(int argc, char** argv) {
-  Zoom::Application app;
+  ambr::Application app;
 
-  Zoom::WindowSystemSpecifications windowSpecs {1920, 1080, "Zoom Engine" };
-  Zoom::RendererSystemSpecifications rendererSpecs {
-      Zoom::RendererImplementation::OpenGL, true, 1920, 1080 };
+  ambr::WindowSystemSpecifications windowSpecs {1920, 1080, "Ambrosia Editor" };
+  ambr::RendererSystemSpecifications rendererSpecs {
+      ambr::RendererImplementation::OpenGL, true, 1920, 1080 };
 
   /** Systems need to be registered in the right order.
    *  ex: Window needs to be registered before Renderer, since it depends on it. **/
-  app.Register(Zoom::SystemLocator<Zoom::Window>::Get(), &windowSpecs);
-  app.Register(Zoom::SystemLocator<Zoom::ECS>::Get(), nullptr);
-  app.Register(Zoom::SystemLocator<Zoom::Renderer>::Get(), &rendererSpecs);
-  app.Register(Zoom::SystemLocator<Zoom::Gui>::Get(), nullptr);
-  app.Register(Zoom::SystemLocator<Zoom::FontManager>::Get(), nullptr);
+  app.Register(ambr::SystemLocator<ambr::Window>::Get(), &windowSpecs);
+  app.Register(ambr::SystemLocator<ambr::ECS>::Get(), nullptr);
+  app.Register(ambr::SystemLocator<ambr::Renderer>::Get(), &rendererSpecs);
+  app.Register(ambr::SystemLocator<ambr::Gui>::Get(), nullptr);
+  app.Register(ambr::SystemLocator<ambr::FontManager>::Get(), nullptr);
 
   app.Start();
 

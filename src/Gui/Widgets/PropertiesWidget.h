@@ -1,7 +1,7 @@
 #include "ECS/ECS.h"
 #include "Gui/Widget.h"
 
-namespace Zoom {
+namespace ambr {
 
 class PropertiesWidget : public Widget {
  public:
@@ -20,4 +20,4 @@ class PropertiesWidget : public Widget {
   U32 m_SelectedActor = 0;
 };
 
-};  // namespace Zoom
+};  // namespace ambr

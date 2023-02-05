@@ -3,7 +3,7 @@
 #include "Gui/Gui.h"
 #include "Core/System.h"
 
-namespace Zoom {
+namespace ambr {
 
 enum class FontID : U8 {
   SourceSansProRegular,
@@ -37,4 +37,4 @@ private:
   std::vector<Font> m_Fonts;
 };
 
-};  // namespace Zoom
+};  // namespace ambr

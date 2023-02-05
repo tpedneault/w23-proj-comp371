@@ -1,6 +1,6 @@
 #include "Renderer/Modules/Shader.h"
 
-namespace Zoom {
+namespace ambr {
 
 Shader* Shader::Create(ShaderType type, const String& path) {
   const auto shader = new Shader(type);
@@ -75,4 +75,4 @@ void ShaderProgram::Use() const { glUseProgram(m_Id); }
 
 U32 ShaderProgram::GetID() const { return m_Id; }
 
-}  // namespace Zoom
+}  // namespace ambr

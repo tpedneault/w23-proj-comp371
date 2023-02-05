@@ -7,7 +7,7 @@
 #include "Core/Base.h"
 #include "ECS/Component.h"
 
-namespace Zoom {
+namespace ambr {
 class Mesh {
  public:
   static Mesh FromVertices(const std::vector<glm::vec3>& vertices) {
@@ -40,4 +40,4 @@ class Mesh {
   U64 m_Size{};
 };
 
-};  // namespace Zoom
+};  // namespace ambr

@@ -2,7 +2,7 @@
 
 #include <glm/glm.hpp>
 
-namespace Zoom {
+namespace ambr {
 
 class Camera
 {
@@ -12,4 +12,4 @@ class Camera
   glm::vec3 m_Position;
 };
 
-};  // namespace Zoom
+};  // namespace ambr

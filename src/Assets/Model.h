@@ -2,7 +2,7 @@
 
 #include "Core/System.h"
 
-namespace Zoom {
+namespace ambr {
 
 struct Model {
   U32 VAO;
@@ -15,4 +15,4 @@ class ModelManager final : public System {
   static Model* FromVertices(const String& name, const std::vector<float> vertices);
 };
 
-};  // namespace Zoom
+};  // namespace ambr

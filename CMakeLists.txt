@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(zoom-engine)
+project(ambrosia)
 
 # Set the C++ version to use.
 set(CMAKE_CXX_STANDARD 20)
@@ -33,9 +33,9 @@ file(GLOB imgui_backends
 
 # Add Zoom Engine source files.
 include_directories(src)
-file(GLOB_RECURSE zoom_src "src/**.cpp")
+file(GLOB_RECURSE ambrosia_src "src/**.cpp")
 
-add_executable(zoom-engine ${zoom_src} ${imgui_src} ${imgui_backends} "src/Assets/Model.cpp" "src/Gui/Widgets/MenuBar.h")
-target_link_libraries(zoom-engine ${OPENGL_LIBRARIES} glfw libglew_static glm)
+add_executable(ambrosia ${ambrosia_src} ${imgui_src} ${imgui_backends})
+target_link_libraries(ambrosia ${OPENGL_LIBRARIES} glfw libglew_static glm)
 
 file(COPY assets DESTINATION .)

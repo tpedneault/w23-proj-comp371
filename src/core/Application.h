@@ -2,7 +2,7 @@
 
 #include "Core/System.h"
 
-namespace Zoom {
+namespace ambr {
 
 class Application {
  public:
@@ -30,4 +30,4 @@ public:
   Application& operator=(Application&&) = default;
 };
 
-}  // namespace Zoom
+}  // namespace ambr

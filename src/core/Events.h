@@ -2,7 +2,7 @@
 
 #include "Core/Base.h"
 
-namespace Zoom {
+namespace ambr {
 
 enum class EventCode : U16 {
   ExitApplication = 0,
@@ -14,4 +14,4 @@ struct Event {
   U32 dataSize;
 };
 
-};  // namespace Zoom
+};  // namespace ambr

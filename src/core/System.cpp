@@ -1,6 +1,6 @@
 #include "Core/System.h"
 
-namespace Zoom {
+namespace ambr {
 
 void System::Initialize(void* specifications) {
   PreInitialization();
@@ -46,4 +46,4 @@ std::vector<Event> System::ForwardEvents() {
   return events;
 }
 
-};  // namespace Zoom
+};  // namespace ambr

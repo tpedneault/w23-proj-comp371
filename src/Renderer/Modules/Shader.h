@@ -4,7 +4,7 @@
 
 #include "Core/Base.h"
 
-namespace Zoom {
+namespace ambr {
 
 enum class ShaderType : GLenum {
   Vertex = GL_VERTEX_SHADER,
@@ -41,4 +41,4 @@ class ShaderProgram final {
   U32 m_Id;
 };
 
-};  // namespace Zoom
+};  // namespace ambr

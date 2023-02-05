@@ -8,7 +8,7 @@
 
 #include "Assets/Model.h"
 
-namespace Zoom {
+namespace ambr {
 
 struct Actor {
   String name;
@@ -35,4 +35,4 @@ class ECS final : public System {
   std::vector<std::shared_ptr<Actor>> actors;
 };
 
-};  // namespace Zoom
+};  // namespace ambr

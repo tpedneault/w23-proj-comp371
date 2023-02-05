@@ -1,6 +1,6 @@
 #include "Gui/Gui.h"
 
-namespace Zoom {
+namespace ambr {
 
 void Gui::OnInitialization(void* specs) {
   // Initialization the ImGui library here.
@@ -132,4 +132,4 @@ void Gui::ConfigureStyle() {
   style.TabRounding = 0.5f;
 }
 
-}  // namespace Zoom
+}  // namespace ambr

@@ -1,6 +1,6 @@
 #include "Core/Application.h"
 
-namespace Zoom {
+namespace ambr {
 
 void Application::Register(std::shared_ptr<System> system,
                            void* specification) {
@@ -61,4 +61,4 @@ void Application::ProcessEvent(const Event& e) {
   }
 }
 
-};  // namespace Zoom
+};  // namespace ambr

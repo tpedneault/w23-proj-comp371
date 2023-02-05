@@ -2,7 +2,7 @@
 
 #include "Gui/Widget.h"
 
-namespace Zoom {
+namespace ambr {
 
 class MenuBar : public Widget {
  public:
@@ -39,4 +39,4 @@ class MenuBar : public Widget {
   }
 };
 
-};  // namespace Zoom
+};  // namespace ambr

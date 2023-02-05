@@ -2,7 +2,7 @@
 
 #include "ECS/ECS.h"
 
-namespace Zoom {
+namespace ambr {
 
 void Renderer::OnInitialization(void* specs) {
   m_Specs = *(static_cast<RendererSystemSpecifications*>(specs));
@@ -79,4 +79,4 @@ std::vector<std::shared_ptr<System>> Renderer::GetDependencies() const {
   return {SystemLocator<Window>::Get(), SystemLocator<ECS>::Get()};
 }
 void Renderer::ProcessEvent(const Event& e) {}
-};  // namespace Zoom
+};  // namespace ambr

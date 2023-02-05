@@ -5,8 +5,8 @@
 #include "Core/Base.h"
 #include "ECS/Component.h"
 
-namespace Zoom {
+namespace ambr {
 struct Color {
   glm::vec3 color;
 };
-};  // namespace Zoom
+};  // namespace ambr

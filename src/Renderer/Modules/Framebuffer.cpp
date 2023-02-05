@@ -1,6 +1,6 @@
 #include "Renderer/Modules/Framebuffer.h"
 
-namespace Zoom {
+namespace ambr {
 
 Framebuffer::Framebuffer() {}
 
@@ -50,4 +50,4 @@ U32 Framebuffer::GetWidth() const { return m_Width; }
 
 U32 Framebuffer::GetHeight() const { return m_Height; }
 
-};  // namespace Zoom
+};  // namespace ambr

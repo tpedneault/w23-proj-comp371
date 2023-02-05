@@ -2,7 +2,7 @@
 
 #include "Renderer/Renderer.h"
 
-namespace Zoom {
+namespace ambr {
 
 void ErrorCallbackGLFW(int error, const char* description) {
   std::cerr << description << std::endl;
@@ -68,4 +68,4 @@ GLFWwindow* Window::GetWindow() const { return m_Window; }
 
 void Window::ProcessEvent(const Event& e) {}
 
-};  // namespace Zoom
+};  // namespace ambr

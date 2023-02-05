@@ -6,24 +6,24 @@
 #include <sstream>
 
 #define ZOOM_LOG_TRACE(message) \
-  Zoom::Log(Zoom::LoggerSeverity::Trace, message, __FILE__, __LINE__)
+  ambr::Log(ambr::LoggerSeverity::Trace, message, __FILE__, __LINE__)
 
 #define ZOOM_LOG_INFO(message) \
-  Zoom::Log(Zoom::LoggerSeverity::Info, message, __FILE__, __LINE__)
+  ambr::Log(ambr::LoggerSeverity::Info, message, __FILE__, __LINE__)
 
 #define ZOOM_LOG_DEBUG(message) \
-  Zoom::Log(Zoom::LoggerSeverity::Debug, message, __FILE__, __LINE__)
+  ambr::Log(ambr::LoggerSeverity::Debug, message, __FILE__, __LINE__)
 
 #define ZOOM_LOG_WARN(message) \
-  Zoom::Log(Zoom::LoggerSeverity::Warn, message, __FILE__, __LINE__)
+  ambr::Log(ambr::LoggerSeverity::Warn, message, __FILE__, __LINE__)
 
 #define ZOOM_LOG_ERROR(message) \
-  Zoom::Log(Zoom::LoggerSeverity::Error, message, __FILE__, __LINE__)
+  ambr::Log(ambr::LoggerSeverity::Error, message, __FILE__, __LINE__)
 
 #define ZOOM_LOG_FATAL(message) \
-  Zoom::Log(Zoom::LoggerSeverity::Fatal, message, __FILE__, __LINE__)
+  ambr::Log(ambr::LoggerSeverity::Fatal, message, __FILE__, __LINE__)
 
-namespace Zoom {
+namespace ambr {
 
 static const std::vector<std::string> LoggerSeverityColors = {
     "\x1b[90m", "\x1b[32m", "\x1b[0m", "\x1b[33m", "\x1b[31m", "\x1b[35m"};
@@ -58,4 +58,4 @@ static void Log(LoggerSeverity severity, const std::string& message,
   std::cout << formattedMessage << std::endl;
 };
 
-}  // namespace Zoom
+}  // namespace ambr

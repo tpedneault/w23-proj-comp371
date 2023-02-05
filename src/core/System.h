@@ -3,7 +3,7 @@
 #include "Core/Base.h"
 #include "Core/Events.h"
 
-namespace Zoom {
+namespace ambr {
 
 class System;
 
@@ -127,4 +127,4 @@ class System {
   System& operator=(System&&) = default;
 };
 
-};  // namespace Zoom
+};  // namespace ambr

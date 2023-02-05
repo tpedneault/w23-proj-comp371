@@ -9,7 +9,7 @@
 
 #include "Window/Window.h"
 
-namespace Zoom {
+namespace ambr {
 
 enum class RendererImplementation : U8 { OpenGL, Raytracer };
 
@@ -76,4 +76,4 @@ class Renderer : public System {
   RendererSystemSpecifications m_Specs{};
 };
 
-};  // namespace Zoom
+};  // namespace ambr

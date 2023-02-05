@@ -9,7 +9,7 @@
 
 #include "Window/Window.h"
 
-namespace Zoom {
+namespace ambr {
 
 class Gui final : public System {
  public:
@@ -37,4 +37,4 @@ class Gui final : public System {
   static void ConfigureStyle();
 };
 
-};  // namespace Zoom
+};  // namespace ambr

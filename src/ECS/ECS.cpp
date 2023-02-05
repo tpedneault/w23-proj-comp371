@@ -1,6 +1,6 @@
 #include "ECS/ECS.h"
 
-namespace Zoom {
+namespace ambr {
 
 void ECS::OnInitialization(void* specs) {
   // This is for testing purposes only.
@@ -51,4 +51,4 @@ std::vector<std::shared_ptr<System>> ECS::GetDependencies() const { return {}; }
 
 void ECS::ProcessEvent(const Event& e) {}
 
-};  // namespace Zoom
+};  // namespace ambr

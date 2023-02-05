@@ -1,7 +1,7 @@
 #include "Gui/Widget.h"
 #include "Renderer/Renderer.h"
 
-namespace Zoom {
+namespace ambr {
 /**
  * \brief Renders the OpenGL viewport in a widget. Needs access to the Renderer
  * subsystem to access the framebuffer.
@@ -20,4 +20,4 @@ class ViewportWidget : public Widget {
   }
 };
 
-};  // namespace Zoom
+};  // namespace ambr

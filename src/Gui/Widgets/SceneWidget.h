@@ -2,7 +2,7 @@
 
 #include "ECS/ECS.h"
 
-namespace Zoom {
+namespace ambr {
 
 class SceneWidget : public Widget {
  public:
@@ -26,4 +26,4 @@ class SceneWidget : public Widget {
   U32 m_SelectedActor = 0;
 };
 
-};  // namespace Zoom
+};  // namespace ambr

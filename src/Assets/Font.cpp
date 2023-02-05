@@ -1,6 +1,6 @@
 #include "Assets/Font.h"
 
-namespace Zoom {
+namespace ambr {
 
 void FontManager::OnInitialization(void* specs) {
   LoadFont(FontID::SourceSansProRegular,
@@ -48,4 +48,4 @@ void FontManager::ProcessEvent(const Event& e)
 {
 }
 
-};  // namespace Zoom
+};  // namespace ambr

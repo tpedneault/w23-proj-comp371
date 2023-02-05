@@ -7,7 +7,7 @@
 #include "Core/Base.h"
 #include "ECS/Component.h"
 
-namespace Zoom {
+namespace ambr {
 
 struct Transform {
   glm::vec3 translation;
@@ -27,4 +27,4 @@ struct Transform {
   }
 };
 
-};  // namespace Zoom
+};  // namespace ambr

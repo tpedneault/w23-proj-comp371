@@ -5,7 +5,7 @@
 #include "imgui.h"
 #include "imgui_internal.h"
 
-namespace Zoom {
+namespace ambr {
 /**
  * \brief Base implementation of an ImGui widget.
  */
@@ -25,4 +25,4 @@ class Widget {
   Widget& operator=(Widget&&) = default;
 };
 
-};  // namespace Zoom
+};  // namespace ambr

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Zoom {
+namespace ambr {
 
 enum class ComponentType {
   Transform,
@@ -13,4 +13,4 @@ struct Component
   ComponentType type;
 };
 
-};  // namespace Zoom
+};  // namespace ambr
