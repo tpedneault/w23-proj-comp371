@@ -48,8 +48,10 @@ void Renderer::OnUpdate() {
     glm::mat4 transform = Transform::GetTransformationMatrix(actor->transform);
 
     glm::mat4 mvp = projection * transform;
-    const I32 uniformID = glGetUniformLocation(m_ShaderProgram->GetID(), "mvp");
-    glUniformMatrix4fv(uniformID, 1, GL_FALSE, glm::value_ptr(mvp));
+
+    const I32 mvpUniform =
+        glGetUniformLocation(m_ShaderProgram->GetID(), "mvp");
+    glUniformMatrix4fv(mvpUniform, 1, GL_FALSE, glm::value_ptr(mvp));
 
     glBindVertexArray(actor->mesh.GetVAO());
     glDrawArrays(GL_TRIANGLES, 0, actor->mesh.GetSize());

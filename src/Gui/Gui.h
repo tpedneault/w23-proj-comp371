@@ -2,7 +2,7 @@
 
 #include "Core/System.h"
 
-#include "Gui/Widgets/AssetsWidget.h"
+#include "Gui/Widgets/MenuBar.h"
 #include "Gui/Widgets/PropertiesWidget.h"
 #include "Gui/Widgets/SceneWidget.h"
 #include "Gui/Widgets/ViewportWidget.h"
@@ -28,7 +28,7 @@ class Gui final : public System {
   void ProcessEvent(const Event& e) override;
 
  private:
-  AssetsWidget m_AssetsWidget;
+  MenuBar m_MenuBar;
   PropertiesWidget m_PropertiesWidget;
   SceneWidget m_SceneWidget;
   ViewportWidget m_ViewportWidget;

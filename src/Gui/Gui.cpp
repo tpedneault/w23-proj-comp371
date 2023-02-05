@@ -23,12 +23,12 @@ void Gui::OnUpdate() {
   ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(),
                                ImGuiDockNodeFlags_PassthruCentralNode);
 
+  m_MenuBar.Render();
   m_PropertiesWidget.Render();
   m_SceneWidget.Render();
-  m_AssetsWidget.Render();
   m_ViewportWidget.Render();
 
-  U32 selectedActor = m_SceneWidget.GetSelectedActor();
+  const U32 selectedActor = m_SceneWidget.GetSelectedActor();
   m_PropertiesWidget.SetSelectedActor(selectedActor);
 
   ImGui::EndFrame();
@@ -55,11 +55,6 @@ void Gui::ConfigureIO() {
   io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 }
 
-/**
- * Original style from this source:
- * https://github.com/ocornut/imgui/issues/707#issuecomment-670976818
- */
-
 void Gui::ConfigureStyle() {
   constexpr auto ColorFromBytes = [](uint8_t r, uint8_t g, uint8_t b) {
     return ImVec4((float)r / 255.0f, (float)g / 255.0f, (float)b / 255.0f,
@@ -69,17 +64,17 @@ void Gui::ConfigureStyle() {
   auto& style = ImGui::GetStyle();
   ImVec4* colors = style.Colors;
 
-  const ImVec4 bgColor = ColorFromBytes(37, 37, 38);
-  const ImVec4 lightBgColor = ColorFromBytes(82, 82, 85);
-  const ImVec4 veryLightBgColor = ColorFromBytes(90, 90, 95);
+  const ImVec4 bgColor = ColorFromBytes(30, 30, 30);
+  const ImVec4 lightBgColor = ColorFromBytes(53, 53, 53);
+  const ImVec4 veryLightBgColor = ColorFromBytes(90, 90, 90);
 
-  const ImVec4 panelColor = ColorFromBytes(51, 51, 55);
-  const ImVec4 panelHoverColor = ColorFromBytes(29, 151, 236);
-  const ImVec4 panelActiveColor = ColorFromBytes(0, 119, 200);
+  const ImVec4 panelColor = ColorFromBytes(53, 54, 52);
+  const ImVec4 panelHoverColor = ColorFromBytes(207, 45, 68);
+  const ImVec4 panelActiveColor = ColorFromBytes(230, 50, 75);
 
   const ImVec4 textColor = ColorFromBytes(255, 255, 255);
   const ImVec4 textDisabledColor = ColorFromBytes(151, 151, 151);
-  const ImVec4 borderColor = ColorFromBytes(78, 78, 78);
+  const ImVec4 borderColor = ColorFromBytes(65, 65, 65);
 
   colors[ImGuiCol_Text] = textColor;
   colors[ImGuiCol_TextDisabled] = textDisabledColor;
@@ -95,7 +90,7 @@ void Gui::ConfigureStyle() {
   colors[ImGuiCol_TitleBg] = bgColor;
   colors[ImGuiCol_TitleBgActive] = bgColor;
   colors[ImGuiCol_TitleBgCollapsed] = bgColor;
-  colors[ImGuiCol_MenuBarBg] = panelColor;
+  colors[ImGuiCol_MenuBarBg] = bgColor;
   colors[ImGuiCol_ScrollbarBg] = panelColor;
   colors[ImGuiCol_ScrollbarGrab] = lightBgColor;
   colors[ImGuiCol_ScrollbarGrabHovered] = veryLightBgColor;
@@ -134,7 +129,7 @@ void Gui::ConfigureStyle() {
   style.GrabRounding = 0.0f;
   style.PopupRounding = 0.0f;
   style.ScrollbarRounding = 0.0f;
-  style.TabRounding = 0.0f;
+  style.TabRounding = 0.5f;
 }
 
 }  // namespace Zoom

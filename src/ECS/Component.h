@@ -5,6 +5,7 @@ namespace Zoom {
 enum class ComponentType {
   Transform,
   Mesh,
+  Color,
 };
 
 struct Component

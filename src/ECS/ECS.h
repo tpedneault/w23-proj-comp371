@@ -4,6 +4,7 @@
 
 #include "ECS/Components/Mesh.h"
 #include "ECS/Components/Transform.h"
+#include "ECS/Components/Color.h"
 
 #include "Assets/Model.h"
 
@@ -13,6 +14,7 @@ struct Actor {
   String name;
   Transform transform{};
   Mesh mesh{};
+  Color color{};
 };
 
 class ECS final : public System {
