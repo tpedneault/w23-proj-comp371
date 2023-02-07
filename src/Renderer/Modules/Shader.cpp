@@ -63,7 +63,7 @@ std::shared_ptr<ShaderProgram> ShaderProgram::Create(
     glDeleteProgram(program->m_Id);
 
     std::string output(infoLog.begin(), infoLog.end());
-    ZOOM_LOG_ERROR(output);
+    AMBR_LOG_ERROR(output);
 
     return nullptr;
   }

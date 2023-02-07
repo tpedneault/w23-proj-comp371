@@ -44,7 +44,7 @@ void Renderer::OnUpdate() {
       0.1f, 100.0f);
 
   // TODO: Move to the ActorRenderer class.
-  for (auto& actor : SystemLocator<ECS>::Get()->actors) {
+  /*for (auto& actor : SystemLocator<ECS>::Get()->actors) {
     glm::mat4 transform = Transform::GetTransformationMatrix(actor->transform);
 
     glm::mat4 mvp = projection * transform;
@@ -55,7 +55,11 @@ void Renderer::OnUpdate() {
 
     glBindVertexArray(actor->mesh.GetVAO());
     glDrawArrays(GL_TRIANGLES, 0, actor->mesh.GetSize());
-  }
+  }*/
+
+  auto model = SystemLocator<ModelManager>::Get()->GetModel("cow");
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, model->IBO);
+  glDrawElements(GL_TRIANGLES, model->IndexCount, GL_UNSIGNED_INT, nullptr);
 
   if (m_Specs.useFramebuffer) {
     m_Framebuffer.Unbind();

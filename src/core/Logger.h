@@ -5,22 +5,22 @@
 #include <ctime>
 #include <sstream>
 
-#define ZOOM_LOG_TRACE(message) \
+#define AMBR_LOG_TRACE(message) \
   ambr::Log(ambr::LoggerSeverity::Trace, message, __FILE__, __LINE__)
 
-#define ZOOM_LOG_INFO(message) \
+#define AMBR_LOG_INFO(message) \
   ambr::Log(ambr::LoggerSeverity::Info, message, __FILE__, __LINE__)
 
-#define ZOOM_LOG_DEBUG(message) \
+#define AMBR_LOG_DEBUG(message) \
   ambr::Log(ambr::LoggerSeverity::Debug, message, __FILE__, __LINE__)
 
-#define ZOOM_LOG_WARN(message) \
+#define AMBR_LOG_WARN(message) \
   ambr::Log(ambr::LoggerSeverity::Warn, message, __FILE__, __LINE__)
 
-#define ZOOM_LOG_ERROR(message) \
+#define AMBR_LOG_ERROR(message) \
   ambr::Log(ambr::LoggerSeverity::Error, message, __FILE__, __LINE__)
 
-#define ZOOM_LOG_FATAL(message) \
+#define AMBR_LOG_FATAL(message) \
   ambr::Log(ambr::LoggerSeverity::Fatal, message, __FILE__, __LINE__)
 
 namespace ambr {

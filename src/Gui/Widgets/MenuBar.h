@@ -11,6 +11,9 @@ class MenuBar : public Widget {
       /* File Menu */
       if (ImGui::BeginMenu("File"))
       {
+        if (ImGui::MenuItem("Exit")) {
+          m_EventQueue.push_back({EventCode::ExitApplication});
+        }
         ImGui::EndMenu();
       }
 

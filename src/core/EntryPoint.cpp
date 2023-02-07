@@ -5,6 +5,7 @@
 #include "Renderer/Renderer.h"
 #include "Window/Window.h"
 #include "Assets/Font.h"
+#include "Assets/Model.h"
 
 int main(int argc, char** argv) {
   ambr::Application app;
@@ -20,6 +21,7 @@ int main(int argc, char** argv) {
   app.Register(ambr::SystemLocator<ambr::Renderer>::Get(), &rendererSpecs);
   app.Register(ambr::SystemLocator<ambr::Gui>::Get(), nullptr);
   app.Register(ambr::SystemLocator<ambr::FontManager>::Get(), nullptr);
+  app.Register(ambr::SystemLocator<ambr::ModelManager>::Get(), nullptr);
 
   app.Start();
 

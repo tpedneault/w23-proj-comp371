@@ -7,6 +7,11 @@ void Gui::OnInitialization(void* specs) {
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
 
+  m_Widgets[Widgets::MenuBar] = new MenuBar();
+  m_Widgets[Widgets::Properties] = new PropertiesWidget();
+  m_Widgets[Widgets::Scene] = new SceneWidget();
+  m_Widgets[Widgets::Viewport] = new ViewportWidget();
+
   ConfigureIO();
   ConfigureStyle();
 
@@ -23,17 +28,28 @@ void Gui::OnUpdate() {
   ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(),
                                ImGuiDockNodeFlags_PassthruCentralNode);
 
-  m_MenuBar.Render();
-  m_PropertiesWidget.Render();
-  m_SceneWidget.Render();
-  m_ViewportWidget.Render();
+  // Render all registered widgets and retrieve their events.
+  for (const auto& widget : m_Widgets) {
+    widget.second->Render();
+    auto events = widget.second->ForwardEvents();
+    for (const auto& event : events) {
+      m_EventQueue.push_back(event);
+    }
+  }
 
-  const U32 selectedActor = m_SceneWidget.GetSelectedActor();
-  m_PropertiesWidget.SetSelectedActor(selectedActor);
+  // Logic goes here.
+  SceneWidget* scene = (SceneWidget*)m_Widgets[Widgets::Scene];
+  const U32 selectedActor = scene->GetSelectedActor();
+
+  PropertiesWidget* properties =
+      (PropertiesWidget*)m_Widgets[Widgets::Properties];
+  properties->SetSelectedActor(selectedActor);
 
   ImGui::EndFrame();
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+  // Get events from the widgets and publish them.
 }
 
 void Gui::OnDestroy() {

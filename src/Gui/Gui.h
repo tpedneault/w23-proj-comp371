@@ -1,15 +1,15 @@
 #pragma once
 
 #include "Core/System.h"
-
 #include "Gui/Widgets/MenuBar.h"
 #include "Gui/Widgets/PropertiesWidget.h"
 #include "Gui/Widgets/SceneWidget.h"
 #include "Gui/Widgets/ViewportWidget.h"
-
 #include "Window/Window.h"
 
 namespace ambr {
+
+enum class Widgets : U8 { MenuBar, Properties, Scene, Viewport };
 
 class Gui final : public System {
  public:
@@ -17,7 +17,8 @@ class Gui final : public System {
   void OnUpdate() override;
   void OnDestroy() override;
 
-  [[nodiscard]] std::vector<std::shared_ptr<System>> GetDependencies() const override;
+  [[nodiscard]] std::vector<std::shared_ptr<System>> GetDependencies()
+      const override;
 
   ImGuiIO& GetIO();
 
@@ -28,10 +29,7 @@ class Gui final : public System {
   void ProcessEvent(const Event& e) override;
 
  private:
-  MenuBar m_MenuBar;
-  PropertiesWidget m_PropertiesWidget;
-  SceneWidget m_SceneWidget;
-  ViewportWidget m_ViewportWidget;
+  std::map<Widgets, Widget*> m_Widgets;
 
   static void ConfigureIO();
   static void ConfigureStyle();

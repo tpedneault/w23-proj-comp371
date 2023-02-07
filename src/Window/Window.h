@@ -61,7 +61,7 @@ class Window final : public System {
   void ProcessEvent(const Event& e) override;
 
  private:
-  GLFWwindow* m_Window = nullptr;
+   GLFWwindow* m_Window = nullptr;
 };
 
 };  // namespace ambr
