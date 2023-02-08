@@ -54,15 +54,16 @@ void Renderer::OnUpdate() {
     glUniformMatrix4fv(mvpUniform, 1, GL_FALSE, glm::value_ptr(mvp));
 
     glBindVertexArray(actor->mesh.GetVAO());
-    glDrawArrays(GL_TRIANGLES, 0, actor->mesh.GetSize());
+
+    if (actor->mesh.GetEBO() == 0) {
+      glDrawArrays(GL_TRIANGLES, 0, actor->mesh.GetSize());
+    }
+    else {
+      glDrawElements(GL_TRIANGLES, actor->mesh.GetIndexCount(), GL_UNSIGNED_INT, nullptr);
+    }
+
     glBindVertexArray(0);
   }
-
-  auto model = SystemLocator<ModelManager>::Get()->GetModel("cow");
-  glBindVertexArray(model->VAO);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, model->EBO);
-  glDrawElements(GL_TRIANGLES, model->IndexCount, GL_UNSIGNED_INT, nullptr);
-  glBindVertexArray(0);
 
   if (m_Specs.useFramebuffer) {
     m_Framebuffer.Unbind();
@@ -83,7 +84,7 @@ U32 Renderer::GetFramebufferTextureID() const {
 }
 
 std::vector<std::shared_ptr<System>> Renderer::GetDependencies() const {
-  return {SystemLocator<Window>::Get(), SystemLocator<ECS>::Get()};
+  return {SystemLocator<Window>::Get()};
 }
 void Renderer::ProcessEvent(const Event& e) {}
 

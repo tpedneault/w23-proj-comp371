@@ -17,7 +17,7 @@ void ECS::OnInitialization(void* specs) {
                         glm::vec3(0.0f, 0.0f, 0.0f),
                         glm::vec3(1.0f, 1.0f, 1.0f)};
     actor->mesh = Mesh::FromVertices(vertices);
-    actors.push_back(actor);
+    //actors.push_back(actor);
   }
 
   {
@@ -27,7 +27,7 @@ void ECS::OnInitialization(void* specs) {
                         glm::vec3(0.0f, 0.0f, 0.0f),
                         glm::vec3(1.0f, 1.0f, 1.0f)};
     actor->mesh = Mesh::FromVertices(vertices);
-    actors.push_back(actor);
+    //actors.push_back(actor);
   }
 
   {
@@ -37,6 +37,15 @@ void ECS::OnInitialization(void* specs) {
                         glm::vec3(0.0f, 0.0f, 0.0f),
                         glm::vec3(1.0f, 1.0f, 1.0f)};
     actor->mesh = Mesh::FromVertices(vertices);
+    //actors.push_back(actor);
+  }
+
+  { auto actor = std::make_shared<Actor>();
+    actor->name = "Cow";
+    actor->transform = {glm::vec3(0.0f, 0.0f, 0.0f),
+                        glm::vec3(0.0f, 0.0f, 0.0f),
+                        glm::vec3(1.0f, 1.0f, 1.0f)};
+    actor->mesh = Mesh::FromModel("cow");
     actors.push_back(actor);
   }
 }
@@ -49,7 +58,7 @@ void ECS::OnDestroy() {
    */
 }
 
-std::vector<std::shared_ptr<System>> ECS::GetDependencies() const { return { }; }
+std::vector<std::shared_ptr<System>> ECS::GetDependencies() const { return { SystemLocator<ModelManager>::Get() }; }
 
 void ECS::ProcessEvent(const Event& e) {}
 

@@ -17,11 +17,11 @@ int main(int argc, char** argv) {
   /** Systems need to be registered in the right order.
    *  ex: Window needs to be registered before Renderer, since it depends on it. **/
   app.Register(ambr::SystemLocator<ambr::Window>::Get(), &windowSpecs);
+  app.Register(ambr::SystemLocator<ambr::ModelManager>::Get(), nullptr);
   app.Register(ambr::SystemLocator<ambr::ECS>::Get(), nullptr);
   app.Register(ambr::SystemLocator<ambr::Renderer>::Get(), &rendererSpecs);
   app.Register(ambr::SystemLocator<ambr::Gui>::Get(), nullptr);
   app.Register(ambr::SystemLocator<ambr::FontManager>::Get(), nullptr);
-  app.Register(ambr::SystemLocator<ambr::ModelManager>::Get(), nullptr);
 
   app.Start();
 

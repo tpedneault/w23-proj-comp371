@@ -6,6 +6,7 @@
 
 #include "Core/Base.h"
 #include "ECS/Component.h"
+#include "Assets/Model.h"
 
 namespace ambr {
 class Mesh {
@@ -27,16 +28,25 @@ class Mesh {
     return {VAO, VBO, vertices.size()};
   }
 
+  static Mesh FromModel(const String& modelId) {
+    auto model = SystemLocator<ModelManager>::Get()->GetModel(modelId);
+    return {model->VAO, model->VBO, model->EBO, model->IndexCount};
+  }
+
   Mesh() = default;
   Mesh(const U32 VAO, const U32 VBO, const U64 size)
       : m_VAO(VAO), m_VBO(VBO), m_Size(size) {}
+  Mesh(const U32 VAO, const U32 VBO, const U32 EBO, const U32 indexCount)
+      : m_VAO(VAO), m_VBO(VBO), m_EBO(EBO), m_IndexCount(indexCount) {}
 
   [[nodiscard]] U32 GetVAO() const { return m_VAO; }
   [[nodiscard]] U32 GetVBO() const { return m_VBO; }
+  [[nodiscard]] U32 GetEBO() const { return m_EBO; }
+  [[nodiscard]] U32 GetIndexCount() const { return m_IndexCount; }
   [[nodiscard]] U64 GetSize() const { return m_Size; }
 
  private:
-  U32 m_VAO{}, m_VBO{};
+  U32 m_VAO{}, m_VBO{}, m_EBO{}, m_IndexCount{};
   U64 m_Size{};
 };
 
