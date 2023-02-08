@@ -59,7 +59,7 @@ void Renderer::OnUpdate() {
       glDrawArrays(GL_TRIANGLES, 0, actor->mesh.GetSize());
     }
     else {
-      glDrawElements(GL_TRIANGLES, actor->mesh.GetIndexCount(), GL_UNSIGNED_INT, nullptr);
+      glDrawElements(GL_TRIANGLE_STRIP, actor->mesh.GetIndexCount(), GL_UNSIGNED_INT, 0);
     }
 
     glBindVertexArray(0);

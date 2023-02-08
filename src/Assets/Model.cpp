@@ -63,7 +63,8 @@ std::shared_ptr<Model> ModelManager::FromOBJ(const String& name,
 }
 
 void ModelManager::OnInitialization(void* specs) {
-  m_Models["cow"] = FromOBJ("cow", "assets/models/cow.txt");
+  m_Models["cow"] = FromOBJ("cow",  "assets/models/cow.obj");
+  m_Models["cube"] = FromOBJ("cube", "assets/models/cube.obj");
 }
 
 void ModelManager::OnUpdate() {}

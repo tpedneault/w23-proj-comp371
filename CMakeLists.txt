@@ -10,6 +10,9 @@ set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
 
+set(ASSIMP_BUILD_ZLIB ON)
+set(ASSIMP_BUILD_DOCS OFF)
+
 # Find OpenGL
 find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIRS})
@@ -18,6 +21,7 @@ include_directories(${OPENGL_INCLUDE_DIRS})
 add_subdirectory(extern/glfw)
 add_subdirectory(extern/glew-cmake)
 add_subdirectory(extern/glm)
+add_subdirectory(extern/assimp)
 include_directories(extern/stb)
 
 # Add the ImGui library with the appropriate backends.
@@ -36,6 +40,6 @@ include_directories(src)
 file(GLOB_RECURSE ambrosia_src "src/**.cpp")
 
 add_executable(ambrosia ${ambrosia_src} ${imgui_src} ${imgui_backends})
-target_link_libraries(ambrosia ${OPENGL_LIBRARIES} glfw libglew_static glm)
+target_link_libraries(ambrosia ${OPENGL_LIBRARIES} glfw libglew_static glm assimp)
 
 file(COPY assets DESTINATION .)
