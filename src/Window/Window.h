@@ -60,8 +60,10 @@ class Window final : public System {
    */
   void ProcessEvent(const Event& e) override;
 
+  void ToggleFullscreen() const;
+
  private:
-   GLFWwindow* m_Window = nullptr;
+  GLFWwindow* m_Window = nullptr;
 };
 
 };  // namespace ambr

@@ -12,7 +12,7 @@ namespace ambr {
 struct Model {
   U32 VAO;
   U32 VBO;
-  U32 IBO;
+  U32 EBO;
   U32 IndexCount;
 };
 
@@ -30,7 +30,9 @@ class ModelManager final : public System {
   [[nodiscard]] std::shared_ptr<Model> GetModel(const String& name);
 
  private:
-  static glm::vec3 ReadVec3Line(std::stringstream& ss);
+  static glm::vec3 ReadVertexLine(std::stringstream& ss);
+  static glm::uvec3 ReadFaceLine(std::stringstream& ss);
+
 
   std::map<String, std::shared_ptr<Model>> m_Models;
 };

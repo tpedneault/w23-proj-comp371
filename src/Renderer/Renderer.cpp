@@ -44,7 +44,7 @@ void Renderer::OnUpdate() {
       0.1f, 100.0f);
 
   // TODO: Move to the ActorRenderer class.
-  /*for (auto& actor : SystemLocator<ECS>::Get()->actors) {
+  for (auto& actor : SystemLocator<ECS>::Get()->actors) {
     glm::mat4 transform = Transform::GetTransformationMatrix(actor->transform);
 
     glm::mat4 mvp = projection * transform;
@@ -55,11 +55,14 @@ void Renderer::OnUpdate() {
 
     glBindVertexArray(actor->mesh.GetVAO());
     glDrawArrays(GL_TRIANGLES, 0, actor->mesh.GetSize());
-  }*/
+    glBindVertexArray(0);
+  }
 
   auto model = SystemLocator<ModelManager>::Get()->GetModel("cow");
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, model->IBO);
+  glBindVertexArray(model->VAO);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, model->EBO);
   glDrawElements(GL_TRIANGLES, model->IndexCount, GL_UNSIGNED_INT, nullptr);
+  glBindVertexArray(0);
 
   if (m_Specs.useFramebuffer) {
     m_Framebuffer.Unbind();
@@ -83,4 +86,5 @@ std::vector<std::shared_ptr<System>> Renderer::GetDependencies() const {
   return {SystemLocator<Window>::Get(), SystemLocator<ECS>::Get()};
 }
 void Renderer::ProcessEvent(const Event& e) {}
+
 };  // namespace ambr

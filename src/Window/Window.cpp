@@ -68,4 +68,6 @@ GLFWwindow* Window::GetWindow() const { return m_Window; }
 
 void Window::ProcessEvent(const Event& e) {}
 
+void Window::ToggleFullscreen() const { AMBR_LOG_TRACE("Toggling "); }
+
 };  // namespace ambr

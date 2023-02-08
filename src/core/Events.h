@@ -6,6 +6,7 @@ namespace ambr {
 
 enum class EventCode : U16 {
   ExitApplication = 0,
+  ToggleFullscreen = 1,
 };
 
 struct Event {
