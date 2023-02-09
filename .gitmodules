@@ -10,3 +10,6 @@
 [submodule "extern/assimp"]
 	path = extern/assimp
 	url = https://github.com/assimp/assimp
+[submodule "extern/zep"]
+	path = extern/zep
+	url = https://github.com/Rezonality/zep
