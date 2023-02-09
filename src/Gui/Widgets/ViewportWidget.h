@@ -11,7 +11,7 @@ namespace ambr {
 class ViewportWidget final : public Widget {
  public:
   void Render() override {
-    ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+    ImGui::Begin("Scene Viewport", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
     {
       // Display the rendered viewport in this window.
       const ImVec2 availableRegion = ImGui::GetContentRegionAvail();

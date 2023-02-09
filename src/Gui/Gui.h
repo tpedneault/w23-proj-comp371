@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/System.h"
+#include "Gui/Widgets/AssetsWidget.h"
 #include "Gui/Widgets/MenuBar.h"
 #include "Gui/Widgets/PropertiesWidget.h"
 #include "Gui/Widgets/SceneWidget.h"
@@ -9,7 +10,7 @@
 
 namespace ambr {
 
-enum class Widgets : U8 { MenuBar, Properties, Scene, Viewport };
+enum class Widgets : U8 { Assets, MenuBar, Properties, Scene, Viewport };
 
 class Gui final : public System {
  public:

@@ -7,6 +7,7 @@ void Gui::OnInitialization(void* specs) {
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
 
+  m_Widgets[Widgets::Assets] = new AssetsWidget();
   m_Widgets[Widgets::MenuBar] = new MenuBar();
   m_Widgets[Widgets::Properties] = new PropertiesWidget();
   m_Widgets[Widgets::Scene] = new SceneWidget();
