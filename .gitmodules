@@ -10,6 +10,7 @@
 [submodule "extern/assimp"]
 	path = extern/assimp
 	url = https://github.com/assimp/assimp
-[submodule "extern/zep"]
-	path = extern/zep
-	url = https://github.com/Rezonality/zep
+[submodule "extern/ImGuiColorTextEdit"]
+	path = extern/ImGuiColorTextEdit
+	url = https://github.com/BalazsJako/ImGuiColorTextEdit
+	branch = master
