@@ -12,6 +12,7 @@ void Gui::OnInitialization(void* specs) {
   m_Widgets[Widgets::Properties] = new PropertiesWidget();
   m_Widgets[Widgets::Scene] = new SceneWidget();
   m_Widgets[Widgets::Viewport] = new ViewportWidget();
+  m_Widgets[Widgets::ShaderEditor] = new ShaderEditorWidget();
 
   ConfigureIO();
   ConfigureStyle();
@@ -20,6 +21,11 @@ void Gui::OnInitialization(void* specs) {
   const auto& window = SystemLocator<Window>::Get();
   ImGui_ImplGlfw_InitForOpenGL(window->GetWindow(), true);
   ImGui_ImplOpenGL3_Init("#version 330");
+
+  // Initialize the widgets.
+  for (const auto& widget : m_Widgets) {
+    widget.second->OnInitialization();
+  }
 }
 
 void Gui::OnUpdate() {
@@ -39,11 +45,11 @@ void Gui::OnUpdate() {
   }
 
   // Logic goes here.
-  SceneWidget* scene = (SceneWidget*)m_Widgets[Widgets::Scene];
+  const auto scene = static_cast<SceneWidget*>(m_Widgets[Widgets::Scene]);
   const U32 selectedActor = scene->GetSelectedActor();
 
-  PropertiesWidget* properties =
-      (PropertiesWidget*)m_Widgets[Widgets::Properties];
+  const auto properties =
+      static_cast<PropertiesWidget*>(m_Widgets[Widgets::Properties]);
   properties->SetSelectedActor(selectedActor);
 
   ImGui::EndFrame();

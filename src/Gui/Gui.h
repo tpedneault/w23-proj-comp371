@@ -6,11 +6,12 @@
 #include "Gui/Widgets/PropertiesWidget.h"
 #include "Gui/Widgets/SceneWidget.h"
 #include "Gui/Widgets/ViewportWidget.h"
+#include "Gui/Widgets/ShaderEditorWidget.h"
 #include "Window/Window.h"
 
 namespace ambr {
 
-enum class Widgets : U8 { Assets, MenuBar, Properties, Scene, Viewport };
+enum class Widgets : U8 { Assets, MenuBar, Properties, Scene, Viewport, ShaderEditor };
 
 class Gui final : public System {
  public:

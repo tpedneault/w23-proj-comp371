@@ -12,8 +12,11 @@ class PropertiesWidget : public Widget {
     {
       // Render the scene elements here.
       auto actor = SystemLocator<ECS>::Get()->actors[m_SelectedActor];
+
+    	ImGui::BeginGroup();
+      ImGui::Text("Transform");
       ImGui::DragFloat3(
-          "Translation",
+          "Position",
                         reinterpret_cast<float*>(&actor->transform.translation),
                         0.1f, 0.0f, 0.0f, "%.2f");
       ImGui::DragFloat3("Rotation",
@@ -22,6 +25,20 @@ class PropertiesWidget : public Widget {
       ImGui::DragFloat3("Scale",
                         reinterpret_cast<float*>(&actor->transform.scale),
                         0.1f, 0.0f, 0.0f, "%.2f");
+      ImGui::EndGroup();
+
+      ImGui::Dummy(ImVec2(0.0f, 5.0f));
+    	ImGui::Separator();
+      ImGui::Dummy(ImVec2(0.0f, 5.0f));
+
+      ImGui::BeginGroup();
+      ImGui::Text("Shader");
+      ImGui::EndGroup();
+
+      ImGui::Dummy(ImVec2(0.0f, 5.0f));
+      ImGui::Separator();
+      ImGui::Dummy(ImVec2(0.0f, 5.0f));
+
     }
     ImGui::End();
   }

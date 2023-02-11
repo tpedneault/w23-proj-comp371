@@ -10,7 +10,7 @@
 
 namespace ambr {
 
-struct Actor {
+struct  Actor {
   String name;
   Transform transform{};
   Mesh mesh{};

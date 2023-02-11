@@ -11,6 +11,11 @@ namespace ambr {
  */
 class Widget {
  public:
+	/**
+	 * \brief Runs once when the GUI system is initialized.
+	 */
+	virtual void OnInitialization() {}
+
   /**
    * \brief Renders the widget to the window.
    */
