@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Gui/Gui.h"
+#include "Editor/Editor.h"
 #include "Core/System.h"
 
 namespace ambr {

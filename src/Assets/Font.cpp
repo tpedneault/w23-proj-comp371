@@ -14,7 +14,7 @@ void FontManager::OnUpdate() {}
 void FontManager::OnDestroy() {}
 
 Font FontManager::LoadFont(const FontID id, const String& path, const U8 size) {
-  const auto& io = SystemLocator<Gui>::Get()->GetIO();
+  const auto& io = SystemLocator<Editor>::Get()->GetIO();
 
   /** Ensure that the requested font is not already loaded. **/
   for (auto& font : m_Fonts) {
@@ -41,7 +41,7 @@ Font FontManager::GetFont(const FontID id) {
 
 std::vector<std::shared_ptr<System>> FontManager::GetDependencies() const
 {
-	return { SystemLocator<Gui>::Get() };
+	return { SystemLocator<Editor>::Get() };
 }
 
 void FontManager::ProcessEvent(const Event& e)

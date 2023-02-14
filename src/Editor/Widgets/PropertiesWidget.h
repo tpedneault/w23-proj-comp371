@@ -1,12 +1,14 @@
 #pragma once 
 
 #include "ECS/ECS.h"
-#include "Gui/Widget.h"
+#include "Editor/Widget.h"
 
 namespace ambr {
 
 class PropertiesWidget : public Widget {
  public:
+  PropertiesWidget(const String& id) : Widget(id) {}
+
   void Render() override {
     ImGui::Begin("Properties", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
     {

@@ -6,7 +6,7 @@ void System::Initialize(void* specifications) {
   PreInitialization();
   OnInitialization(specifications);
   PostInitialization();
-  AMBR_LOG_TRACE(std::format("Initialized {}!", typeid(*this).name()));
+  AMBR_LOG_TRACE(fmt::format("Initialized {}!", typeid(*this).name()));
 }
 
 void System::PreInitialization() {

@@ -55,7 +55,7 @@ class Renderer : public System {
 
   /**
    * \brief Gets the texture ID of the rendered scene from the framebuffer. To
-   * be rendered in an ImGui widget. View Gui system for usage.
+   * be rendered in an ImGui widget. View Editor system for usage.
    * \return ID of the texture containing the rendered scene.
    */
   [[nodiscard]] U32 GetFramebufferTextureID() const;

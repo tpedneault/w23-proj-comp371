@@ -1,19 +1,17 @@
 #pragma once
 
 #include "Core/System.h"
-#include "Gui/Widgets/AssetsWidget.h"
-#include "Gui/Widgets/MenuBar.h"
-#include "Gui/Widgets/PropertiesWidget.h"
-#include "Gui/Widgets/SceneWidget.h"
-#include "Gui/Widgets/ViewportWidget.h"
-#include "Gui/Widgets/ShaderEditorWidget.h"
+#include "Editor/Widgets/AssetsWidget.h"
+#include "Editor/Widgets/MenuBar.h"
+#include "Editor/Widgets/PropertiesWidget.h"
+#include "Editor/Widgets/SceneWidget.h"
+#include "Editor/Widgets/ViewportWidget.h"
+#include "Editor/Widgets/ShaderEditorWidget.h"
 #include "Window/Window.h"
 
 namespace ambr {
 
-enum class Widgets : U8 { Assets, MenuBar, Properties, Scene, Viewport, ShaderEditor };
-
-class Gui final : public System {
+class Editor final : public System {
  public:
   void OnInitialization(void* specs) override;
   void OnUpdate() override;
@@ -24,6 +22,9 @@ class Gui final : public System {
 
   ImGuiIO& GetIO();
 
+  template <typename T>
+  T* GetWidget(const String& id);
+
   /**
    * \brief Processes the received event.
    * \param e event to handle
@@ -31,7 +32,7 @@ class Gui final : public System {
   void ProcessEvent(const Event& e) override;
 
  private:
-  std::map<Widgets, Widget*> m_Widgets;
+  std::vector<Widget*> m_Widgets;
 
   static void ConfigureIO();
   static void ConfigureStyle();

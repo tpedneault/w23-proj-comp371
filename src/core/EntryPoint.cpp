@@ -1,7 +1,7 @@
 #include "Core/Application.h"
 #include "Core/Base.h"
 #include "ECS/ECS.h"
-#include "Gui/Gui.h"
+#include "Editor/Editor.h"
 #include "Renderer/Renderer.h"
 #include "Window/Window.h"
 #include "Assets/Font.h"
@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
   app.Register(ambr::SystemLocator<ambr::ModelManager>::Get(), nullptr);
   app.Register(ambr::SystemLocator<ambr::ECS>::Get(), nullptr);
   app.Register(ambr::SystemLocator<ambr::Renderer>::Get(), &rendererSpecs);
-  app.Register(ambr::SystemLocator<ambr::Gui>::Get(), nullptr);
+  app.Register(ambr::SystemLocator<ambr::Editor>::Get(), nullptr);
   app.Register(ambr::SystemLocator<ambr::FontManager>::Get(), nullptr);
 
   app.Start();

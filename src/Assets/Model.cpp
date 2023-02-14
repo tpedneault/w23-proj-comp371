@@ -37,7 +37,7 @@ std::shared_ptr<Model> ModelManager::FromOBJ(const String& name,
   I32 size = 0;
   glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
   if (size != verticesSize) {
-    AMBR_LOG_ERROR(std::format(
+    AMBR_LOG_ERROR(fmt::format(
         "Failed to load indices for model {}, actual size: {} s.b {}", name,
         size, verticesSize));
   }
@@ -52,7 +52,7 @@ std::shared_ptr<Model> ModelManager::FromOBJ(const String& name,
 
   glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
   if (size != indicesSize) {
-    AMBR_LOG_ERROR(std::format(
+    AMBR_LOG_ERROR(fmt::format(
         "Failed to load indices for model {}, actual size: {} s.b {}", name,
         size, indicesSize));
   }

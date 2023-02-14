@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Gui/Widget.h"
+#include "Editor/Widget.h"
 
 #include "ECS/ECS.h"
 
@@ -8,6 +8,8 @@ namespace ambr {
 
 class SceneWidget : public Widget {
  public:
+  SceneWidget(const String& id) : Widget(id) {}
+
   void Render() override {
     ImGui::Begin("Scene", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
     {

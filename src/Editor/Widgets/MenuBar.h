@@ -1,11 +1,13 @@
 #pragma once
 
-#include "Gui/Widget.h"
+#include "Editor/Widget.h"
 
 namespace ambr {
 
 class MenuBar : public Widget {
  public:
+  MenuBar(const String& id) : Widget(id) {}
+
   void Render() override {
     if (ImGui::BeginMainMenuBar()) {
       /* File Menu */

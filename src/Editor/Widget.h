@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utility>
+
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
 #include "imgui.h"
@@ -11,10 +13,10 @@ namespace ambr {
  */
 class Widget {
  public:
-	/**
-	 * \brief Runs once when the GUI system is initialized.
-	 */
-	virtual void OnInitialization() {}
+  /**
+   * \brief Runs once when the GUI system is initialized.
+   */
+  virtual void OnInitialization() {}
 
   /**
    * \brief Renders the widget to the window.
@@ -36,16 +38,19 @@ class Widget {
    * \brief Publishes an event to the other systems.
    * \param e Publishes an event to the Application event queue.
    */
-  virtual void PublishEvent(const Event& e) { m_EventQueue.push_back(e); }
+  virtual void PublishEvent(const Event &e) { m_EventQueue.push_back(e); }
 
-  Widget() = default;
-  virtual ~Widget() = default;
-  Widget(Widget const&) = default;
-  Widget(Widget&&) = default;
-  Widget& operator=(Widget const&) = default;
-  Widget& operator=(Widget&&) = default;
+  [[nodiscard]] const String& GetID() const { return m_ID; }
+
+  Widget(const String& id) : m_ID(id) {};
+  virtual ~Widget() = default;;
+  Widget(Widget const &) = default;
+  Widget(Widget &&) = default;
+  Widget &operator=(Widget const &) = default;
+  Widget &operator=(Widget &&) = default;
 
  protected:
+  std::string m_ID;
   std::vector<Event> m_EventQueue;
 };
 

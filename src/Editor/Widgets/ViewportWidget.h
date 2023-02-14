@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Gui/Widget.h"
+#include "Editor/Widget.h"
 #include "Renderer/Renderer.h"
 
 namespace ambr {
@@ -10,6 +10,8 @@ namespace ambr {
  */
 class ViewportWidget final : public Widget {
  public:
+  ViewportWidget(const String& id) : Widget(id) {}
+
   void Render() override {
     ImGui::Begin("Scene Viewport", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
     {

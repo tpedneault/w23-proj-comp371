@@ -1,34 +1,36 @@
-#include "Gui/Gui.h"
+#include "Editor/Editor.h"
 
 namespace ambr {
 
-void Gui::OnInitialization(void* specs) {
+void Editor::OnInitialization(void *specs) {
   // Initialization the ImGui library here.
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
 
-  m_Widgets[Widgets::Assets] = new AssetsWidget();
-  m_Widgets[Widgets::MenuBar] = new MenuBar();
-  m_Widgets[Widgets::Properties] = new PropertiesWidget();
-  m_Widgets[Widgets::Scene] = new SceneWidget();
-  m_Widgets[Widgets::Viewport] = new ViewportWidget();
-  m_Widgets[Widgets::ShaderEditor] = new ShaderEditorWidget();
+  m_Widgets.push_back(new AssetsWidget("assets"));
+  m_Widgets.push_back(new MenuBar("menu"));
+  m_Widgets.push_back(new PropertiesWidget("properties"));
+  m_Widgets.push_back(new SceneWidget("scene"));
+  m_Widgets.push_back(new ViewportWidget("scene_viewport"));
+  m_Widgets.push_back(new ShaderEditorWidget("shader_editor",
+                                             new ShaderEditorSpecifications{"assets/shaders/fragment_shader.glsl ",
+                                                                            "Fragment Shader"}));
 
   ConfigureIO();
   ConfigureStyle();
 
   // Initializes the ImGui backends for GLFW and OpenGL 3.3
-  const auto& window = SystemLocator<Window>::Get();
+  const auto &window = SystemLocator<Window>::Get();
   ImGui_ImplGlfw_InitForOpenGL(window->GetWindow(), true);
   ImGui_ImplOpenGL3_Init("#version 330");
 
   // Initialize the widgets.
-  for (const auto& widget : m_Widgets) {
-    widget.second->OnInitialization();
+  for (const auto &widget : m_Widgets) {
+    widget->OnInitialization();
   }
 }
 
-void Gui::OnUpdate() {
+void Editor::OnUpdate() {
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
@@ -36,20 +38,19 @@ void Gui::OnUpdate() {
                                ImGuiDockNodeFlags_PassthruCentralNode);
 
   // Render all registered widgets and retrieve their events.
-  for (const auto& widget : m_Widgets) {
-    widget.second->Render();
-    auto events = widget.second->ForwardEvents();
-    for (const auto& event : events) {
+  for (const auto &widget : m_Widgets) {
+    widget->Render();
+    auto events = widget->ForwardEvents();
+    for (const auto &event : events) {
       m_EventQueue.push_back(event);
     }
   }
 
   // Logic goes here.
-  const auto scene = static_cast<SceneWidget*>(m_Widgets[Widgets::Scene]);
+  const auto scene = GetWidget<SceneWidget>("scene");
   const U32 selectedActor = scene->GetSelectedActor();
 
-  const auto properties =
-      static_cast<PropertiesWidget*>(m_Widgets[Widgets::Properties]);
+  const auto properties = GetWidget<PropertiesWidget>("properties");
   properties->SetSelectedActor(selectedActor);
 
   ImGui::EndFrame();
@@ -59,33 +60,43 @@ void Gui::OnUpdate() {
   // Get events from the widgets and publish them.
 }
 
-void Gui::OnDestroy() {
+void Editor::OnDestroy() {
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplGlfw_Shutdown();
   ImGui::DestroyContext();
 }
 
-std::vector<std::shared_ptr<System>> Gui::GetDependencies() const {
+std::vector<std::shared_ptr<System>> Editor::GetDependencies() const {
   return {SystemLocator<Window>::Get(), SystemLocator<Renderer>::Get()};
 }
 
-ImGuiIO& Gui::GetIO() { return ImGui::GetIO(); }
+ImGuiIO &Editor::GetIO() { return ImGui::GetIO(); }
 
-void Gui::ProcessEvent(const Event& e) {}
+template<typename T>
+T *Editor::GetWidget(const String &id) {
+  for (const auto widget : m_Widgets) {
+    if (widget->GetID() == id) {
+      return reinterpret_cast<T *>(widget);
+    }
+  }
+  return nullptr;
+}
 
-void Gui::ConfigureIO() {
-  ImGuiIO& io = ImGui::GetIO();
+void Editor::ProcessEvent(const Event &e) {}
+
+void Editor::ConfigureIO() {
+  ImGuiIO &io = ImGui::GetIO();
   io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 }
 
-void Gui::ConfigureStyle() {
+void Editor::ConfigureStyle() {
   constexpr auto ColorFromBytes = [](uint8_t r, uint8_t g, uint8_t b) {
-    return ImVec4((float)r / 255.0f, (float)g / 255.0f, (float)b / 255.0f,
+    return ImVec4((float) r / 255.0f, (float) g / 255.0f, (float) b / 255.0f,
                   1.0f);
   };
 
-  auto& style = ImGui::GetStyle();
-  ImVec4* colors = style.Colors;
+  auto &style = ImGui::GetStyle();
+  ImVec4 *colors = style.Colors;
 
   const ImVec4 bgColor = ColorFromBytes(30, 30, 30);
   const ImVec4 lightBgColor = ColorFromBytes(53, 53, 53);

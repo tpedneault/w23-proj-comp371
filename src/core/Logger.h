@@ -1,7 +1,7 @@
 #pragma once
 
 #include <filesystem>
-#include <format>
+#include <fmt/core.h>
 #include <ctime>
 #include <sstream>
 
@@ -25,8 +25,13 @@
 
 namespace ambr {
 
+#ifdef AMBR_LOG_USE_COLORS
 static const std::vector<std::string> LoggerSeverityColors = {
     "\x1b[90m", "\x1b[32m", "\x1b[0m", "\x1b[33m", "\x1b[31m", "\x1b[35m"};
+#else
+static const std::vector<std::string> LoggerSeverityColors = {
+        "", "", "", "", "", ""};
+#endif
 
 static const std::vector<std::string> LoggerSeverityNames = {
     "Trace", "Info", "Debug", "Warn", "Error", "Fatal"};
@@ -52,8 +57,8 @@ static void Log(LoggerSeverity severity, const std::string& message,
   const std::string& tag = LoggerSeverityNames[static_cast<uint8_t>(severity)];
   const std::string& color =
       LoggerSeverityColors[static_cast<uint8_t>(severity)];
-  const std::string formattedMessage = std::format(
-      "\x1b[90m{}\x1b[32m {}:{:02d} {}[{:5}]\x1b[0m {}", timestamp, filename, line, color, tag, message);
+  const std::string formattedMessage = fmt::format(
+      "{}{}{} {}:{:02d} {}[{:5}]{} {}", LoggerSeverityColors[0], timestamp, LoggerSeverityColors[1], filename, line, color, tag, LoggerSeverityColors[2], message);
 
   std::cout << formattedMessage << std::endl;
 };
