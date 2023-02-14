@@ -13,9 +13,10 @@ void Editor::OnInitialization(void *specs) {
   m_Widgets.push_back(new SceneWidget("scene"));
   m_Widgets.push_back(new ViewportWidget("scene_viewport"));
   m_Widgets.push_back(new ShaderEditorWidget("shader_editor",
-                                             new ShaderEditorSpecifications{"assets/shaders/fragment_shader.glsl ",
+                                             new ShaderEditorSpecifications{"assets/shaders/frag_shader.glsl ",
                                                                             "Fragment Shader"}));
 
+  // Sets up the style of ImGui.
   ConfigureIO();
   ConfigureStyle();
 
@@ -79,7 +80,17 @@ T *Editor::GetWidget(const String &id) {
       return reinterpret_cast<T *>(widget);
     }
   }
+
+  AMBR_LOG_WARN(fmt::format("Widget id={} does not exist.", id));
   return nullptr;
+}
+
+void Editor::DeleteShader(const String &id) {
+  for (int i = 0; i < m_Widgets.size(); i++) {
+    if (m_Widgets[i]->GetID() == id) {
+      m_Widgets.erase(m_Widgets.begin() + i);
+    }
+  }
 }
 
 void Editor::ProcessEvent(const Event &e) {}

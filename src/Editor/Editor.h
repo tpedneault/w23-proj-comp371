@@ -24,6 +24,7 @@ class Editor final : public System {
 
   template <typename T>
   T* GetWidget(const String& id);
+  void DeleteShader(const String& id);
 
   /**
    * \brief Processes the received event.
