@@ -14,3 +14,6 @@
 	path = extern/ImGuiColorTextEdit
 	url = https://github.com/BalazsJako/ImGuiColorTextEdit
 	branch = master
+[submodule "extern/fmt"]
+	path = extern/fmt
+	url = https://github.com/fmtlib/fmt
