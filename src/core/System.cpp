@@ -6,7 +6,7 @@ void System::Initialize(void* specifications) {
   PreInitialization();
   OnInitialization(specifications);
   PostInitialization();
-  AMBR_LOG_TRACE(fmt::format("Initialized {}!", typeid(*this).name()));
+  AMBR_LOG_TRACE(fmt::format("Initialized {}!", GetName()));
 }
 
 void System::PreInitialization() {
@@ -29,7 +29,7 @@ bool System::VerifyDependenciesInit() const {
     if (!dependency->IsInitialized()) {
       // TODO: Output the name of the component which is not initialized.
       std::cerr << "[" << typeid(*this).name() << "] "
-                << "FATAL ERROR: Dependency '" << typeid(*dependency).name()
+                << "FATAL ERROR: Dependency '" << dependency->GetName()
                 << "' is not initialized." << std::endl;
       initialized = false;
     }

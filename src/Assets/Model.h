@@ -1,7 +1,6 @@
 #pragma once
 
 #include <GL/glew.h>
-
 #include <glm/glm.hpp>
 
 #include "Core/System.h"
@@ -24,15 +23,15 @@ class ModelManager final : public System {
   void OnUpdate() override;
   void OnDestroy() override;
   void ProcessEvent(const Event& e) override;
+
+  [[nodiscard]] String GetName() override { return "ModelManager"; }
   [[nodiscard]] std::vector<std::shared_ptr<System>> GetDependencies()
       const override;
-
   [[nodiscard]] std::shared_ptr<Model> GetModel(const String& name);
 
  private:
   static glm::vec3 ReadVertexLine(std::stringstream& ss);
   static glm::uvec3 ReadFaceLine(std::stringstream& ss);
-
 
   std::map<String, std::shared_ptr<Model>> m_Models;
 };

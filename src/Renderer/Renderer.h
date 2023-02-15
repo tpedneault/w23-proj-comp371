@@ -29,12 +29,14 @@ struct RendererSystemSpecifications {
  */
 class Renderer : public System {
  public:
+  virtual String GetName() override { return "Renderer"; }
+
   /**
    * \brief Initializes the Renderer subsystem with the given specifications.
    * \param specs Any specifications to be passed to the Renderer, nullptr if
    * none.
    */
-  void OnInitialization(void* specs) override;
+  void OnInitialization(void *specs) override;
 
   /**
    * \brief Renders the current frame.
@@ -61,13 +63,13 @@ class Renderer : public System {
   [[nodiscard]] U32 GetFramebufferTextureID() const;
 
   [[nodiscard]] std::vector<std::shared_ptr<System>> GetDependencies()
-      const override;
+  const override;
 
   /**
    * \brief Processes the received event.
    * \param e event to handle
    */
-  void ProcessEvent(const Event& e) override;
+  void ProcessEvent(const Event &e) override;
 
  private:
   U32 m_VBO{}, m_VAO{};

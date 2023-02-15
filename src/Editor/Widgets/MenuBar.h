@@ -30,15 +30,6 @@ class MenuBar : public Widget {
         ImGui::EndMenu();
       }
 
-      /* Entity Menu */
-      if (ImGui::BeginMenu("Entity")) {
-        if (ImGui::MenuItem("Create Triangle")) {
-        }
-        if (ImGui::MenuItem("Create Square")) {
-        }
-        ImGui::EndMenu();
-      }
-
       ImGui::EndMainMenuBar();
     }
   }

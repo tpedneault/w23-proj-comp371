@@ -6,12 +6,12 @@
 
 namespace ambr {
 
-class SceneWidget : public Widget {
+class HierarchyWidget : public Widget {
  public:
-  SceneWidget(const String& id) : Widget(id) {}
+  HierarchyWidget(const String& id) : Widget(id) {}
 
   void Render() override {
-    ImGui::Begin("Scene", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+    ImGui::Begin("Hierarchy", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
     {
       // Render the scene elements here.
       auto const actors = SystemLocator<ECS>::Get()->actors;

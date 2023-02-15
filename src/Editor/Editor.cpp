@@ -10,7 +10,7 @@ void Editor::OnInitialization(void *specs) {
   m_Widgets.push_back(new AssetsWidget("assets"));
   m_Widgets.push_back(new MenuBar("menu"));
   m_Widgets.push_back(new PropertiesWidget("properties"));
-  m_Widgets.push_back(new SceneWidget("scene"));
+  m_Widgets.push_back(new HierarchyWidget("hierarchy"));
   m_Widgets.push_back(new ViewportWidget("scene_viewport"));
   m_Widgets.push_back(new ShaderEditorWidget("shader_editor",
                                              new ShaderEditorSpecifications{"assets/shaders/frag_shader.glsl ",
@@ -48,8 +48,8 @@ void Editor::OnUpdate() {
   }
 
   // Logic goes here.
-  const auto scene = GetWidget<SceneWidget>("scene");
-  const U32 selectedActor = scene->GetSelectedActor();
+  const auto hierarchy = GetWidget<HierarchyWidget>("hierarchy");
+  const U32 selectedActor = hierarchy->GetSelectedActor();
 
   const auto properties = GetWidget<PropertiesWidget>("properties");
   properties->SetSelectedActor(selectedActor);
@@ -68,7 +68,7 @@ void Editor::OnDestroy() {
 }
 
 std::vector<std::shared_ptr<System>> Editor::GetDependencies() const {
-  return {SystemLocator<Window>::Get(), SystemLocator<Renderer>::Get()};
+  return {SystemLocator<Window>::Get()};
 }
 
 ImGuiIO &Editor::GetIO() { return ImGui::GetIO(); }
@@ -81,7 +81,7 @@ T *Editor::GetWidget(const String &id) {
     }
   }
 
-  AMBR_LOG_WARN(fmt::format("Widget id={} does not exist.", id));
+  AMBR_LOG_ERROR(fmt::format("Widget id={} does not exist.", id));
   return nullptr;
 }
 

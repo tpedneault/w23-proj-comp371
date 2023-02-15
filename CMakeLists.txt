@@ -45,7 +45,7 @@ file(GLOB imgui_text_edit_src "extern/ImGuiColorTextEdit/*.cpp")
 include_directories(src)
 file(GLOB_RECURSE ambrosia_src "src/**.cpp")
 
-add_executable(ambrosia ${ambrosia_src} ${imgui_src} ${imgui_backends} ${imgui_text_edit_src})
+add_executable(ambrosia ${ambrosia_src} ${imgui_src} ${imgui_backends} ${imgui_text_edit_src} src/Editor/Widgets/CreateEntityWidget.h src/Core/EventData.h)
 target_link_libraries(ambrosia ${OPENGL_LIBRARIES} glfw libglew_static glm assimp fmt)
 
 file(COPY assets DESTINATION .)

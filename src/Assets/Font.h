@@ -18,6 +18,8 @@ struct Font {
 
 class FontManager final : public System {
  public:
+  virtual String GetName() override { return "FontManager"; }
+
   void OnInitialization(void* specs) override;
   void OnUpdate() override;
   void OnDestroy() override;
