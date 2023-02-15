@@ -1,5 +1,8 @@
 #pragma once
 
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
@@ -18,6 +21,7 @@ struct Model {
 class ModelManager final : public System {
  public:
   static std::shared_ptr<Model> FromOBJ(const String& name, const String& path);
+  static std::shared_ptr<Model> LoadModel(const String& name, const String& path);
 
   void OnInitialization(void* specs) override;
   void OnUpdate() override;

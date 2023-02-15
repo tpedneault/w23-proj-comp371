@@ -2,8 +2,8 @@
 
 namespace ambr {
 
-std::shared_ptr<Model> ModelManager::FromOBJ(const String& name,
-                                             const String& path) {
+std::shared_ptr<Model> ModelManager::FromOBJ(const String &name,
+                                             const String &path) {
   std::ifstream fin(path);
   std::string token;
 
@@ -31,7 +31,7 @@ std::shared_ptr<Model> ModelManager::FromOBJ(const String& name,
   glBindBuffer(GL_ARRAY_BUFFER, model->VBO);
   glBufferData(GL_ARRAY_BUFFER, verticesSize, vertices.data(), GL_STATIC_DRAW);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3),
-                        static_cast<void*>(nullptr));
+                        static_cast<void *>(nullptr));
 
   // Verify that the vertices were successfully stored.
   I32 size = 0;
@@ -62,26 +62,27 @@ std::shared_ptr<Model> ModelManager::FromOBJ(const String& name,
   return model;
 }
 
-void ModelManager::OnInitialization(void* specs) {
-  m_Models["cow"] = FromOBJ("cow",  "assets/models/cow.obj");
+void ModelManager::OnInitialization(void *specs) {
+  m_Models["cow"] = FromOBJ("cow", "assets/models/cow.obj");
   m_Models["cube"] = FromOBJ("cube", "assets/models/cube.obj");
+  m_Models["mini_tank"] = LoadModel("mini_tank", "assets/models/mini_tank.glb");
 }
 
 void ModelManager::OnUpdate() {}
 
 void ModelManager::OnDestroy() {}
 
-void ModelManager::ProcessEvent(const Event& e) {}
+void ModelManager::ProcessEvent(const Event &e) {}
 
 std::vector<std::shared_ptr<System>> ModelManager::GetDependencies() const {
   return {};
 }
 
-std::shared_ptr<Model> ModelManager::GetModel(const String& name) {
+std::shared_ptr<Model> ModelManager::GetModel(const String &name) {
   return m_Models[name];
 }
 
-glm::vec3 ModelManager::ReadVertexLine(std::stringstream& ss) {
+glm::vec3 ModelManager::ReadVertexLine(std::stringstream &ss) {
   std::string token;
   glm::vec3 vertex{};
   std::getline(ss, token, ' ');
@@ -93,7 +94,7 @@ glm::vec3 ModelManager::ReadVertexLine(std::stringstream& ss) {
   return vertex;
 }
 
-glm::uvec3 ModelManager::ReadFaceLine(std::stringstream& ss) {
+glm::uvec3 ModelManager::ReadFaceLine(std::stringstream &ss) {
   std::string token;
   glm::vec3 face{};
   std::getline(ss, token, ' ');
@@ -103,6 +104,16 @@ glm::uvec3 ModelManager::ReadFaceLine(std::stringstream& ss) {
   std::getline(ss, token, ' ');
   face.z = std::stoul(token);
   return face;
+}
+std::shared_ptr<Model> ModelManager::LoadModel(const String &name,
+                                               const String &path) {
+  static Assimp::Importer s_Importer;
+  const aiScene *scene = s_Importer.ReadFile(path.c_str(), 0);
+  if (!scene) {
+    AMBR_LOG_ERROR(
+        fmt::format("Failed to load file {}, error string: {}", name, s_Importer.GetErrorString()));
+  }
+  return std::shared_ptr<Model>();
 }
 
 };  // namespace ambr

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Base.h"
+#include "Core/EventData.h"
 
 namespace ambr {
 

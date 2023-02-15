@@ -4,9 +4,4 @@
 
 namespace ambr {
 
-struct CreateEntityEvent {
-  String name;
-  String path;
-};
-
 };
