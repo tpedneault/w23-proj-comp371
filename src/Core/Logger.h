@@ -45,20 +45,11 @@ static void Log(LoggerSeverity severity, const std::string& message,
   const size_t lastSlashPosition = filename.find_last_of("\\/");
   filename.erase(0, lastSlashPosition + 1);
 
-  // Get the timestamp.
-  std::time_t now = std::time(nullptr);
-  std::tm timeinfo;
-  localtime_s(&timeinfo, &now);
-
-  std::stringstream ss;
-  ss << std::put_time(&timeinfo, "%Y-%m-%d %H:%M:%S");
-  const std::string timestamp = ss.str();
-
   const std::string& tag = LoggerSeverityNames[static_cast<uint8_t>(severity)];
   const std::string& color =
       LoggerSeverityColors[static_cast<uint8_t>(severity)];
   const std::string formattedMessage = fmt::format(
-      "{}{}{} {}:{:02d} {}[{:5}]{} {}", LoggerSeverityColors[0], timestamp, LoggerSeverityColors[1], filename, line, color, tag, LoggerSeverityColors[2], message);
+      "{}:{:02d} {}[{:5}]{} {}", filename, line, color, tag, LoggerSeverityColors[2], message);
 
   std::cout << formattedMessage << std::endl;
 };

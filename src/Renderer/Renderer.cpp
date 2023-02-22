@@ -14,9 +14,6 @@ void Renderer::OnInitialization(void* specs) {
 
   m_ShaderProgram = ShaderProgram::Create({vertex, frag});
 
-  delete vertex;
-  delete frag;
-
   glEnable(GL_DEPTH_TEST);
 
   SetViewportSize(m_Specs.viewportWidth, m_Specs.viewportHeight);
@@ -44,7 +41,7 @@ void Renderer::OnUpdate() {
       0.1f, 100.0f);
 
   // TODO: Move to the ActorRenderer class.
-  for (auto& actor : SystemLocator<ECS>::Get()->actors) {
+  for (const auto& actor : SystemLocator<ECS>::Get()->actors) {
     glm::mat4 transform = Transform::GetTransformationMatrix(actor->transform);
 
     glm::mat4 mvp = projection * transform;
@@ -53,16 +50,11 @@ void Renderer::OnUpdate() {
         glGetUniformLocation(m_ShaderProgram->GetID(), "mvp");
     glUniformMatrix4fv(mvpUniform, 1, GL_FALSE, glm::value_ptr(mvp));
 
-    glBindVertexArray(actor->mesh.GetVAO());
-
-    if (actor->mesh.GetEBO() == 0) {
-      glDrawArrays(GL_TRIANGLES, 0, actor->mesh.GetSize());
+    for(const auto& mesh : actor->model->meshes) {
+      glBindVertexArray(mesh->vertexArray);
+      glDrawElements(GL_TRIANGLE_STRIP, mesh->indexCount, GL_UNSIGNED_INT, nullptr);
+      glBindVertexArray(0);
     }
-    else {
-      glDrawElements(GL_TRIANGLE_STRIP, actor->mesh.GetIndexCount(), GL_UNSIGNED_INT, 0);
-    }
-
-    glBindVertexArray(0);
   }
 
   if (m_Specs.useFramebuffer) {

@@ -11,32 +11,43 @@
 
 namespace ambr {
 
+enum class OpenGLBufferType : U32 {
+  VertexBuffer = 0,
+  TextureCoordsBuffer = 1,
+  NormalBuffer = 2
+};
+
+struct ModelMesh {
+  String name;
+  U32 vertexArray;
+  U32 vertexBuffer;
+  U32 indexBuffer;
+  U32 indexCount;
+  U32 textureCoordsBuffer;
+  U32 normalBuffer;
+  aiMaterial* material;
+};
+
 struct Model {
-  U32 VAO;
-  U32 VBO;
-  U32 EBO;
-  U32 IndexCount;
+  const aiScene *scene;
+  std::vector<std::shared_ptr<ModelMesh>> meshes;
 };
 
 class ModelManager final : public System {
  public:
-  static std::shared_ptr<Model> FromOBJ(const String& name, const String& path);
-  static std::shared_ptr<Model> LoadModel(const String& name, const String& path);
+  static std::shared_ptr<Model> LoadModel(const String &name, const String &path);
 
-  void OnInitialization(void* specs) override;
+  void OnInitialization(void *specs) override;
   void OnUpdate() override;
   void OnDestroy() override;
-  void ProcessEvent(const Event& e) override;
+  void ProcessEvent(const Event &e) override;
 
   [[nodiscard]] String GetName() override { return "ModelManager"; }
   [[nodiscard]] std::vector<std::shared_ptr<System>> GetDependencies()
-      const override;
-  [[nodiscard]] std::shared_ptr<Model> GetModel(const String& name);
+  const override;
+  [[nodiscard]] std::shared_ptr<Model> GetModel(const String &name);
 
  private:
-  static glm::vec3 ReadVertexLine(std::stringstream& ss);
-  static glm::uvec3 ReadFaceLine(std::stringstream& ss);
-
   std::map<String, std::shared_ptr<Model>> m_Models;
 };
 

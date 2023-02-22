@@ -4,10 +4,10 @@ namespace ambr {
 
 void ECS::OnInitialization(void* specs) {
   auto actor = std::make_shared<Actor>();
-  actor->name = "Cursed Cow";
+  actor->name = "Mini Tank";
   actor->transform = {glm::vec3(-1.0f, 0.0f, -6.0f),
                       glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)};
-  actor->mesh = Mesh::FromModel("cow");
+  actor->model = SystemLocator<ModelManager>::Get()->GetModel("mini_tank");
   actors.push_back(actor);
 }
 

@@ -2,7 +2,6 @@
 
 #include "Core/System.h"
 
-#include "ECS/Components/Mesh.h"
 #include "ECS/Components/Transform.h"
 #include "ECS/Components/Color.h"
 
@@ -11,10 +10,9 @@
 namespace ambr {
 
 struct Actor {
-  String name;
+  String name{};
   Transform transform{};
-  Mesh mesh{};
-  Color color{};
+  std::shared_ptr<Model> model;
 };
 
 class ECS final : public System {
