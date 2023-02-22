@@ -18,7 +18,7 @@ std::vector<std::shared_ptr<System>> ModelManager::GetDependencies() const {
 
 std::shared_ptr<Model> ModelManager::GetModel(const String &name) {
   return m_Models[name];
-} 
+}
 
 std::shared_ptr<Model> ModelManager::LoadModel(const String &name,
                                                const String &path) {
@@ -136,6 +136,7 @@ std::shared_ptr<Model> ModelManager::LoadModel(const String &name,
                           sizeof(aiVector3D),
                           static_cast<void *>(nullptr));
     glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
+
     if (size != normalsSize) {
       AMBR_LOG_ERROR(fmt::format(
           "Failed to load normals for model {}, actual size: {} s.b {}", name,
