@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/euler_angles.hpp>
 
 #include "Core/Base.h"
 #include "ECS/Component.h"
@@ -20,8 +21,6 @@ struct Transform {
 
     matrix = glm::translate(matrix, transform.translation);
     matrix = glm::scale(matrix, transform.scale);
-
-    // TODO: Implement rotation by converting the rotation Euler angles to Quaternions.
 
     return matrix;
   }
