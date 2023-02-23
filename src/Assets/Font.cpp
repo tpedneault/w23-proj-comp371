@@ -4,9 +4,9 @@ namespace ambr {
 
 void FontManager::OnInitialization(void* specs) {
   LoadFont(FontID::RubikRegular,
-           "assets/fonts/Rubik/Rubik-Regular.ttf", 16);
+           "assets/fonts/Rubik/Rubik-Regular.ttf", 18);
   LoadFont(FontID::RubikBold,
-           "assets/fonts/Rubik/Rubik-Bold.ttf", 16);
+           "assets/fonts/Rubik/Rubik-Bold.ttf", 18);
 }
 
 void FontManager::OnUpdate() {}

@@ -52,7 +52,7 @@ void Renderer::OnUpdate() {
 
     for(const auto& mesh : actor->model->meshes) {
       glBindVertexArray(mesh->vertexArray);
-      glDrawElements(GL_TRIANGLES, mesh->indexCount, GL_UNSIGNED_INT, nullptr);
+      glDrawElements(GL_TRIANGLE_STRIP, mesh->indexCount, GL_UNSIGNED_INT, nullptr);
       glBindVertexArray(0);
     }
   }
