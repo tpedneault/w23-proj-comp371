@@ -22,15 +22,24 @@ struct ModelMesh {
   U32 vertexArray;
   U32 vertexBuffer;
   U32 indexBuffer;
-  U32 indexCount;
+  I32 indexCount;
   U32 textureCoordsBuffer;
   U32 normalBuffer;
+};
+
+struct Material {
+  aiString name;
   aiMaterial* material;
+  aiColor4D specularColor;
+  aiColor4D diffuseColor;
+  aiColor4D ambiantColor;
+  float shininess;
 };
 
 struct Model {
   const aiScene *scene;
   std::vector<std::shared_ptr<ModelMesh>> meshes;
+  Material material;
 };
 
 class ModelManager final : public System {

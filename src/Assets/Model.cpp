@@ -4,6 +4,7 @@ namespace ambr {
 
 void ModelManager::OnInitialization(void *specs) {
   m_Models["mini_tank"] = LoadModel("mini_tank", "assets/models/mini_tank.glb");
+  m_Models["cow"] = LoadModel("cow", "assets/models/cow.obj");
 }
 
 void ModelManager::OnUpdate() {}
@@ -24,7 +25,7 @@ std::shared_ptr<Model> ModelManager::LoadModel(const String &name,
                                                const String &path) {
   static Assimp::Importer s_Importer;
 
-  const aiScene *scene = s_Importer.ReadFile(path.c_str(), aiProcess_Triangulate | aiProcess_FlipUVs);
+  const aiScene *scene = s_Importer.ReadFile(path.c_str(), aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices);
   if (!scene) {
     AMBR_LOG_ERROR(
         fmt::format("Failed to load file {}, error string: {}", name, s_Importer.GetErrorString()));
@@ -119,10 +120,8 @@ std::shared_ptr<Model> ModelManager::LoadModel(const String &name,
           size, textureCoordsSize));
     }
 
-    modelMesh->material = scene->mMaterials[mesh->mMaterialIndex];
-    aiString materialName;
-    aiGetMaterialString(modelMesh->material, AI_MATKEY_NAME, &materialName);
-    AMBR_LOG_TRACE(materialName.C_Str());
+    model->material.material = scene->mMaterials[mesh->mMaterialIndex];
+    aiGetMaterialString(model->material.material, AI_MATKEY_NAME, &model->material.name);
 
     /* Load Normals into a vertex buffer object. */
     I32 normalsSize = mesh->mNumVertices * sizeof(aiVector3D);

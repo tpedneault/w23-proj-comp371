@@ -1,5 +1,5 @@
 #include "Core/Application.h"
-#include "Core/Base.h"
+
 #include "ECS/ECS.h"
 #include "Editor/Editor.h"
 #include "Renderer/Renderer.h"

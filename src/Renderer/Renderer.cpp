@@ -4,8 +4,8 @@
 
 namespace ambr {
 
-void Renderer::OnInitialization(void* specs) {
-  m_Specs = *(static_cast<RendererSystemSpecifications*>(specs));
+void Renderer::OnInitialization(void *specs) {
+  m_Specs = *(static_cast<RendererSystemSpecifications *>(specs));
 
   auto vertex =
       Shader::Create(ShaderType::Vertex, "assets/shaders/vertex_shader.glsl");
@@ -34,25 +34,35 @@ void Renderer::OnUpdate() {
 
   m_ShaderProgram->Use();
 
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
   // TODO: Move the perspective matrix to the Camera class.
   const glm::mat4 projection = glm::perspective(
       glm::radians(45.0f),
       static_cast<float>(m_Framebuffer.GetWidth()) / m_Framebuffer.GetHeight(),
       0.1f, 100.0f);
 
+  const glm::mat4 view = glm::mat4(1.0f);
+
   // TODO: Move to the ActorRenderer class.
-  for (const auto& actor : SystemLocator<ECS>::Get()->actors) {
-    glm::mat4 transform = Transform::GetTransformationMatrix(actor->transform);
+  for (const auto &actor : SystemLocator<ECS>::Get()->actors) {
+    glm::mat4 model = Transform::GetTransformationMatrix(actor->transform);
 
-    glm::mat4 mvp = projection * transform;
+    const I32 projectionUniform =
+        glGetUniformLocation(m_ShaderProgram->GetID(), "projection");
+    glUniformMatrix4fv(projectionUniform, 1, GL_FALSE, glm::value_ptr(projection));
 
-    const I32 mvpUniform =
-        glGetUniformLocation(m_ShaderProgram->GetID(), "mvp");
-    glUniformMatrix4fv(mvpUniform, 1, GL_FALSE, glm::value_ptr(mvp));
+    const I32 viewUniform =
+        glGetUniformLocation(m_ShaderProgram->GetID(), "view");
+    glUniformMatrix4fv(viewUniform, 1, GL_FALSE, glm::value_ptr(view));
 
-    for(const auto& mesh : actor->model->meshes) {
+    const I32 modelUniform =
+        glGetUniformLocation(m_ShaderProgram->GetID(), "model");
+    glUniformMatrix4fv(modelUniform, 1, GL_FALSE, glm::value_ptr(model));
+
+    for (const auto &mesh : actor->model->meshes) {
       glBindVertexArray(mesh->vertexArray);
-      glDrawElements(GL_TRIANGLE_STRIP, mesh->indexCount, GL_UNSIGNED_INT, nullptr);
+      glDrawElements(GL_TRIANGLES, mesh->indexCount, GL_UNSIGNED_INT, nullptr);
       glBindVertexArray(0);
     }
   }
@@ -78,6 +88,7 @@ U32 Renderer::GetFramebufferTextureID() const {
 std::vector<std::shared_ptr<System>> Renderer::GetDependencies() const {
   return {SystemLocator<Window>::Get()};
 }
-void Renderer::ProcessEvent(const Event& e) {}
+
+void Renderer::ProcessEvent(const Event &e) {}
 
 };  // namespace ambr
