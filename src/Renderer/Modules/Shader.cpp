@@ -23,6 +23,7 @@ Shader* Shader::Create(ShaderType type, const String& path) {
 
     std::vector<GLchar> errorLog(maxLength);
     glGetShaderInfoLog(shader->m_Id, maxLength, &maxLength, errorLog.data());
+    AMBR_LOG_ERROR(fmt::format("Failed to load shader {}, err={}", path, std::string(errorLog.begin(), errorLog.end())));
 
     glDeleteShader(shader->m_Id);
 

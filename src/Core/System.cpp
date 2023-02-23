@@ -41,7 +41,9 @@ void System::PublishEvent(const Event& e) { m_EventQueue.push_back(e); }
 
 std::vector<Event> System::ForwardEvents() {
   std::vector<Event> events;
-  std::ranges::move(m_EventQueue, std::back_inserter(events));
+    for(const Event evt : events) {
+        m_EventQueue.push_back(evt);
+    }
   m_EventQueue.clear();
   return events;
 }
