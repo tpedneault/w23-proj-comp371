@@ -58,9 +58,11 @@ void Renderer::OnUpdate() {
 
     const I32 modelUniform =
         glGetUniformLocation(m_ShaderProgram->GetID(), "model");
-    glUniformMatrix4fv(modelUniform, 1, GL_FALSE, glm::value_ptr(model));
 
     for (const auto &mesh : actor->model->meshes) {
+      glm::mat4 meshTransform = model * mesh->transform;
+      glUniformMatrix4fv(modelUniform, 1, GL_FALSE, glm::value_ptr(meshTransform));
+
       glBindVertexArray(mesh->vertexArray);
       glDrawElements(GL_TRIANGLES, mesh->indexCount * 3, GL_UNSIGNED_INT, nullptr);
       glBindVertexArray(0);

@@ -148,6 +148,8 @@ std::shared_ptr<Model> ModelManager::LoadModel(const String &name,
           size, normalsSize));
     }
 
+    modelMesh->transform = aiMatrix4x4ToGlm(node->mTransformation);
+
     model->meshes.push_back(modelMesh);
   }
 
