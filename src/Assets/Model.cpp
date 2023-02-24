@@ -5,6 +5,7 @@ namespace ambr {
 void ModelManager::OnInitialization(void *specs) {
   m_Models["mini_tank"] = LoadModel("mini_tank", "assets/models/mini_tank.glb");
   m_Models["cow"] = LoadModel("cow", "assets/models/cow.obj");
+  m_Models["couch"] = LoadModel("couch", "assets/models/Koltuk.blend");
 }
 
 void ModelManager::OnUpdate() {}
@@ -25,7 +26,7 @@ std::shared_ptr<Model> ModelManager::LoadModel(const String &name,
                                                const String &path) {
   static Assimp::Importer s_Importer;
 
-  const aiScene *scene = s_Importer.ReadFile(path.c_str(), aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices);
+  const aiScene *scene = s_Importer.ReadFile(path.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices);
   if (!scene) {
     AMBR_LOG_ERROR(
         fmt::format("Failed to load file {}, error string: {}", name, s_Importer.GetErrorString()));
@@ -46,6 +47,11 @@ std::shared_ptr<Model> ModelManager::LoadModel(const String &name,
                                node->mName.C_Str(),
                                node->mNumChildren,
                                node->mNumMeshes));
+
+    // If there are no meshes, this is either a light or a camera.
+    if(node->mNumMeshes == 0) {
+        continue;
+    }
 
     auto modelMesh = std::make_shared<ModelMesh>();
     auto mesh = scene->mMeshes[node->mMeshes[0]];
