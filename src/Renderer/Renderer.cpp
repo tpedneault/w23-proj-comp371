@@ -34,8 +34,6 @@ void Renderer::OnUpdate() {
 
   m_ShaderProgram->Use();
 
-  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
   // TODO: Move the perspective matrix to the Camera class.
   const glm::mat4 projection = glm::perspective(
       glm::radians(45.0f),
