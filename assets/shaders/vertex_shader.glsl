@@ -1,5 +1,11 @@
 #version 410 core
 
+struct Light {
+	vec3 position;
+	vec3 color;
+	float ambientStrength;
+};
+
 layout (location = 0) in vec4 vPosition;
 layout (location = 1) in vec3 vTextureCoords;
 layout (location = 2) in vec3 vNormals;

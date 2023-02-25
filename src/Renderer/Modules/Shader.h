@@ -1,6 +1,8 @@
 #pragma once
 
 #include <GL/glew.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "Core/Base.h"
 
@@ -36,6 +38,10 @@ class ShaderProgram final {
 
   ShaderProgram() = default;
   virtual ~ShaderProgram() = default;
+
+  I32 SetUniform(const String& name, const glm::mat4& value) const;
+  I32 SetUniform(const String& name, const glm::vec3& value) const;
+  I32 SetUniform(const String& name, float value) const;
 
  protected:
   U32 m_Id;

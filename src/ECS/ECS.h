@@ -15,6 +15,18 @@ struct Actor {
   std::shared_ptr<Model> model;
 };
 
+struct Camera {
+  String name{};
+  glm::vec3 position{};
+};
+
+struct Light {
+  String name{};
+  glm::vec3 position{};
+  glm::vec3 color{};
+  float ambientStrength;
+};
+
 class ECS final : public System {
  public:
   virtual String GetName() override { return "ECS"; }
@@ -23,8 +35,7 @@ class ECS final : public System {
   void OnUpdate() override;
   void OnDestroy() override;
 
-  [[nodiscard]] std::vector<std::shared_ptr<System>> GetDependencies()
-  const override;
+  [[nodiscard]] std::vector<std::shared_ptr<System>> GetDependencies() const override;
 
   /**
    * \brief Processes the received event.
@@ -33,6 +44,8 @@ class ECS final : public System {
   void ProcessEvent(const Event &e) override;
 
   std::vector<std::shared_ptr<Actor>> actors;
+  std::vector<std::shared_ptr<Light>> lights;
+  Camera camera;
 };
 
 };  // namespace ambr

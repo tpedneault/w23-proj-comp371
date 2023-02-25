@@ -42,26 +42,23 @@ void Renderer::OnUpdate() {
       static_cast<float>(m_Framebuffer.GetWidth()) / m_Framebuffer.GetHeight(),
       0.1f, 100.0f);
 
-  const glm::mat4 view = glm::mat4(1.0f);
+  const auto view = glm::mat4(1.0f);
+
+  auto light = SystemLocator<ECS>::Get()->lights[0];
 
   // TODO: Move to the ActorRenderer class.
   for (const auto &actor : SystemLocator<ECS>::Get()->actors) {
     glm::mat4 model = Transform::GetTransformationMatrix(actor->transform);
 
-    const I32 projectionUniform =
-        glGetUniformLocation(m_ShaderProgram->GetID(), "projection");
-    glUniformMatrix4fv(projectionUniform, 1, GL_FALSE, glm::value_ptr(projection));
-
-    const I32 viewUniform =
-        glGetUniformLocation(m_ShaderProgram->GetID(), "view");
-    glUniformMatrix4fv(viewUniform, 1, GL_FALSE, glm::value_ptr(view));
-
-    const I32 modelUniform =
-        glGetUniformLocation(m_ShaderProgram->GetID(), "model");
+    m_ShaderProgram->SetUniform("projection", projection);
+    m_ShaderProgram->SetUniform("view", view);
+    m_ShaderProgram->SetUniform("light.position", light->position);
+    m_ShaderProgram->SetUniform("light.color", light->color);
+    m_ShaderProgram->SetUniform("light.ambientStrength", light->ambientStrength);
 
     for (const auto &mesh : actor->model->meshes) {
       glm::mat4 meshTransform = model * mesh->transform;
-      glUniformMatrix4fv(modelUniform, 1, GL_FALSE, glm::value_ptr(meshTransform));
+      m_ShaderProgram->SetUniform("model", meshTransform);
 
       glBindVertexArray(mesh->vertexArray);
       glDrawElements(GL_TRIANGLES, mesh->indexCount * 3, GL_UNSIGNED_INT, nullptr);

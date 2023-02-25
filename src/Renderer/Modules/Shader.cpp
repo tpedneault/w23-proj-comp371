@@ -76,4 +76,34 @@ void ShaderProgram::Use() const { glUseProgram(m_Id); }
 
 U32 ShaderProgram::GetID() const { return m_Id; }
 
+I32 ShaderProgram::SetUniform(const String& name, const glm::mat4& value) const {
+  I32 location = glGetUniformLocation(m_Id, name.c_str());
+  if(location >= 0) {
+    glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
+  } else {
+    AMBR_LOG_WARN(fmt::format("Failed to load uniform {}.", name));
+  }
+  return location;
+}
+
+I32 ShaderProgram::SetUniform(const String& name, const glm::vec3& value) const {
+  I32 location = glGetUniformLocation(m_Id, name.c_str());
+  if(location >= 0) {
+    glUniform3f(location, value.x, value.y, value.z);
+  } else {
+    AMBR_LOG_WARN(fmt::format("Failed to load uniform {}.", name));
+  }
+  return location;
+}
+
+I32 ShaderProgram::SetUniform(const String& name, float value) const {
+  I32 location = glGetUniformLocation(m_Id, name.c_str());
+  if(location >= 0) {
+    glUniform1f(location, value);
+  } else {
+    AMBR_LOG_WARN(fmt::format("Failed to load uniform {}.", name));
+  }
+  return location;
+}
+
 }  // namespace ambr

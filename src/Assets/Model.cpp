@@ -26,7 +26,9 @@ std::shared_ptr<Model> ModelManager::LoadModel(const String &name,
                                                const String &path) {
   static Assimp::Importer s_Importer;
 
-  const aiScene *scene = s_Importer.ReadFile(path.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices);
+  const aiScene *scene = s_Importer.ReadFile(path.c_str(),
+                                             aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs
+                                                 | aiProcess_JoinIdenticalVertices);
   if (!scene) {
     AMBR_LOG_ERROR(
         fmt::format("Failed to load file {}, error string: {}", name, s_Importer.GetErrorString()));
@@ -43,14 +45,14 @@ std::shared_ptr<Model> ModelManager::LoadModel(const String &name,
   // Since this is a model and not a scene, assuming no child nodes.
   for (I32 i = 0; i < root->mNumChildren; i++) {
     auto node = root->mChildren[i];
-    AMBR_LOG_TRACE(fmt::format("--> '{}' with {} child nodes, {} meshes.",
+    AMBR_LOG_DEBUG(fmt::format("--> '{}' with {} child nodes, {} meshes.",
                                node->mName.C_Str(),
                                node->mNumChildren,
                                node->mNumMeshes));
 
     // If there are no meshes, this is either a light or a camera.
-    if(node->mNumMeshes == 0) {
-        continue;
+    if (node->mNumMeshes == 0) {
+      continue;
     }
 
     auto modelMesh = std::make_shared<ModelMesh>();
@@ -126,9 +128,6 @@ std::shared_ptr<Model> ModelManager::LoadModel(const String &name,
           size, textureCoordsSize));
     }
 
-    model->material.material = scene->mMaterials[mesh->mMaterialIndex];
-    aiGetMaterialString(model->material.material, AI_MATKEY_NAME, &model->material.name);
-
     /* Load Normals into a vertex buffer object. */
     I32 normalsSize = mesh->mNumVertices * sizeof(aiVector3D);
     glGenBuffers(1, &modelMesh->normalBuffer);
@@ -149,6 +148,21 @@ std::shared_ptr<Model> ModelManager::LoadModel(const String &name,
     }
 
     modelMesh->transform = aiMatrix4x4ToGlm(node->mTransformation);
+
+    modelMesh->material.material = scene->mMaterials[mesh->mMaterialIndex];
+    aiGetMaterialString(modelMesh->material.material, AI_MATKEY_NAME, &modelMesh->material.name);
+
+    aiColor3D ambientColor(0.0f, 0.0f, 0.0f);
+    if (modelMesh->material.material->Get(AI_MATKEY_COLOR_AMBIENT, ambientColor)) {
+      AMBR_LOG_DEBUG(fmt::format("--> '{}' has ambient color r={}, g={}, b={}",
+                                 modelMesh->name,
+                                 ambientColor.r,
+                                 ambientColor.g,
+                                 ambientColor.b));
+      modelMesh->material.ambientColor.x = ambientColor.r;
+      modelMesh->material.ambientColor.y = ambientColor.g;
+      modelMesh->material.ambientColor.z = ambientColor.b;
+    }
 
     model->meshes.push_back(modelMesh);
   }

@@ -48,8 +48,9 @@ static void Log(LoggerSeverity severity, const std::string& message,
   const std::string& tag = LoggerSeverityNames[static_cast<uint8_t>(severity)];
   const std::string& color =
       LoggerSeverityColors[static_cast<uint8_t>(severity)];
+  const std::string fileLine = fmt::format("{}:{}", filename, line);
   const std::string formattedMessage = fmt::format(
-      "{}:{:02d} {}[{:5}]{} {}", filename, line, color, tag, LoggerSeverityColors[2], message);
+      "{:<15}{}[{:5}]{} {}", fileLine, color, tag, LoggerSeverityColors[2], message);
 
   std::cout << formattedMessage << std::endl;
 };
