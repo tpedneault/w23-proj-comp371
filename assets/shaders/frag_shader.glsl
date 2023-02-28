@@ -11,11 +11,13 @@ uniform Light light;
 layout (location = 0) out vec4 fColor;
 
 in vec3 FragmentPosition;
+in vec2 TextureCoord;
 in vec3 Normal;
+
+uniform sampler2D texture;
 
 void main() {
 	vec3 ambient = light.color * light.ambientStrength;
-	vec3 modelColor = vec3(1.0f * Normal.x, 1.0f * Normal.y, 1.0f * Normal.z);
 
 	vec3 norm = normalize(Normal);
 	vec3 lightDirection = normalize(light.position - FragmentPosition);
@@ -23,6 +25,7 @@ void main() {
 	float diff = max(dot(norm, lightDirection), 0.0f);
 	vec3 diffuse = diff * light.color;
 
-	vec3 result = (ambient + diffuse) * modelColor;
+	vec4 textureColor = texture2D(texture, TextureCoord);
+	vec3 result = (ambient + diffuse) * vec3(textureColor.x, textureColor.y, textureColor.z);
 	fColor = vec4(result, 1.0f);
 }

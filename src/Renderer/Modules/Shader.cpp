@@ -106,4 +106,14 @@ I32 ShaderProgram::SetUniform(const String& name, float value) const {
   return location;
 }
 
+I32 ShaderProgram::SetUniform(const String& name, U32 value) const {
+  I32 location = glGetUniformLocation(m_Id, name.c_str());
+  if(location >= 0) {
+    glUniform1i(location, value);
+  } else {
+    AMBR_LOG_WARN(fmt::format("Failed to load uniform {}.", name));
+  }
+  return location;
+}
+
 }  // namespace ambr

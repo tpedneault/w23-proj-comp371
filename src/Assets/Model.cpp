@@ -1,5 +1,8 @@
 #include "Assets/Model.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 namespace ambr {
 
 void ModelManager::OnInitialization(void *specs) {
@@ -41,6 +44,33 @@ std::shared_ptr<Model> ModelManager::LoadModel(const String &name,
 
   auto model = std::make_shared<Model>();
   model->scene = scene;
+
+  // Load the textures for the scene.
+  if (scene->HasTextures()) {
+    for (U32 i = 0; i < scene->mNumTextures; i++) {
+      U32 textureId;
+      glGenTextures(1, &textureId);
+      glBindTexture(GL_TEXTURE_2D, textureId);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+      glTexParameteri(GL_TEXTURE_2D,
+                      GL_TEXTURE_WRAP_S,
+                      (scene->mTextures[i]->achFormatHint[0] & 0x01 ? GL_REPEAT : GL_CLAMP));
+      glTexParameteri(GL_TEXTURE_2D,
+                      GL_TEXTURE_WRAP_T,
+                      (scene->mTextures[i]->achFormatHint[0] & 0x01 ? GL_REPEAT : GL_CLAMP));
+      glTexImage2D(GL_TEXTURE_2D,
+                   0,
+                   GL_RGBA8,
+                   scene->mTextures[i]->mWidth,
+                   scene->mTextures[i]->mHeight,
+                   0,
+                   GL_BGRA,
+                   GL_UNSIGNED_BYTE,
+                   scene->mTextures[i]->pcData);
+      model->textures.push_back(textureId);
+    }
+  }
 
   // Since this is a model and not a scene, assuming no child nodes.
   for (I32 i = 0; i < root->mNumChildren; i++) {
@@ -149,19 +179,18 @@ std::shared_ptr<Model> ModelManager::LoadModel(const String &name,
 
     modelMesh->transform = aiMatrix4x4ToGlm(node->mTransformation);
 
-    modelMesh->material.material = scene->mMaterials[mesh->mMaterialIndex];
-    aiGetMaterialString(modelMesh->material.material, AI_MATKEY_NAME, &modelMesh->material.name);
+    // Get the texture for the mesh.
+    if (scene->HasTextures()) {
+      aiString baseColor;
+      auto material = scene->mMaterials[mesh->mMaterialIndex];
 
-    aiColor3D ambientColor(0.0f, 0.0f, 0.0f);
-    if (modelMesh->material.material->Get(AI_MATKEY_COLOR_AMBIENT, ambientColor)) {
-      AMBR_LOG_DEBUG(fmt::format("--> '{}' has ambient color r={}, g={}, b={}",
-                                 modelMesh->name,
-                                 ambientColor.r,
-                                 ambientColor.g,
-                                 ambientColor.b));
-      modelMesh->material.ambientColor.x = ambientColor.r;
-      modelMesh->material.ambientColor.y = ambientColor.g;
-      modelMesh->material.ambientColor.z = ambientColor.b;
+      aiReturn result = material->GetTexture(AI_MATKEY_BASE_COLOR_TEXTURE, &baseColor);
+      if (result != AI_SUCCESS) {
+        AMBR_LOG_WARN("Failed to load the texture for the current mesh.");
+      }
+
+      auto texture = scene->GetEmbeddedTextureAndIndex(baseColor.C_Str());
+      modelMesh->textureIndex = texture.second;
     }
 
     model->meshes.push_back(modelMesh);

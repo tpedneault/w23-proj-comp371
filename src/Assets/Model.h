@@ -8,6 +8,7 @@
 
 #include "Core/System.h"
 #include "Renderer/Renderer.h"
+#include "Assets/Material.h"
 
 namespace ambr {
 
@@ -17,30 +18,24 @@ enum class OpenGLBufferType : U32 {
   NormalBuffer = 2
 };
 
-struct Material {
-  aiString name;
-  aiMaterial *material;
-  glm::vec3 specularColor;
-  glm::vec3 diffuseColor;
-  glm::vec3 ambientColor;
-  float shininess;
-};
-
 struct ModelMesh {
   String name;
+  glm::mat4 transform;
   U32 vertexArray;
   U32 vertexBuffer;
   U32 indexBuffer;
   I32 indexCount;
   U32 textureCoordsBuffer;
   U32 normalBuffer;
-  glm::mat4 transform;
-  Material material;
+  U32 materialIndex;
+  U32 textureIndex;
 };
 
 struct Model {
   const aiScene *scene;
   std::vector<std::shared_ptr<ModelMesh>> meshes;
+  std::vector<std::shared_ptr<Material>> materials;
+  std::vector<U32> textures;
 };
 
 class ModelManager final : public System {
