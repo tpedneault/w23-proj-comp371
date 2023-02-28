@@ -59,8 +59,6 @@ void Renderer::OnUpdate() {
       m_ShaderProgram->SetUniform("model", meshTransform);
 
       glBindVertexArray(mesh->vertexArray);
-      glBindTexture(GL_TEXTURE0, actor->model->textures[mesh->textureIndex]);
-      m_ShaderProgram->SetUniform("texture", static_cast<U32>(0));
       glDrawElements(GL_TRIANGLES, mesh->indexCount * 3, GL_UNSIGNED_INT, nullptr);
       glBindVertexArray(0);
     }

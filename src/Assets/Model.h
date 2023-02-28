@@ -32,6 +32,7 @@ struct ModelMesh {
 };
 
 struct Model {
+  String name;
   const aiScene *scene;
   std::vector<std::shared_ptr<ModelMesh>> meshes;
   std::vector<std::shared_ptr<Material>> materials;
@@ -51,8 +52,11 @@ class ModelManager final : public System {
   [[nodiscard]] std::vector<std::shared_ptr<System>> GetDependencies()
   const override;
   [[nodiscard]] std::shared_ptr<Model> GetModel(const String &name);
+  [[nodiscard]] std::vector<std::shared_ptr<Model>> GetModels();
 
  private:
+  static void LoadMesh(const String& name, const aiScene* scene, const aiNode* node, const std::shared_ptr<Model>& model);
+
   [[nodiscard]] static glm::mat4 aiMatrix4x4ToGlm(const aiMatrix4x4 from) {
     glm::mat4 to;
 
@@ -76,7 +80,7 @@ class ModelManager final : public System {
     return to;
   }
 
-  std::map<String, std::shared_ptr<Model>> m_Models;
+  std::vector<std::shared_ptr<Model>> m_Models;
 };
 
 };  // namespace ambr

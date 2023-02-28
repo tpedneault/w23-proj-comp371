@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Core/Base.h"
-#include "Core/EventData.h"
 
 namespace ambr {
 
@@ -13,6 +12,7 @@ enum class EventCode : U16 {
   CloseCreateEntityWidget,
   IsModelLoaded,
   LoadModelFromFile,
+  ChangeSelectedActorModel,
 };
 
 struct Event {

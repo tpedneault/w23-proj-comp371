@@ -6,9 +6,10 @@
 namespace ambr {
 
 void ModelManager::OnInitialization(void *specs) {
-  m_Models["mini_tank"] = LoadModel("mini_tank", "assets/models/mini_tank.glb");
-  m_Models["cow"] = LoadModel("cow", "assets/models/cow.obj");
-  m_Models["couch"] = LoadModel("couch", "assets/models/Koltuk.blend");
+  m_Models.push_back(LoadModel("car", "assets/models/car.fbx"));
+  m_Models.push_back(LoadModel("mini_tank", "assets/models/mini_tank.glb"));
+  m_Models.push_back(LoadModel("cow", "assets/models/cow.obj"));
+  m_Models.push_back(LoadModel("couch", "assets/models/couch.blend"));
 }
 
 void ModelManager::OnUpdate() {}
@@ -22,7 +23,12 @@ std::vector<std::shared_ptr<System>> ModelManager::GetDependencies() const {
 }
 
 std::shared_ptr<Model> ModelManager::GetModel(const String &name) {
-  return m_Models[name];
+  for(auto model : m_Models) {
+    if(model->name == name) {
+      return model;
+    }
+  }
+  return nullptr;
 }
 
 std::shared_ptr<Model> ModelManager::LoadModel(const String &name,
@@ -43,6 +49,7 @@ std::shared_ptr<Model> ModelManager::LoadModel(const String &name,
   AMBR_LOG_INFO(fmt::format("Model contains the following nodes:"));
 
   auto model = std::make_shared<Model>();
+  model->name = name;
   model->scene = scene;
 
   // Load the textures for the scene.
@@ -85,8 +92,26 @@ std::shared_ptr<Model> ModelManager::LoadModel(const String &name,
       continue;
     }
 
+    // Load the mesh and add its data to the model.
+    LoadMesh(name, scene, node, model);
+  }
+
+  return model;
+}
+
+void ModelManager::LoadMesh(const String &name,
+                            const aiScene *scene,
+                            const aiNode *node,
+                            const std::shared_ptr<Model> &model) {
+  // Load the child nodes first.
+  for (U32 i = 0; i < node->mNumChildren; i++) {
+    LoadMesh(name, scene, node->mChildren[i], model);
+  }
+
+
+  for (int i = 0; i < node->mNumMeshes; i++) {
     auto modelMesh = std::make_shared<ModelMesh>();
-    auto mesh = scene->mMeshes[node->mMeshes[0]];
+    auto mesh = scene->mMeshes[node->mMeshes[i]];
 
     modelMesh->name = node->mName.C_Str();
 
@@ -195,8 +220,10 @@ std::shared_ptr<Model> ModelManager::LoadModel(const String &name,
 
     model->meshes.push_back(modelMesh);
   }
+}
 
-  return model;
+std::vector<std::shared_ptr<Model>> ModelManager::GetModels() {
+  return m_Models;
 }
 
 };  // namespace ambr

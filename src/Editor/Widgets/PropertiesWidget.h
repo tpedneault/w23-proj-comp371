@@ -41,6 +41,29 @@ class PropertiesWidget : public Widget {
       ImGui::Separator();
       ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
+      ImGui::BeginGroup();
+      ImGui::Text("Model");
+      ImGui::EndGroup();
+
+      const char* currentSelection = actor->model->name.c_str();
+      if(ImGui::BeginCombo("Model", currentSelection)) {
+        auto models = SystemLocator<ModelManager>::Get()->GetModels();
+        for(U32 i = 0; i < models.size(); i++) {
+          bool isSelected = currentSelection == models[i]->name.c_str();
+          if(ImGui::Selectable(models[i]->name.c_str(), isSelected)) {
+            actor->model = models[i];
+          }
+          if(isSelected) {
+            ImGui::SetItemDefaultFocus();
+          }
+        }
+        ImGui::EndCombo();
+      }
+
+      ImGui::Dummy(ImVec2(0.0f, 5.0f));
+      ImGui::Separator();
+      ImGui::Dummy(ImVec2(0.0f, 5.0f));
+
     }
     ImGui::End();
   }
