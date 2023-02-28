@@ -29,8 +29,8 @@ class Widget {
    */
   virtual std::vector<Event> ForwardEvents() {
     std::vector<Event> events;
-    for(const Event evt : events) {
-        m_EventQueue.push_back(evt);
+    for(const Event evt : m_EventQueue) {
+        events.push_back(evt);
     }
     m_EventQueue.clear();
     return events;
