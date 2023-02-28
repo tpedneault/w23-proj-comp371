@@ -36,7 +36,7 @@ std::vector<std::shared_ptr<System>> ECS::GetDependencies() const {
 
 void ECS::ProcessEvent(const Event &e) {
   switch (e.code) {
-    case EventCode::ChangeSelectedActorModel:
+    default:
       break;
   }
 }

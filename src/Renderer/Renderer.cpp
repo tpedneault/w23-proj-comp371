@@ -46,6 +46,11 @@ void Renderer::OnUpdate() {
 
   // TODO: Move to the ActorRenderer class.
   for (const auto &actor : SystemLocator<ECS>::Get()->actors) {
+    // If the actor is currently hidden, skip to the next.
+    if(!actor->isVisible) {
+      continue;
+    }
+
     glm::mat4 model = Transform::GetTransformationMatrix(actor->transform);
 
     m_ShaderProgram->SetUniform("projection", projection);

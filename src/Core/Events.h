@@ -11,8 +11,7 @@ enum class EventCode : U16 {
   CreateEntity,
   CloseCreateEntityWidget,
   IsModelLoaded,
-  LoadModelFromFile,
-  ChangeSelectedActorModel,
+  LoadModelFromFile
 };
 
 struct Event {

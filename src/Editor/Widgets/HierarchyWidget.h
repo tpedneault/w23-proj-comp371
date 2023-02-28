@@ -8,7 +8,7 @@ namespace ambr {
 
 class HierarchyWidget : public Widget {
  public:
-  HierarchyWidget(const String& id) : Widget(id) {}
+  HierarchyWidget(const String &id) : Widget(id) {}
 
   void Render() override {
     ImGui::Begin("Hierarchy", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
@@ -16,8 +16,15 @@ class HierarchyWidget : public Widget {
       // Render the scene elements here.
       auto const actors = SystemLocator<ECS>::Get()->actors;
       for (int i = 0; i < actors.size(); i++) {
-        if (ImGui::Selectable(actors[i]->name.c_str(), m_SelectedActor == i)) {
+        if(!actors[i]->isVisible) {
+          ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(151, 151, 151, 255));
+        }
+        if (ImGui::Selectable(actors[i]->name.size() > 0 ? actors[i]->name.c_str() : "UNDEFINED",
+                              m_SelectedActor == i)) {
           m_SelectedActor = i;
+        }
+        if(!actors[i]->isVisible) {
+          ImGui::PopStyleColor();
         }
       }
     }

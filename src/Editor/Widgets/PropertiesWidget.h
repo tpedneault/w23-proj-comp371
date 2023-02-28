@@ -15,7 +15,12 @@ class PropertiesWidget : public Widget {
       // Render the scene elements here.
       auto actor = SystemLocator<ECS>::Get()->actors[m_SelectedActor];
 
-    	ImGui::BeginGroup();
+      ImGui::Dummy(ImVec2(0.0f, 5.0f));
+      ImGui::InputText("Name", &actor->name);
+      ImGui::Checkbox("Is Visible", &actor->isVisible);
+      ImGui::Dummy(ImVec2(0.0f, 5.0f));
+
+      ImGui::BeginGroup();
       ImGui::Text("Transform");
       ImGui::DragFloat3(
           "Position",

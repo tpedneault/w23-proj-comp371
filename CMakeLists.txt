@@ -38,6 +38,7 @@ file(GLOB imgui_backends
         "extern/imgui-docking/backends/imgui_impl_opengl3.cpp"
         "extern/imgui-docking/backends/imgui_impl_opengl3.h"
         "extern/imgui-docking/backends/imgui_impl_opengl3_loader.h"
+        "extern/imgui-docking/misc/cpp/imgui_stdlib.cpp"
         )
 
 include_directories(extern/ImGuiColorTextEdit)

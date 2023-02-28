@@ -13,6 +13,7 @@ struct Actor {
   String name{};
   Transform transform{};
   std::shared_ptr<Model> model;
+  bool isVisible = true;
 };
 
 struct Camera {
