@@ -23,7 +23,7 @@ class PropertiesWidget : public Widget {
                         0.1f, 0.0f, 0.0f, "%.2f");
       ImGui::DragFloat3("Rotation",
                         reinterpret_cast<float*>(&actor->transform.rotation),
-                        0.1f, 0.0f, 0.0f, "%.2f");
+                        1.0f, 0.0f, 0.0f, "%.2f");
       ImGui::DragFloat3("Scale",
                         reinterpret_cast<float*>(&actor->transform.scale),
                         0.1f, 0.0f, 0.0f, "%.2f");

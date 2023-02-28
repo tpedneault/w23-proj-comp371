@@ -15,7 +15,7 @@ in vec3 Normal;
 
 void main() {
 	vec3 ambient = light.color * light.ambientStrength;
-	vec3 modelColor = vec3(1.0f, 0.1f, 0.1f);
+	vec3 modelColor = vec3(1.0f * Normal.x, 1.0f * Normal.y, 1.0f * Normal.z);
 
 	vec3 norm = normalize(Normal);
 	vec3 lightDirection = normalize(light.position - FragmentPosition);
