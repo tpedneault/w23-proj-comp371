@@ -47,13 +47,6 @@ void Editor::OnUpdate() {
     }
   }
 
-  // Logic goes here.
-  const auto hierarchy = GetWidget<HierarchyWidget>("hierarchy");
-  const U32 selectedActor = hierarchy->GetSelectedActor();
-
-  const auto properties = GetWidget<PropertiesWidget>("properties");
-  properties->SetSelectedActor(selectedActor);
-
   ImGui::EndFrame();
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

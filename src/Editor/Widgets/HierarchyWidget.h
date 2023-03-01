@@ -15,26 +15,23 @@ class HierarchyWidget : public Widget {
     {
       // Render the scene elements here.
       auto const actors = SystemLocator<ECS>::Get()->actors;
-      for (int i = 0; i < actors.size(); i++) {
-        if(!actors[i]->isVisible) {
+      auto const selectedIndex = SystemLocator<ECS>::Get()->GetSelectedActorIndex();
+
+      for (U32 i = 0; i < actors.size(); i++) {
+        if (!actors[i]->isVisible) {
           ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(151, 151, 151, 255));
         }
         if (ImGui::Selectable(actors[i]->name.size() > 0 ? actors[i]->name.c_str() : "UNDEFINED",
-                              m_SelectedActor == i)) {
-          m_SelectedActor = i;
+                              selectedIndex == i)) {
+          PublishEvent({.code = EventCode::ChangeSelectedActor, .data = new U32(i)});
         }
-        if(!actors[i]->isVisible) {
+        if (!actors[i]->isVisible) {
           ImGui::PopStyleColor();
         }
       }
     }
     ImGui::End();
   }
-
-  U32 GetSelectedActor() { return m_SelectedActor; }
-
- private:
-  U32 m_SelectedActor = 0;
 };
 
 };  // namespace ambr

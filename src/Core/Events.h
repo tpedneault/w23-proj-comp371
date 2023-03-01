@@ -6,12 +6,8 @@ namespace ambr {
 
 enum class EventCode : U16 {
   ExitApplication,
-  ToggleFullscreen,
-  OpenCreateEntityWidget,
-  CreateEntity,
-  CloseCreateEntityWidget,
-  IsModelLoaded,
-  LoadModelFromFile
+  ChangeSelectedActor,
+  ChangeSelectedActorModel,
 };
 
 struct Event {

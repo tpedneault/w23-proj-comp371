@@ -44,9 +44,15 @@ class ECS final : public System {
    */
   void ProcessEvent(const Event &e) override;
 
+  [[nodiscard]] std::shared_ptr<Actor> GetSelectedActor() const;
+  [[nodiscard]] U32 GetSelectedActorIndex() const;
+
   std::vector<std::shared_ptr<Actor>> actors;
   std::vector<std::shared_ptr<Light>> lights;
   Camera camera;
+
+ private:
+  U32 m_SelectedActor;
 };
 
 };  // namespace ambr

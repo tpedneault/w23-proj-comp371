@@ -13,7 +13,7 @@ class PropertiesWidget : public Widget {
     ImGui::Begin("Properties", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
     {
       // Render the scene elements here.
-      auto actor = SystemLocator<ECS>::Get()->actors[m_SelectedActor];
+      auto actor = SystemLocator<ECS>::Get()->GetSelectedActor();
 
       ImGui::Dummy(ImVec2(0.0f, 5.0f));
       ImGui::InputText("Name", &actor->name);
@@ -56,7 +56,7 @@ class PropertiesWidget : public Widget {
         for(U32 i = 0; i < models.size(); i++) {
           bool isSelected = currentSelection == models[i]->name.c_str();
           if(ImGui::Selectable(models[i]->name.c_str(), isSelected)) {
-            actor->model = models[i];
+            PublishEvent({ .code = EventCode::ChangeSelectedActorModel, .data = &models[i] });
           }
           if(isSelected) {
             ImGui::SetItemDefaultFocus();
@@ -72,11 +72,6 @@ class PropertiesWidget : public Widget {
     }
     ImGui::End();
   }
-
-  void SetSelectedActor(U32 id) { m_SelectedActor = id; }
-
- private:
-  U32 m_SelectedActor = 0;
 };
 
 };  // namespace ambr
