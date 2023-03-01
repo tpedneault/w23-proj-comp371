@@ -3,23 +3,12 @@
 namespace ambr {
 
 void ECS::OnInitialization(void *specs) {
-  {
-    auto actor = std::make_shared<Actor>();
-    actor->name = "Cow";
-    actor->transform = {glm::vec3(-1.0f, 0.0f, -6.0f),
-                        glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, -0.8f, 1.0f)};
-    actor->model = SystemLocator<ModelManager>::Get()->GetModel("Cube");
-    actors.push_back(actor);
-  }
-
-  {
-    auto light = std::make_shared<Light>();
-    light->name = "Light";
-    light->position = glm::vec3(-5.0f, 5.0f, 0.0f);
-    light->color = glm::vec3(1.0f, 1.0f, 1.0f);
-    light->ambientStrength = 0.6f;
-    lights.push_back(light);
-  }
+  auto light = std::make_shared<Light>();
+  light->name = "Default Light";
+  light->position = glm::vec3(-5.0f, 5.0f, 0.0f);
+  light->color = glm::vec3(1.0f, 1.0f, 1.0f);
+  light->ambientStrength = 0.1f;
+  m_Lights.push_back(light);
 }
 
 void ECS::OnUpdate() {}
@@ -44,13 +33,44 @@ void ECS::ProcessEvent(const Event &e) {
     case EventCode::ChangeSelectedActorModel:
       OnChangeSelectedActorModel(*(static_cast<String *>(e.data)));
       break;
+    case EventCode::CreateActorEntity: {
+      auto actor = std::make_shared<Actor>();
+      actor->name = "New Actor";
+      actor->transform = {
+          {0.0f, 0.0f, 0.0f},
+          {0.0f, 0.0f, 0.0f},
+          {1.0f, 1.0f, 1.0f}
+      };
+      actor->model = SystemLocator<ModelManager>::Get()->GetDefaultModel();
+      m_Actors.push_back(actor);
+      break;
+    }
+    case EventCode::CreateLightEntity: {
+      auto light = std::make_shared<Light>();
+      light->name = "New Light";
+      light->position = {0.0f, 0.0f, 0.0f};
+      light->color = {1.0f, 1.0f, 1.0f};
+      light->ambientStrength = 0.1f;
+      m_Lights.push_back(light);
+      break;
+    }
+    case EventCode::CreateCameraEntity: {
+      auto camera = std::make_shared<Camera>();
+      camera->name = "New Camera";
+      camera->position = {0.0f, 0.0f, 0.0f};
+      m_Cameras.push_back(camera);
+      break;
+    }
     default:
       break;
   }
 }
 
 std::shared_ptr<Actor> ECS::GetSelectedActor() const {
-  return actors[m_SelectedActor];
+  if(m_Actors.empty()) {
+    return nullptr;
+  }
+  return m_Actors[m_SelectedActor];
 }
 
 U32 ECS::GetSelectedActorIndex() const {
@@ -62,7 +82,22 @@ void ECS::OnChangeSelectedActor(U32 id) {
 }
 
 void ECS::OnChangeSelectedActorModel(String modelId) {
-  actors[m_SelectedActor]->model = SystemLocator<ModelManager>::Get()->GetModel(modelId);
+  m_Actors[m_SelectedActor]->model = SystemLocator<ModelManager>::Get()->GetModel(modelId);
+}
+
+std::vector<std::shared_ptr<Actor>> ECS::GetActors() const {
+  return m_Actors;
+}
+
+std::vector<std::shared_ptr<Light>> ECS::GetLights() const {
+  return m_Lights;
+}
+
+std::vector<std::shared_ptr<Camera>> ECS::GetCameras() const {
+  return m_Cameras;
+}
+EntityIndexInfo ECS::GetSelectedEntityInfo() const {
+  return m_SelectedEntity;
 }
 
 };  // namespace ambr

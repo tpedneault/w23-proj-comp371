@@ -10,7 +10,10 @@ enum class EventCode : U16 {
   ChangeSelectedActorModel,
   OpenLoadModelWindow,
   CloseLoadModelWindow,
-  LoadModel,
+  ImportModel,
+  CreateActorEntity,
+  CreateLightEntity,
+  CreateCameraEntity,
 };
 
 struct Event {

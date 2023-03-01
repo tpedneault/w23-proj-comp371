@@ -53,6 +53,7 @@ class ModelManager final : public System {
   const override;
   [[nodiscard]] std::shared_ptr<Model> GetModel(const String &name);
   [[nodiscard]] std::vector<std::shared_ptr<Model>> GetModels();
+  [[nodiscard]] std::shared_ptr<Model> GetDefaultModel();
 
  private:
   static void LoadMesh(const String& name, const aiScene* scene, const aiNode* node, const std::shared_ptr<Model>& model);

@@ -13,7 +13,7 @@ class MenuBar : public Widget {
       /* File Menu */
       if (ImGui::BeginMenu("File"))
       {
-        if(ImGui::MenuItem("Load Model")) {
+        if(ImGui::MenuItem("Import Model")) {
           m_EventQueue.push_back({ EventCode::OpenLoadModelWindow});
         }
 

@@ -12,8 +12,11 @@ class PropertiesWidget : public Widget {
   void Render() override {
     ImGui::Begin("Properties", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
     {
-      // Render the scene elements here.
       auto actor = SystemLocator<ECS>::Get()->GetSelectedActor();
+      if(!actor) {
+        ImGui::End();
+        return;
+      }
 
       ImGui::Dummy(ImVec2(0.0f, 5.0f));
       ImGui::InputText("Name", &actor->name);

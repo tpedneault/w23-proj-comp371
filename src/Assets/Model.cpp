@@ -15,7 +15,7 @@ void ModelManager::OnDestroy() {}
 
 void ModelManager::ProcessEvent(const Event &e) {
   switch (e.code) {
-    case EventCode::LoadModel: {
+    case EventCode::ImportModel: {
       auto specs = static_cast<LoadModelEventSpecs *>(e.data);
       m_Models.push_back(LoadModel(specs->name, specs->path));
       break;
@@ -29,21 +29,12 @@ std::vector<std::shared_ptr<System>> ModelManager::GetDependencies() const {
   return {};
 }
 
-std::shared_ptr<Model> ModelManager::GetModel(const String &name) {
-  for (auto model : m_Models) {
-    if (model->name == name) {
-      return model;
-    }
-  }
-  return nullptr;
-}
-
 std::shared_ptr<Model> ModelManager::LoadModel(const String &name,
                                                const String &path) {
   static Assimp::Importer s_Importer;
 
   const aiScene *scene = s_Importer.ReadFile(path.c_str(),
-                                             aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs
+                                             aiProcess_Triangulate | aiProcess_FlipUVs
                                                  | aiProcess_JoinIdenticalVertices);
   if (!scene) {
     AMBR_LOG_ERROR(
@@ -228,8 +219,20 @@ void ModelManager::LoadMesh(const String &name,
   }
 }
 
+std::shared_ptr<Model> ModelManager::GetModel(const String &name) {
+  for (auto model : m_Models) {
+    if (model->name == name) {
+      return model;
+    }
+  }
+  return nullptr;
+}
+
 std::vector<std::shared_ptr<Model>> ModelManager::GetModels() {
   return m_Models;
+}
+std::shared_ptr<Model> ModelManager::GetDefaultModel() {
+  return m_Models[0];
 }
 
 };  // namespace ambr

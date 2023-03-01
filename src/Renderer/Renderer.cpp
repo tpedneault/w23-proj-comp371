@@ -42,10 +42,10 @@ void Renderer::OnUpdate() {
 
   const auto view = glm::mat4(1.0f);
 
-  auto light = SystemLocator<ECS>::Get()->lights[0];
+  auto light = SystemLocator<ECS>::Get()->GetLights()[0];
 
   // TODO: Move to the ActorRenderer class.
-  for (const auto &actor : SystemLocator<ECS>::Get()->actors) {
+  for (const auto &actor : SystemLocator<ECS>::Get()->GetActors()) {
     // If the actor is currently hidden, skip to the next.
     if(!actor->isVisible) {
       continue;

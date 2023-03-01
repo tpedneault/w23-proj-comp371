@@ -19,7 +19,7 @@ class LoadModelWidget : public Widget {
       ImGui::InputText("Path", &m_LoadModelSpecs->path);
 
       if(ImGui::Button("Load")) {
-        PublishEvent({ EventCode::LoadModel, m_LoadModelSpecs });
+        PublishEvent({EventCode::ImportModel, m_LoadModelSpecs });
         PublishEvent({ EventCode::CloseLoadModelWindow });
       }
       if(ImGui::Button("Close")) {

@@ -9,6 +9,13 @@
 
 namespace ambr {
 
+enum class EntityType { Actor, Light, Camera };
+
+struct EntityIndexInfo {
+  EntityType entityType;
+  U32 index;
+};
+
 struct Actor {
   String name{};
   Transform transform{};
@@ -30,7 +37,7 @@ struct Light {
 
 class ECS final : public System {
  public:
-  virtual String GetName() override { return "ECS"; }
+  String GetName() override { return "ECS"; }
 
   void OnInitialization(void *specs) override;
   void OnUpdate() override;
@@ -46,16 +53,22 @@ class ECS final : public System {
 
   [[nodiscard]] std::shared_ptr<Actor> GetSelectedActor() const;
   [[nodiscard]] U32 GetSelectedActorIndex() const;
-
-  std::vector<std::shared_ptr<Actor>> actors;
-  std::vector<std::shared_ptr<Light>> lights;
-  Camera camera;
+  [[nodiscard]] EntityIndexInfo GetSelectedEntityInfo() const;
+  [[nodiscard]] std::vector<std::shared_ptr<Actor>> GetActors() const;
+  [[nodiscard]] std::vector<std::shared_ptr<Light>> GetLights() const;
+  [[nodiscard]] std::vector<std::shared_ptr<Camera>> GetCameras() const;
 
  private:
   void OnChangeSelectedActor(U32 id);
+  void OnChangeSelectedEntity(EntityIndexInfo entityInfo);
   void OnChangeSelectedActorModel(String modelId);
 
+  std::vector<std::shared_ptr<Actor>>  m_Actors;
+  std::vector<std::shared_ptr<Light>>  m_Lights;
+  std::vector<std::shared_ptr<Camera>> m_Cameras;
+
   U32 m_SelectedActor;
+  EntityIndexInfo m_SelectedEntity;
 };
 
 };  // namespace ambr
