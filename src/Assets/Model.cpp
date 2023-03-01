@@ -6,7 +6,7 @@
 namespace ambr {
 
 void ModelManager::OnInitialization(void *specs) {
-  m_Models.push_back(LoadModel("car", "assets/models/car.fbx"));
+  m_Models.push_back(LoadModel("Cube", "assets/models/cube.obj"));
 }
 
 void ModelManager::OnUpdate() {}
@@ -20,6 +20,8 @@ void ModelManager::ProcessEvent(const Event &e) {
       m_Models.push_back(LoadModel(specs->name, specs->path));
       break;
     }
+    default:
+      break;
   }
 }
 

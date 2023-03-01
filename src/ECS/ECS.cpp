@@ -8,7 +8,7 @@ void ECS::OnInitialization(void *specs) {
     actor->name = "Cow";
     actor->transform = {glm::vec3(-1.0f, 0.0f, -6.0f),
                         glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, -0.8f, 1.0f)};
-    actor->model = SystemLocator<ModelManager>::Get()->GetModel("car");
+    actor->model = SystemLocator<ModelManager>::Get()->GetModel("Cube");
     actors.push_back(actor);
   }
 

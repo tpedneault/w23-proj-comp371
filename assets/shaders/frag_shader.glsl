@@ -19,7 +19,7 @@ uniform sampler2D texture;
 void main() {
 	vec3 ambient = light.color * light.ambientStrength;
 
-	vec3 norm = normalize(Normal);
+	vec3 norm = abs(normalize(Normal));
 	vec3 lightDirection = normalize(light.position - FragmentPosition);
 
 	float diff = max(dot(norm, lightDirection), 0.0f);

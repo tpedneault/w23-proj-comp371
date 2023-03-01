@@ -17,15 +17,29 @@ class HierarchyWidget : public Widget {
     ImGui::Begin("Hierarchy", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
     {
       for (U32 i = 0; i < actors.size(); i++) {
-        if (!actors[i]->isVisible) {
-          ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(151, 151, 151, 255));
+        if (ImGui::CollapsingHeader("Entities", ImGuiTreeNodeFlags_None)) {
+          if (!actors[i]->isVisible) {
+            ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(151, 151, 151, 255));
+          }
+          if (ImGui::Selectable(!actors[i]->name.empty() ? actors[i]->name.c_str() : "UNDEFINED",
+                                selectedIndex == i)) {
+            PublishEvent({EventCode::ChangeSelectedActor, new U32(i)});
+          }
+          if (!actors[i]->isVisible) {
+            ImGui::PopStyleColor();
+          }
         }
-        if (ImGui::Selectable(!actors[i]->name.empty() ? actors[i]->name.c_str() : "UNDEFINED",
-                              selectedIndex == i)) {
-          PublishEvent({EventCode::ChangeSelectedActor, new U32(i)});
+
+        ImGui::Dummy(ImVec2(0.0f, 5.0f));
+
+        if (ImGui::CollapsingHeader("Lights", ImGuiTreeNodeFlags_None)) {
+
         }
-        if (!actors[i]->isVisible) {
-          ImGui::PopStyleColor();
+
+        ImGui::Dummy(ImVec2(0.0f, 5.0f));
+
+        if (ImGui::CollapsingHeader("Cameras", ImGuiTreeNodeFlags_None)) {
+
         }
       }
     }
