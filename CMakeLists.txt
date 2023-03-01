@@ -48,5 +48,5 @@ file(GLOB imgui_text_edit_src "extern/ImGuiColorTextEdit/*.cpp")
 include_directories(src)
 file(GLOB_RECURSE ambrosia_src "src/**.cpp")
 
-add_executable(ambrosia ${ambrosia_src} ${imgui_src} ${imgui_backends} ${imgui_text_edit_src} src/Assets/Material.h src/Assets/Material.cpp)
+add_executable(ambrosia ${ambrosia_src} ${imgui_src} ${imgui_backends} ${imgui_text_edit_src} src/Assets/Material.h src/Assets/Material.cpp src/Editor/Widgets/LoadModelWidget.h)
 target_link_libraries(ambrosia ${OPENGL_LIBRARIES} glfw libglew_static glm assimp fmt)

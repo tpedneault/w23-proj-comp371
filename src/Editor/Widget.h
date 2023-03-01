@@ -8,6 +8,8 @@
 #include "imgui_internal.h"
 #include "misc/cpp/imgui_stdlib.h"
 
+#include "Core/Base.h"
+
 namespace ambr {
 /**
  * \brief Base implementation of an ImGui widget.
@@ -46,11 +48,7 @@ class Widget {
   [[nodiscard]] const String& GetID() const { return m_ID; }
 
   Widget(const String& id) : m_ID(id) {};
-  virtual ~Widget() = default;;
-  Widget(Widget const &) = default;
-  Widget(Widget &&) = default;
-  Widget &operator=(Widget const &) = default;
-  Widget &operator=(Widget &&) = default;
+  virtual ~Widget() = default;
 
  protected:
   std::string m_ID;

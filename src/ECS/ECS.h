@@ -52,6 +52,9 @@ class ECS final : public System {
   Camera camera;
 
  private:
+  void OnChangeSelectedActor(U32 id);
+  void OnChangeSelectedActorModel(String modelId);
+
   U32 m_SelectedActor;
 };
 

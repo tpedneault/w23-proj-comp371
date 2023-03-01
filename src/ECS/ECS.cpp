@@ -36,12 +36,13 @@ std::vector<std::shared_ptr<System>> ECS::GetDependencies() const {
 
 void ECS::ProcessEvent(const Event &e) {
   switch (e.code) {
-    case EventCode::ChangeSelectedActor:
-      m_SelectedActor = *(static_cast<U32*>(e.data));
-      delete (U32*) e.data;
+    case EventCode::ChangeSelectedActor: {
+      OnChangeSelectedActor(*(static_cast<U32 *>(e.data)));
+      delete (U32 *) e.data;
       break;
+    }
     case EventCode::ChangeSelectedActorModel:
-      actors[m_SelectedActor]->model = *(static_cast<std::shared_ptr<Model>*>(e.data));
+      OnChangeSelectedActorModel(*(static_cast<String *>(e.data)));
       break;
     default:
       break;
@@ -54,6 +55,14 @@ std::shared_ptr<Actor> ECS::GetSelectedActor() const {
 
 U32 ECS::GetSelectedActorIndex() const {
   return m_SelectedActor;
+}
+
+void ECS::OnChangeSelectedActor(U32 id) {
+  m_SelectedActor = id;
+}
+
+void ECS::OnChangeSelectedActorModel(String modelId) {
+  actors[m_SelectedActor]->model = SystemLocator<ModelManager>::Get()->GetModel(modelId);
 }
 
 };  // namespace ambr

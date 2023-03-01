@@ -11,7 +11,6 @@ class CreateEntityWidget : public Widget {
   void Render() override {
     ImGui::Begin("Create New Entity...", nullptr, ImGuiWindowFlags_Popup);
     {
-
     }
     ImGui::End();
   }

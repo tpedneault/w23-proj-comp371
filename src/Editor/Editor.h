@@ -10,6 +10,7 @@
 #include "Editor/Widgets/ViewportWidget.h"
 #include "Editor/Widgets/ShaderEditorWidget.h"
 #include "Editor/Widgets/CreateEntityWidget.h"
+#include "Editor/Widgets/LoadModelWidget.h"
 
 namespace ambr {
 
@@ -37,6 +38,8 @@ class Editor final : public System {
 
  private:
   std::vector<Widget *> m_Widgets;
+
+  void DeleteWidget(const String& id);
 
   static void ConfigureIO();
   static void ConfigureStyle();

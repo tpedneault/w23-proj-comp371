@@ -20,7 +20,7 @@ enum class OpenGLBufferType : U32 {
 
 struct ModelMesh {
   String name;
-  glm::mat4 transform;
+  glm::mat4 transform = glm::mat4(1.0f);
   U32 vertexArray;
   U32 vertexBuffer;
   U32 indexBuffer;

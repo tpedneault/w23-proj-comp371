@@ -86,7 +86,16 @@ void Editor::DeleteShader(const String &id) {
   }
 }
 
-void Editor::ProcessEvent(const Event &e) {}
+void Editor::ProcessEvent(const Event &e) {
+  switch (e.code) {
+    case EventCode::OpenLoadModelWindow:
+      m_Widgets.push_back(new LoadModelWidget("load_model"));
+      break;
+    case EventCode::CloseLoadModelWindow:
+      DeleteWidget("load_model");
+      break;
+  }
+}
 
 void Editor::ConfigureIO() {
   ImGuiIO &io = ImGui::GetIO();
@@ -168,6 +177,14 @@ void Editor::ConfigureStyle() {
   style.PopupRounding = 0.0f;
   style.ScrollbarRounding = 0.0f;
   style.TabRounding = 0.5f;
+}
+void Editor::DeleteWidget(const String &id) {
+  for (U32 i = 0; i < m_Widgets.size(); i++) {
+    if (m_Widgets[i]->GetID() == id) {
+      // Delete the widget.
+      m_Widgets.erase(m_Widgets.begin() + i);
+    }
+  }
 }
 
 }  // namespace ambr

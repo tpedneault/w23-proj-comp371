@@ -53,10 +53,10 @@ class PropertiesWidget : public Widget {
       const char* currentSelection = actor->model->name.c_str();
       if(ImGui::BeginCombo("Model", currentSelection)) {
         auto models = SystemLocator<ModelManager>::Get()->GetModels();
-        for(U32 i = 0; i < models.size(); i++) {
-          bool isSelected = currentSelection == models[i]->name.c_str();
-          if(ImGui::Selectable(models[i]->name.c_str(), isSelected)) {
-            PublishEvent({ .code = EventCode::ChangeSelectedActorModel, .data = &models[i] });
+        for(auto & model : models) {
+          bool isSelected = currentSelection == model->name.c_str();
+          if(ImGui::Selectable(model->name.c_str(), isSelected)) {
+            PublishEvent({ EventCode::ChangeSelectedActorModel, &model->name });
           }
           if(isSelected) {
             ImGui::SetItemDefaultFocus();

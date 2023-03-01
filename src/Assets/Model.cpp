@@ -7,24 +7,29 @@ namespace ambr {
 
 void ModelManager::OnInitialization(void *specs) {
   m_Models.push_back(LoadModel("car", "assets/models/car.fbx"));
-  m_Models.push_back(LoadModel("mini_tank", "assets/models/mini_tank.glb"));
-  m_Models.push_back(LoadModel("cow", "assets/models/cow.obj"));
-  m_Models.push_back(LoadModel("couch", "assets/models/couch.blend"));
 }
 
 void ModelManager::OnUpdate() {}
 
 void ModelManager::OnDestroy() {}
 
-void ModelManager::ProcessEvent(const Event &e) {}
+void ModelManager::ProcessEvent(const Event &e) {
+  switch (e.code) {
+    case EventCode::LoadModel: {
+      auto specs = static_cast<LoadModelEventSpecs *>(e.data);
+      m_Models.push_back(LoadModel(specs->name, specs->path));
+      break;
+    }
+  }
+}
 
 std::vector<std::shared_ptr<System>> ModelManager::GetDependencies() const {
   return {};
 }
 
 std::shared_ptr<Model> ModelManager::GetModel(const String &name) {
-  for(auto model : m_Models) {
-    if(model->name == name) {
+  for (auto model : m_Models) {
+    if (model->name == name) {
       return model;
     }
   }
@@ -107,7 +112,6 @@ void ModelManager::LoadMesh(const String &name,
   for (U32 i = 0; i < node->mNumChildren; i++) {
     LoadMesh(name, scene, node->mChildren[i], model);
   }
-
 
   for (int i = 0; i < node->mNumMeshes; i++) {
     auto modelMesh = std::make_shared<ModelMesh>();
