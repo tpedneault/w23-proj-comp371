@@ -19,20 +19,26 @@ class PropertiesWidget : public Widget {
       }
 
       ImGui::Dummy(ImVec2(0.0f, 5.0f));
-      ImGui::InputText("Name", &actor->name);
+      ImGui::Text("Actor Name");
+      ImGui::InputText("##Name", &actor->name);
+      ImGui::Dummy(ImVec2(0.0f, 1.0f));
       ImGui::Checkbox("Is Visible", &actor->isVisible);
       ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
       ImGui::BeginGroup();
       ImGui::Text("Transform");
+      ImGui::Dummy(ImVec2(0.0f, 1.0f));
+      ImGui::Text("Position");
       ImGui::DragFloat3(
-          "Position",
+          "##Position",
                         reinterpret_cast<float*>(&actor->transform.translation),
                         0.1f, 0.0f, 0.0f, "%.2f");
-      ImGui::DragFloat3("Rotation",
+      ImGui::Text("Rotation");
+      ImGui::DragFloat3("##Rotation",
                         reinterpret_cast<float*>(&actor->transform.rotation),
                         1.0f, 0.0f, 0.0f, "%.2f");
-      ImGui::DragFloat3("Scale",
+      ImGui::Text("Rotation");
+      ImGui::DragFloat3("##Scale",
                         reinterpret_cast<float*>(&actor->transform.scale),
                         0.1f, 0.0f, 0.0f, "%.2f");
       ImGui::EndGroup();
@@ -51,10 +57,8 @@ class PropertiesWidget : public Widget {
 
       ImGui::BeginGroup();
       ImGui::Text("Model");
-      ImGui::EndGroup();
-
       const char* currentSelection = actor->model->name.c_str();
-      if(ImGui::BeginCombo("Model", currentSelection)) {
+      if(ImGui::BeginCombo("##Model", currentSelection)) {
         auto models = SystemLocator<ModelManager>::Get()->GetModels();
         for(auto & model : models) {
           bool isSelected = currentSelection == model->name.c_str();
@@ -67,6 +71,7 @@ class PropertiesWidget : public Widget {
         }
         ImGui::EndCombo();
       }
+      ImGui::EndGroup();
 
       ImGui::Dummy(ImVec2(0.0f, 5.0f));
       ImGui::Separator();

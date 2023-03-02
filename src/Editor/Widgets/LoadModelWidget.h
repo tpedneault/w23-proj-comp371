@@ -15,13 +15,18 @@ class LoadModelWidget : public Widget {
   void Render() override {
     ImGui::Begin("Load Model...", nullptr, ImGuiWindowFlags_NoDocking);
     {
-      ImGui::InputText("Name", &m_LoadModelSpecs->name);
-      ImGui::InputText("Path", &m_LoadModelSpecs->path);
+      ImGui::Text("Model Name");
+      ImGui::InputText("##Name", &m_LoadModelSpecs->name);
+      ImGui::Text("Model Path");
+      ImGui::InputText("##Path", &m_LoadModelSpecs->path);
+
+      ImGui::Dummy({0.0f, 2.0f});
 
       if(ImGui::Button("Load")) {
         PublishEvent({EventCode::ImportModel, m_LoadModelSpecs });
         PublishEvent({ EventCode::CloseLoadModelWindow });
       }
+      ImGui::SameLine();
       if(ImGui::Button("Close")) {
         PublishEvent({ EventCode::CloseLoadModelWindow });
       }
