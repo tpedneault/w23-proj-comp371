@@ -55,6 +55,7 @@ void Renderer::OnUpdate() {
 
   auto light = SystemLocator<ECS>::Get()->GetLights()[0];
 
+  m_ShaderProgram->Use();
   m_ShaderProgram->SetUniform("projection", projection);
   m_ShaderProgram->SetUniform("view", view);
   m_ShaderProgram->SetUniform("light.position", light->position);
@@ -79,9 +80,9 @@ void Renderer::OnUpdate() {
     }
   }
 
+  m_LightShaderProgram->Use();
   m_LightShaderProgram->SetUniform("projection", projection);
   m_LightShaderProgram->SetUniform("view", view);
-
   for(const auto &light : SystemLocator<ECS>::Get()->GetLights()) {
     if(!light->isVisible) {
       continue;
