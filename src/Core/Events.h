@@ -7,6 +7,7 @@ namespace ambr {
 enum class EventCode : U16 {
   ExitApplication,
   ChangeSelectedActor,
+  ChangeSelectedEntity,
   ChangeSelectedActorModel,
   OpenLoadModelWindow,
   CloseLoadModelWindow,

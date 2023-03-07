@@ -7,8 +7,10 @@ void ECS::OnInitialization(void *specs) {
   light->name = "Default Light";
   light->position = glm::vec3(-5.0f, 5.0f, 0.0f);
   light->color = glm::vec3(1.0f, 1.0f, 1.0f);
-  light->ambientStrength = 0.1f;
+  light->ambientStrength = 0.8f;
   m_Lights.push_back(light);
+
+  m_HasSelectedEntity = false;
 }
 
 void ECS::OnUpdate() {}
@@ -25,13 +27,12 @@ std::vector<std::shared_ptr<System>> ECS::GetDependencies() const {
 
 void ECS::ProcessEvent(const Event &e) {
   switch (e.code) {
-    case EventCode::ChangeSelectedActor: {
-      OnChangeSelectedActor(*(static_cast<U32 *>(e.data)));
-      delete (U32 *) e.data;
-      break;
-    }
     case EventCode::ChangeSelectedActorModel:
       OnChangeSelectedActorModel(*(static_cast<String *>(e.data)));
+      break;
+    case EventCode::ChangeSelectedEntity:
+      OnChangeSelectedEntity(*(static_cast<EntityIndexInfo *>(e.data)));
+      delete (EntityIndexInfo *) e.data;
       break;
     case EventCode::CreateActorEntity: {
       auto actor = std::make_shared<Actor>();
@@ -43,6 +44,8 @@ void ECS::ProcessEvent(const Event &e) {
       };
       actor->model = SystemLocator<ModelManager>::Get()->GetDefaultModel();
       m_Actors.push_back(actor);
+      m_SelectedEntity.entityType = EntityType::Actor;
+      m_SelectedEntity.index = m_Actors.size() - 1;
       break;
     }
     case EventCode::CreateLightEntity: {
@@ -52,6 +55,8 @@ void ECS::ProcessEvent(const Event &e) {
       light->color = {1.0f, 1.0f, 1.0f};
       light->ambientStrength = 0.1f;
       m_Lights.push_back(light);
+      m_SelectedEntity.entityType = EntityType::Light;
+      m_SelectedEntity.index = m_Lights.size() - 1;
       break;
     }
     case EventCode::CreateCameraEntity: {
@@ -59,6 +64,8 @@ void ECS::ProcessEvent(const Event &e) {
       camera->name = "New Camera";
       camera->position = {0.0f, 0.0f, 0.0f};
       m_Cameras.push_back(camera);
+      m_SelectedEntity.entityType = EntityType::Camera;
+      m_SelectedEntity.index = m_Cameras.size() - 1;
       break;
     }
     default:
@@ -66,23 +73,41 @@ void ECS::ProcessEvent(const Event &e) {
   }
 }
 
-std::shared_ptr<Actor> ECS::GetSelectedActor() const {
-  if(m_Actors.empty()) {
-    return nullptr;
+void ECS::OnChangeSelectedEntity(EntityIndexInfo entityInfo) {
+  switch(entityInfo.entityType) {
+    case EntityType::Actor: {
+      if(m_Actors.size() <= entityInfo.index) {
+        AMBR_LOG_ERROR("Failed to update currently selected entity. Index is out of bounds.");
+        m_HasSelectedEntity = false;
+        return;
+      }
+    } break;
+    case EntityType::Light: {
+      if(m_Lights.size() <= entityInfo.index) {
+        AMBR_LOG_ERROR("Failed to update currently selected entity. Index is out of bounds.");
+        m_HasSelectedEntity = false;
+        return;
+      }
+    } break;
+    case EntityType::Camera: {
+      if(m_Cameras.size() <= entityInfo.index) {
+        AMBR_LOG_ERROR("Failed to update currently selected entity. Index is out of bounds.");
+        m_HasSelectedEntity = false;
+        return;
+      }
+    } break;
   }
-  return m_Actors[m_SelectedActor];
+
+  m_HasSelectedEntity = true;
+  m_SelectedEntity.entityType = entityInfo.entityType;
+  m_SelectedEntity.index = entityInfo.index;
 }
 
-U32 ECS::GetSelectedActorIndex() const {
-  return m_SelectedActor;
-}
-
-void ECS::OnChangeSelectedActor(U32 id) {
-  m_SelectedActor = id;
-}
-
-void ECS::OnChangeSelectedActorModel(String modelId) {
-  m_Actors[m_SelectedActor]->model = SystemLocator<ModelManager>::Get()->GetModel(modelId);
+void ECS::OnChangeSelectedActorModel(const String& modelId) {
+  if(!m_HasSelectedEntity || m_SelectedEntity.entityType != EntityType::Actor) {
+    AMBR_LOG_WARN("Failed to change model. No currently selected actor.");
+  }
+  m_Actors[m_SelectedEntity.index]->model = SystemLocator<ModelManager>::Get()->GetModel(modelId);
 }
 
 std::vector<std::shared_ptr<Actor>> ECS::GetActors() const {
@@ -96,8 +121,13 @@ std::vector<std::shared_ptr<Light>> ECS::GetLights() const {
 std::vector<std::shared_ptr<Camera>> ECS::GetCameras() const {
   return m_Cameras;
 }
+
 EntityIndexInfo ECS::GetSelectedEntityInfo() const {
   return m_SelectedEntity;
+}
+
+bool ECS::IsEntitySelected() const {
+  return m_HasSelectedEntity;
 }
 
 };  // namespace ambr

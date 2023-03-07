@@ -26,6 +26,7 @@ struct Actor {
 struct Camera {
   String name{};
   glm::vec3 position{};
+  bool isVisible = true;
 };
 
 struct Light {
@@ -33,6 +34,7 @@ struct Light {
   glm::vec3 position{};
   glm::vec3 color{};
   float ambientStrength;
+  bool isVisible = true;
 };
 
 class ECS final : public System {
@@ -51,23 +53,21 @@ class ECS final : public System {
    */
   void ProcessEvent(const Event &e) override;
 
-  [[nodiscard]] std::shared_ptr<Actor> GetSelectedActor() const;
-  [[nodiscard]] U32 GetSelectedActorIndex() const;
+  [[nodiscard]] bool IsEntitySelected() const;
   [[nodiscard]] EntityIndexInfo GetSelectedEntityInfo() const;
   [[nodiscard]] std::vector<std::shared_ptr<Actor>> GetActors() const;
   [[nodiscard]] std::vector<std::shared_ptr<Light>> GetLights() const;
   [[nodiscard]] std::vector<std::shared_ptr<Camera>> GetCameras() const;
 
  private:
-  void OnChangeSelectedActor(U32 id);
   void OnChangeSelectedEntity(EntityIndexInfo entityInfo);
-  void OnChangeSelectedActorModel(String modelId);
+  void OnChangeSelectedActorModel(const String& modelId);
 
-  std::vector<std::shared_ptr<Actor>>  m_Actors;
-  std::vector<std::shared_ptr<Light>>  m_Lights;
+  std::vector<std::shared_ptr<Actor>> m_Actors;
+  std::vector<std::shared_ptr<Light>> m_Lights;
   std::vector<std::shared_ptr<Camera>> m_Cameras;
 
-  U32 m_SelectedActor;
+  bool m_HasSelectedEntity;
   EntityIndexInfo m_SelectedEntity;
 };
 

@@ -12,9 +12,6 @@ void Editor::OnInitialization(void *specs) {
   m_Widgets.push_back(new PropertiesWidget("properties"));
   m_Widgets.push_back(new HierarchyWidget("hierarchy"));
   m_Widgets.push_back(new ViewportWidget("scene_viewport"));
-//  m_Widgets.push_back(new ShaderEditorWidget("shader_editor",
-//                                             new ShaderEditorSpecifications{"assets/shaders/frag_shader.glsl ",
-//                                                                            "Fragment Shader"}));
 
   // Sets up the style of ImGui.
   ConfigureIO();

@@ -7,6 +7,9 @@ namespace ambr {
 
 void ModelManager::OnInitialization(void *specs) {
   m_Models.push_back(LoadModel("Cube", "assets/models/cube.obj"));
+  m_Models.push_back(LoadModel("Cow", "assets/models/cow.obj"));
+  m_Models.push_back(LoadModel("Mini Tank", "assets/models/mini_tank.glb"));
+  m_Models.push_back(LoadModel("Couch", "assets/models/couch.blend"));
 }
 
 void ModelManager::OnUpdate() {}
@@ -34,7 +37,7 @@ std::shared_ptr<Model> ModelManager::LoadModel(const String &name,
   static Assimp::Importer s_Importer;
 
   const aiScene *scene = s_Importer.ReadFile(path.c_str(),
-                                             aiProcess_Triangulate | aiProcess_FlipUVs
+                                             aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_FlipUVs
                                                  | aiProcess_JoinIdenticalVertices);
   if (!scene) {
     AMBR_LOG_ERROR(

@@ -363,4 +363,5 @@ FodyWeavers.xsd
 # CLion generated files
 cmake-build-debug/
 cmake-build-release/
+build/
 .idea/

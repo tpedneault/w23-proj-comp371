@@ -14,22 +14,22 @@ class HierarchyWidget : public Widget {
     auto const actors = SystemLocator<ECS>::Get()->GetActors();
     auto const lights = SystemLocator<ECS>::Get()->GetLights();
     auto const cameras = SystemLocator<ECS>::Get()->GetCameras();
-    auto const selectedEntity = SystemLocator<ECS>::Get()->GetSelectedActorIndex();
+    auto const selectedEntity = SystemLocator<ECS>::Get()->GetSelectedEntityInfo();
 
     ImGui::Begin("Hierarchy", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
     {
-      if(ImGui::Button("New Actor")) {
-        PublishEvent({ EventCode::CreateActorEntity });
+      if (ImGui::Button("New Actor")) {
+        PublishEvent({EventCode::CreateActorEntity});
       }
 
       ImGui::SameLine();
-      if(ImGui::Button("New Light")) {
-        PublishEvent({ EventCode::CreateLightEntity });
+      if (ImGui::Button("New Light")) {
+        PublishEvent({EventCode::CreateLightEntity});
       }
 
       ImGui::SameLine();
-      if(ImGui::Button("New Camera")) {
-        PublishEvent({ EventCode::CreateCameraEntity });
+      if (ImGui::Button("New Camera")) {
+        PublishEvent({EventCode::CreateCameraEntity});
       }
 
       ImGui::Dummy(ImVec2(0.0f, 2.5f));
@@ -40,8 +40,13 @@ class HierarchyWidget : public Widget {
             ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(151, 151, 151, 255));
           }
           if (ImGui::Selectable(!actors[i]->name.empty() ? actors[i]->name.c_str() : "UNDEFINED",
-                                selectedEntity == i, ImGuiSelectableFlags_SelectOnClick)) {
-            PublishEvent({EventCode::ChangeSelectedActor, new U32(i)});
+                                selectedEntity.entityType == EntityType::Actor && selectedEntity.index == i,
+                                ImGuiSelectableFlags_SelectOnClick)) {
+            auto info = new EntityIndexInfo();
+            info->entityType = EntityType::Actor;
+            info->index = i;
+
+            PublishEvent({EventCode::ChangeSelectedEntity, info});
           }
           if (!actors[i]->isVisible) {
             ImGui::PopStyleColor();
@@ -52,9 +57,21 @@ class HierarchyWidget : public Widget {
       ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
       if (ImGui::CollapsingHeader("Lights", ImGuiTreeNodeFlags_None)) {
-        for(U32 i = 0; i < lights.size(); i++) {
-          if(ImGui::Selectable(!lights[i]->name.empty() ? lights[i]->name.c_str() : "UNDEFINED")) {
+        for (U32 i = 0; i < lights.size(); i++) {
+          if (!lights[i]->isVisible) {
+            ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(151, 151, 151, 255));
+          }
+          if (ImGui::Selectable(!lights[i]->name.empty() ? lights[i]->name.c_str() : "UNDEFINED",
+                                selectedEntity.entityType == EntityType::Light && selectedEntity.index == i,
+                                ImGuiSelectableFlags_SelectOnClick)) {
+            auto info = new EntityIndexInfo();
+            info->entityType = EntityType::Light;
+            info->index = i;
 
+            PublishEvent({EventCode::ChangeSelectedEntity, info});
+          }
+          if (!lights[i]->isVisible) {
+            ImGui::PopStyleColor();
           }
         }
       }
@@ -62,9 +79,21 @@ class HierarchyWidget : public Widget {
       ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
       if (ImGui::CollapsingHeader("Cameras", ImGuiTreeNodeFlags_None)) {
-        for(U32 i = 0; i < cameras.size(); i++) {
-          if(ImGui::Selectable(!cameras[i]->name.empty() ? cameras[i]->name.c_str() : "UNDEFINED")) {
+        for (U32 i = 0; i < cameras.size(); i++) {
+          if (!cameras[i]->isVisible) {
+            ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(151, 151, 151, 255));
+          }
+          if (ImGui::Selectable(!cameras[i]->name.empty() ? cameras[i]->name.c_str() : "UNDEFINED",
+                                selectedEntity.entityType == EntityType::Camera && selectedEntity.index == i,
+                                ImGuiSelectableFlags_SelectOnClick)) {
+            auto info = new EntityIndexInfo();
+            info->entityType = EntityType::Camera;
+            info->index = i;
 
+            PublishEvent({EventCode::ChangeSelectedEntity, info});
+          }
+          if (!cameras[i]->isVisible) {
+            ImGui::PopStyleColor();
           }
         }
       }

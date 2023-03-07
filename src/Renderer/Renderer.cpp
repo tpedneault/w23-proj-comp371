@@ -40,7 +40,7 @@ void Renderer::OnUpdate() {
       static_cast<float>(m_Framebuffer.GetWidth()) / m_Framebuffer.GetHeight(),
       0.1f, 100.0f);
 
-  const auto view = glm::mat4(1.0f);
+  const auto view = glm::lookAt(glm::vec3(4.0f, 4.0f, 4.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f));
 
   auto light = SystemLocator<ECS>::Get()->GetLights()[0];
 
@@ -62,7 +62,6 @@ void Renderer::OnUpdate() {
     for (const auto &mesh : actor->model->meshes) {
       glm::mat4 meshTransform = model * mesh->transform;
       m_ShaderProgram->SetUniform("model", meshTransform);
-
       glBindVertexArray(mesh->vertexArray);
       glDrawElements(GL_TRIANGLES, mesh->indexCount * 3, GL_UNSIGNED_INT, nullptr);
       glBindVertexArray(0);
