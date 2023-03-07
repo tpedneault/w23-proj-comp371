@@ -7,9 +7,9 @@ void Renderer::OnInitialization(void *specs) {
 
   {
     auto vertex =
-        Shader::Create(ShaderType::Vertex, "assets/shaders/vertex_shader.glsl");
+        Shader::Create(ShaderType::Vertex, "assets/shaders/actor.vertex.glsl");
     auto frag =
-        Shader::Create(ShaderType::Fragment, "assets/shaders/frag_shader.glsl");
+        Shader::Create(ShaderType::Fragment, "assets/shaders/actor.fragment.glsl");
     m_ShaderProgram = ShaderProgram::Create({vertex, frag});
 
     delete vertex;
@@ -94,7 +94,6 @@ void Renderer::OnUpdate() {
     auto model = SystemLocator<ModelManager>::Get()->GetDefaultModel();
     m_LightShaderProgram->SetUniform("model", modelTransform);
     glBindVertexArray(model->meshes[0]->vertexArray);
-    --/*
     glDrawElements(GL_TRIANGLES, model->meshes[0]->indexCount * 3, GL_UNSIGNED_INT, nullptr);
     glBindVertexArray(0);
   }
