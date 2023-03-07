@@ -8,6 +8,7 @@
 #include "Renderer/Modules/Shader.h"
 
 #include "Window/Window.h"
+#include "ECS/ECS.h"
 
 namespace ambr {
 
@@ -72,8 +73,9 @@ class Renderer : public System {
   void ProcessEvent(const Event &e) override;
 
  private:
-  U32 m_VBO{}, m_VAO{};
   std::shared_ptr<ShaderProgram> m_ShaderProgram;
+  std::shared_ptr<ShaderProgram> m_LightShaderProgram;
+
   Framebuffer m_Framebuffer;
   RendererSystemSpecifications m_Specs{};
 };

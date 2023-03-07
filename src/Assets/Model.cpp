@@ -165,7 +165,9 @@ void ModelManager::LoadMesh(const String &name,
 
     modelMesh->indexCount = mesh->mNumFaces;
 
-    /* Load Texture Coordinates into a vertex buffer object. */
+    /*
+     * Load Texture Coordinates into a vertex buffer object.
+     *
     I32 textureCoordsSize = mesh->mNumVertices * sizeof(aiVector3D);
     glGenBuffers(1, &modelMesh->textureCoordsBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, modelMesh->textureCoordsBuffer);
@@ -182,6 +184,7 @@ void ModelManager::LoadMesh(const String &name,
           "Failed to load texture coordinates for model {}, actual size: {} s.b {}", name,
           size, textureCoordsSize));
     }
+     */
 
     /* Load Normals into a vertex buffer object. */
     I32 normalsSize = mesh->mNumVertices * sizeof(aiVector3D);

@@ -102,6 +102,12 @@ class PropertiesWidget : public Widget {
     ImGui::Dummy(ImVec2(0.0f, 1.0f));
     ImGui::Checkbox("Is Visible", &light->isVisible);
     ImGui::Dummy(ImVec2(0.0f, 5.0f));
+
+    ImGui::Text("Position");
+    ImGui::DragFloat3(
+        "##Position",
+        reinterpret_cast<float*>(&light->position),
+        0.1f, 0.0f, 0.0f, "%.2f");
   }
 
   inline void RenderCameraProperties(std::shared_ptr<Camera> camera) {
@@ -111,6 +117,12 @@ class PropertiesWidget : public Widget {
     ImGui::Dummy(ImVec2(0.0f, 1.0f));
     ImGui::Checkbox("Is Visible", &camera->isVisible);
     ImGui::Dummy(ImVec2(0.0f, 5.0f));
+
+    ImGui::Text("Position");
+    ImGui::DragFloat3(
+        "##Position",
+        reinterpret_cast<float*>(&camera->position),
+        0.1f, 0.0f, 0.0f, "%.2f");
   }
 };
 

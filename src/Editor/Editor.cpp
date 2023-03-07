@@ -175,6 +175,7 @@ void Editor::ConfigureStyle() {
   style.ScrollbarRounding = 0.0f;
   style.TabRounding = 0.5f;
 }
+
 void Editor::DeleteWidget(const String &id) {
   for (U32 i = 0; i < m_Widgets.size(); i++) {
     if (m_Widgets[i]->GetID() == id) {

@@ -7,7 +7,6 @@
 #include <glm/glm.hpp>
 
 #include "Core/System.h"
-#include "Renderer/Renderer.h"
 #include "Assets/Material.h"
 
 namespace ambr {
