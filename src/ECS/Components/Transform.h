@@ -13,6 +13,7 @@ struct Transform {
   glm::vec3 translation;
   glm::vec3 rotation; // Exposes the rotation as Euler angles.
   glm::vec3 scale;
+  float scaleMultiplier = 1.0f;
 
   [[nodiscard]] static glm::mat4 GetTransformationMatrix(
       const Transform& transform) {
@@ -22,7 +23,7 @@ struct Transform {
     matrix = glm::rotate(matrix, glm::radians(transform.rotation.x), glm::vec3(0.0f, 0.0f, 1.0f));
     matrix = glm::rotate(matrix, glm::radians(transform.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
     matrix = glm::rotate(matrix, glm::radians(transform.rotation.z), glm::vec3(1.0f, 0.0f, 0.0f));
-    matrix = glm::scale(matrix, transform.scale);
+    matrix = glm::scale(matrix, transform.scale * transform.scaleMultiplier);
 
     // TODO: Implement rotation by converting the rotation Euler angles to Quaternions.
     return matrix;

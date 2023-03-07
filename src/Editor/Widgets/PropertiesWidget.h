@@ -53,11 +53,13 @@ class PropertiesWidget : public Widget {
     ImGui::Text("Rotation");
     ImGui::DragFloat3("##Rotation",
                       reinterpret_cast<float*>(&actor->transform.rotation),
-                      1.0f, 0.0f, 0.0f, "%.2f");
-    ImGui::Text("Rotation");
+                      1.0f, 0.0f, 360.0f, "%.2fº");
+    ImGui::Text("Scaling");
     ImGui::DragFloat3("##Scale",
                       reinterpret_cast<float*>(&actor->transform.scale),
-                      0.1f, 0.0f, 0.0f, "%.2f");
+                      0.1f, 0.0f, 1000000.0f, "%.2f");
+    ImGui::DragFloat("##ScaleMultiplier", reinterpret_cast<float*>(&actor->transform.scaleMultiplier),
+                     0.05f, 0.0f, 1000000.0f, "%.2f");
     ImGui::EndGroup();
 
     ImGui::Dummy(ImVec2(0.0f, 5.0f));
