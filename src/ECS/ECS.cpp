@@ -44,6 +44,7 @@ void ECS::ProcessEvent(const Event &e) {
       };
       actor->model = SystemLocator<ModelManager>::Get()->GetDefaultModel();
       m_Actors.push_back(actor);
+      m_HasSelectedEntity = true;
       m_SelectedEntity.entityType = EntityType::Actor;
       m_SelectedEntity.index = m_Actors.size() - 1;
       break;
@@ -55,6 +56,7 @@ void ECS::ProcessEvent(const Event &e) {
       light->color = {1.0f, 1.0f, 1.0f};
       light->ambientStrength = 0.1f;
       m_Lights.push_back(light);
+      m_HasSelectedEntity = true;
       m_SelectedEntity.entityType = EntityType::Light;
       m_SelectedEntity.index = m_Lights.size() - 1;
       break;
@@ -64,6 +66,7 @@ void ECS::ProcessEvent(const Event &e) {
       camera->name = "New Camera";
       camera->position = {0.0f, 0.0f, 0.0f};
       m_Cameras.push_back(camera);
+      m_HasSelectedEntity = true;
       m_SelectedEntity.entityType = EntityType::Camera;
       m_SelectedEntity.index = m_Cameras.size() - 1;
       break;
