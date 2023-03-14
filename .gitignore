@@ -360,3 +360,7 @@ cmake-build-debug/
 cmake-build-release/
 build/
 .idea/
+
+assets/assets
+
+assets/models/truck.obj

@@ -125,6 +125,27 @@ class PropertiesWidget : public Widget {
         "##Position",
         reinterpret_cast<float*>(&camera->position),
         0.1f, 0.0f, 0.0f, "%.2f");
+
+    ImGui::Text("Target");
+    ImGui::DragFloat3(
+        "##Target",
+        reinterpret_cast<float*>(&camera->target),
+        0.1f, 0.0f, 0.0f, "%.2f");
+
+    ImGui::Text("Up");
+    ImGui::DragFloat3(
+        "##Up",
+        reinterpret_cast<float*>(&camera->up),
+        0.1f, 0.0f, 0.0f, "%.2f");
+
+    ImGui::Text("FOV");
+    ImGui::DragFloat("##FOV", &camera->fov, 0.5f, 1.0f, 360.0f, "%.2f");
+
+    ImGui::Text("Near Plane");
+    ImGui::DragFloat("##near", &camera->nearPlane, 0.1f, 0.1f, 100000.0f, "%.2f");
+
+    ImGui::Text("Far Plane");
+    ImGui::DragFloat("##far", &camera->farPlane, 0.1f, 0.1f, 100000.0f, "%.2f");
   }
 };
 

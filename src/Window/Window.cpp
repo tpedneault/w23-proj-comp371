@@ -13,6 +13,18 @@ void FramebufferSizeCallback(GLFWwindow* window, const I32 width,
   SystemLocator<Renderer>::Get()->SetViewportSize(width, height);
 }
 
+void KeyCallback(GLFWwindow* window, I32 key, I32 scanCode, I32 action, I32 mods) {
+  // Forward W, A, S, D events to the other subsystems.
+  switch(key) {
+    case GLFW_KEY_A:
+    case GLFW_KEY_W:
+    case GLFW_KEY_S:
+    case GLFW_KEY_D:
+      SystemLocator<Window>::Get()->PublishEvent({ EventCode::KeyPressed, new I32(key) });
+      break;
+  }
+}
+
 void Window::OnInitialization(void* specs) {
   glfwSetErrorCallback(ErrorCallbackGLFW);
   if (!glfwInit()) {
@@ -30,6 +42,8 @@ void Window::OnInitialization(void* specs) {
       *(static_cast<WindowSystemSpecifications*>(specs));
   m_Window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
 
+  glfwSetKeyCallback(m_Window, ambr::KeyCallback);
+
   glfwMakeContextCurrent(m_Window);
   glfwSwapInterval(1);  // Enables V-Sync.
   glfwSetFramebufferSizeCallback(m_Window, FramebufferSizeCallback);
@@ -41,9 +55,15 @@ void Window::OnInitialization(void* specs) {
               << std::endl;
     exit(EXIT_FAILURE);
   }
+
+  m_TimeLastFrame = glfwGetTime();
 }
 
 void Window::OnUpdate() {
+  double m_CurrentTime = glfwGetTime();
+  m_DeltaTime = (m_CurrentTime - m_TimeLastFrame);
+  m_TimeLastFrame = m_CurrentTime;
+
   glfwPollEvents();
   glfwSwapBuffers(m_Window);
 
@@ -68,6 +88,10 @@ GLFWwindow* Window::GetWindow() const { return m_Window; }
 
 void Window::ProcessEvent(const Event& e) {}
 
-void Window::ToggleFullscreen() const { AMBR_LOG_TRACE("Toggling "); }
+void Window::ToggleFullscreen() const { AMBR_LOG_TRACE("Toggling fullscreen"); }
+
+float Window::GetDeltaTime() const {
+  return m_DeltaTime;
+}
 
 };  // namespace ambr

@@ -26,6 +26,11 @@ struct Actor {
 struct Camera {
   String name{};
   glm::vec3 position{};
+  glm::vec3 target{};
+  glm::vec3 up{};
+  float fov = 90.0f;
+  float nearPlane = 0.1f;
+  float farPlane = 100.0f;
   bool isVisible = true;
 };
 

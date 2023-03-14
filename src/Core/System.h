@@ -117,6 +117,8 @@ class System {
    */
   virtual void OnInitialization(void *specifications) = 0;
 
+  virtual void OnKeyPressed(I32 keyCode);
+
   bool m_Initialized = false;
   std::vector<Event> m_EventQueue;
 

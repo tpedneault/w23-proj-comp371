@@ -3,6 +3,7 @@ project(ambrosia)
 
 # Set the C++ version to use.
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Only build the GLFW library.
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
@@ -48,5 +49,5 @@ file(GLOB imgui_text_edit_src "extern/ImGuiColorTextEdit/*.cpp")
 include_directories(src)
 file(GLOB_RECURSE ambrosia_src "src/**.cpp")
 
-add_executable(ambrosia ${ambrosia_src} ${imgui_src} ${imgui_backends} ${imgui_text_edit_src} src/Assets/Material.h src/Assets/Material.cpp src/Editor/Widgets/LoadModelWidget.h)
+add_executable(ambrosia ${ambrosia_src} ${imgui_src} ${imgui_backends} ${imgui_text_edit_src} src/Assets/Material.h src/Assets/Material.cpp src/Editor/Widgets/LoadModelWidget.h src/Renderer/Modules/Camera.h)
 target_link_libraries(ambrosia ${OPENGL_LIBRARIES} glfw libglew_static glm assimp fmt)

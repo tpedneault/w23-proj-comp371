@@ -15,6 +15,7 @@ enum class EventCode : U16 {
   CreateActorEntity,
   CreateLightEntity,
   CreateCameraEntity,
+  KeyPressed,
 };
 
 struct Event {

@@ -6,6 +6,9 @@
 #include "Core/System.h"
 
 namespace ambr {
+
+constexpr float WINDOW_TARGET_FPS = 60.0f;
+
 /**
  * \brief Contains any specifications to be passed to the Window during
  * initialization.
@@ -45,6 +48,11 @@ class Window final : public System {
   const override;
 
   /**
+   * Gets the timestep since the last frame.
+   */
+  [[nodiscard]] float GetDeltaTime() const;
+
+  /**
    * \brief Verifies if the GLFW window should remain opened.
    * \return true if the window is open.
    */
@@ -65,6 +73,8 @@ class Window final : public System {
   void ToggleFullscreen() const;
 
  private:
+  float m_DeltaTime = 0.0f;
+  double m_TimeLastFrame = 0.0f;
   GLFWwindow *m_Window = nullptr;
 };
 

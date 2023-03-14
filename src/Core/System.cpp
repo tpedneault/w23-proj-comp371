@@ -48,4 +48,7 @@ std::vector<Event> System::ForwardEvents() {
   return events;
 }
 
+void System::OnKeyPressed(I32 keyCode) {
+}
+
 };  // namespace ambr

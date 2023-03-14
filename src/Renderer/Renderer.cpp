@@ -25,6 +25,10 @@ void Renderer::OnInitialization(void *specs) {
     delete frag;
   }
 
+  m_SceneCamera.position = glm::vec3(4.0f, 4.0f, 4.0f);
+  m_SceneCamera.target = glm::vec3(-4.0f, -4.0f, -4.0f);
+  m_SceneCamera.up = glm::vec3(0.0f, -1.0f, 0.0f);
+
   glEnable(GL_DEPTH_TEST);
 
   SetViewportSize(m_Specs.viewportWidth, m_Specs.viewportHeight);
@@ -45,13 +49,12 @@ void Renderer::OnUpdate() {
 
   m_ShaderProgram->Use();
 
-  // TODO: Move the perspective matrix to the Camera class.
   const glm::mat4 projection = glm::perspective(
-      glm::radians(45.0f),
+      glm::radians(m_SceneCamera.fov),
       static_cast<float>(m_Framebuffer.GetWidth()) / m_Framebuffer.GetHeight(),
-      0.1f, 100.0f);
+      m_SceneCamera.nearPlane, m_SceneCamera.farPlane);
 
-  const auto view = glm::lookAt(glm::vec3(4.0f, 4.0f, 4.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+  const auto view = glm::lookAt(m_SceneCamera.position, m_SceneCamera.position + m_SceneCamera.target, m_SceneCamera.up);
 
   auto light = SystemLocator<ECS>::Get()->GetLights()[0];
 
@@ -65,7 +68,7 @@ void Renderer::OnUpdate() {
   // TODO: Move to the ActorRenderer class.
   for (const auto &actor : SystemLocator<ECS>::Get()->GetActors()) {
     // If the actor is currently hidden, skip to the next.
-    if(!actor->isVisible) {
+    if (!actor->isVisible) {
       continue;
     }
 
@@ -83,8 +86,9 @@ void Renderer::OnUpdate() {
   m_LightShaderProgram->Use();
   m_LightShaderProgram->SetUniform("projection", projection);
   m_LightShaderProgram->SetUniform("view", view);
-  for(const auto &light : SystemLocator<ECS>::Get()->GetLights()) {
-    if(!light->isVisible) {
+
+  for (const auto &light : SystemLocator<ECS>::Get()->GetLights()) {
+    if (!light->isVisible) {
       continue;
     }
 
@@ -121,7 +125,37 @@ std::vector<std::shared_ptr<System>> Renderer::GetDependencies() const {
   return {SystemLocator<Window>::Get()};
 }
 
-void Renderer::ProcessEvent(const Event &e) {}
+void Renderer::ProcessEvent(const Event &e) {
+  switch (e.code) {
+    case EventCode::KeyPressed: {
+      I32 keyCode = *(static_cast<I32 *>(e.data));
+      OnKeyPressed(keyCode);
+      delete static_cast<I32 *>(e.data);
+      break;
+    }
+    default:
+      break;
+  }
+}
 
+void Renderer::OnKeyPressed(I32 keyCode) {
+  float dt = SystemLocator<Window>::Get()->GetDeltaTime();
+  switch (keyCode) {
+    case GLFW_KEY_A:
+      m_SceneCamera.position.x -= SCENE_CAMERA_MOVE_SPEED * dt;
+      break;
+    case GLFW_KEY_W:
+      m_SceneCamera.position.z -= SCENE_CAMERA_MOVE_SPEED * dt;
+      break;
+    case GLFW_KEY_D:
+      m_SceneCamera.position.x += SCENE_CAMERA_MOVE_SPEED * dt;
+      break;
+    case GLFW_KEY_S:
+      m_SceneCamera.position.z += SCENE_CAMERA_MOVE_SPEED * dt;
+      break;
+    default:
+      break;
+  }
+}
 
 };  // namespace ambr

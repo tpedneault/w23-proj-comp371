@@ -12,7 +12,10 @@
 
 namespace ambr {
 
-enum class RendererImplementation : U8 { OpenGL, Raytracer };
+constexpr float SCENE_CAMERA_MOVE_SPEED = 10.0f;
+
+// If I want to expand this in the future to use Vulkan or DirectX.
+enum class RendererImplementation : U8 { OpenGL };
 
 /**
  * \brief Contains any specifications to be passed to the Renderer during
@@ -72,9 +75,16 @@ class Renderer : public System {
    */
   void ProcessEvent(const Event &e) override;
 
+ protected:
+  void OnKeyPressed(I32 keyCode) override;
+
  private:
+  U32 m_SceneGridVAO;
+
   std::shared_ptr<ShaderProgram> m_ShaderProgram;
   std::shared_ptr<ShaderProgram> m_LightShaderProgram;
+
+  Camera m_SceneCamera; // TODO: This should be moved somewhere else.
 
   Framebuffer m_Framebuffer;
   RendererSystemSpecifications m_Specs{};
