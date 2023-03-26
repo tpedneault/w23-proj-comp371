@@ -52,5 +52,5 @@ file(GLOB imnodes_src "extern/imnodes/*.cpp")
 include_directories(src)
 file(GLOB_RECURSE ambrosia_src "src/**.cpp")
 
-add_executable(ambrosia ${ambrosia_src} ${imgui_src} ${imgui_backends} ${imgui_text_edit_src} ${imnodes_src} src/Editor/Widget.cpp)
+add_executable(ambrosia ${ambrosia_src} ${imgui_src} ${imgui_backends} ${imgui_text_edit_src} ${imnodes_src} src/Editor/Widget.cpp src/Editor/Widgets/ShaderGraph/Nodes/ConstantShaderGraphNode.h src/Core/Utils.h)
 target_link_libraries(ambrosia ${OPENGL_LIBRARIES} glfw libglew_static glm assimp fmt)

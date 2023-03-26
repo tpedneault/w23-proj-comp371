@@ -3,6 +3,8 @@
 #include "imnodes.h"
 #include "imnodes_internal.h"
 
+#include "Core/Base.h"
+
 namespace ambr {
 
 enum class ShaderGraphAttributeType : I32 {
@@ -18,14 +20,12 @@ struct ShaderGraphNodeAttribute {
 
 class ShaderGraphNode {
  public:
-  ShaderGraphNode(I32 id, const String& name) : m_ID(id), m_Title(name) {
-    PushInputAttribute("Color");
-    PushOutputAttribute("R");
-    PushOutputAttribute("G");
-    PushOutputAttribute("B");
-  }
+  ShaderGraphNode() : m_ID(0) { }
+  virtual ~ShaderGraphNode() = default;
 
-  virtual void Render() {
+  virtual void OnInitialize() {}
+
+  virtual void OnRender() {
     ImNodes::BeginNode(m_ID);
 
     ImNodes::BeginNodeTitleBar();
@@ -58,6 +58,10 @@ class ShaderGraphNode {
     ImNodes::EndNode();
   }
 
+  void SetID(I32 id) {
+    m_ID = id;
+  }
+
   [[nodiscard]] I32 GetID() const {
     return m_ID;
   }
@@ -67,11 +71,13 @@ class ShaderGraphNode {
   }
 
  protected:
-  I32 m_ID;
+  I32 m_ID{};
   String m_Title;
+
   I32 m_NextInputAttributeID = 0;
   I32 m_NextStaticAttributeID = 0;
   I32 m_NextOutputAttributeID = 0;
+
   std::vector<ShaderGraphNodeAttribute> m_InputAttributes;
   std::vector<ShaderGraphNodeAttribute> m_StaticAttributes;
   std::vector<ShaderGraphNodeAttribute> m_OutputAttributes;
@@ -83,12 +89,12 @@ class ShaderGraphNode {
 
   I32 PushStaticAttribute(const String& title) {
     m_StaticAttributes.push_back({ m_NextStaticAttributeID++, title });
-    return m_InputAttributes.back().ID;
+    return m_StaticAttributes.back().ID;
   }
 
   I32 PushOutputAttribute(const String& title) {
     m_OutputAttributes.push_back({ m_NextOutputAttributeID++, title });
-    return m_InputAttributes.back().ID;
+    return m_OutputAttributes.back().ID;
   }
 
   void PopInputAttribute() {
