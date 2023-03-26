@@ -19,17 +19,17 @@ class HierarchyWidget : public Widget {
     ImGui::Begin("Hierarchy", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
     {
       if (ImGui::Button("New Actor")) {
-        PublishEvent({EventCode::CreateActorEntity});
+        PublishEvent({EventCode::Editor_CreateActorEntity});
       }
 
       ImGui::SameLine();
       if (ImGui::Button("New Light")) {
-        PublishEvent({EventCode::CreateLightEntity});
+        PublishEvent({EventCode::Editor_CreateLightEntity});
       }
 
       ImGui::SameLine();
       if (ImGui::Button("New Camera")) {
-        PublishEvent({EventCode::CreateCameraEntity});
+        PublishEvent({EventCode::Editor_CreateCameraEntity});
       }
 
       ImGui::Dummy(ImVec2(0.0f, 2.5f));
@@ -46,7 +46,7 @@ class HierarchyWidget : public Widget {
             info->entityType = EntityType::Actor;
             info->index = i;
 
-            PublishEvent({EventCode::ChangeSelectedEntity, info});
+            PublishEvent({EventCode::Editor_ChangeSelectedEntity, info});
           }
           if (!actors[i]->isVisible) {
             ImGui::PopStyleColor();
@@ -68,7 +68,7 @@ class HierarchyWidget : public Widget {
             info->entityType = EntityType::Light;
             info->index = i;
 
-            PublishEvent({EventCode::ChangeSelectedEntity, info});
+            PublishEvent({EventCode::Editor_ChangeSelectedEntity, info});
           }
           if (!lights[i]->isVisible) {
             ImGui::PopStyleColor();
@@ -90,7 +90,7 @@ class HierarchyWidget : public Widget {
             info->entityType = EntityType::Camera;
             info->index = i;
 
-            PublishEvent({EventCode::ChangeSelectedEntity, info});
+            PublishEvent({EventCode::Editor_ChangeSelectedEntity, info});
           }
           if (!cameras[i]->isVisible) {
             ImGui::PopStyleColor();

@@ -14,12 +14,24 @@ class MenuBar : public Widget {
       if (ImGui::BeginMenu("File"))
       {
         if(ImGui::MenuItem("Import Model")) {
-          m_EventQueue.push_back({ EventCode::OpenLoadModelWindow});
+          PublishEvent({ EventCode::Editor_OpenLoadModelWindow });
         }
 
         if (ImGui::MenuItem("Exit")) {
-          m_EventQueue.push_back({EventCode::ExitApplication});
+          PublishEvent({ EventCode::ExitApplication });
         }
+        ImGui::EndMenu();
+      }
+
+      if(ImGui::BeginMenu("Shader Graph")) {
+        if(ImGui::MenuItem("Add Node")) {
+          PublishEvent({ EventCode::ShaderGraph_PushNode });
+        }
+
+        if(ImGui::MenuItem("Remove Node")) {
+          PublishEvent({ EventCode::ShaderGraph_PopNode });
+        }
+
         ImGui::EndMenu();
       }
 

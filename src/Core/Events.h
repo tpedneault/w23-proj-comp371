@@ -6,16 +6,19 @@ namespace ambr {
 
 enum class EventCode : U16 {
   ExitApplication,
-  ChangeSelectedActor,
-  ChangeSelectedEntity,
-  ChangeSelectedActorModel,
-  OpenLoadModelWindow,
-  CloseLoadModelWindow,
-  ImportModel,
-  CreateActorEntity,
-  CreateLightEntity,
-  CreateCameraEntity,
   KeyPressed,
+
+  Editor_ChangeSelectedEntity,
+  Editor_ChangeSelectedActorModel,
+  Editor_OpenLoadModelWindow,
+  Editor_CloseLoadModelWindow,
+  Editor_ImportModel,
+  Editor_CreateActorEntity,
+  Editor_CreateLightEntity,
+  Editor_CreateCameraEntity,
+
+  ShaderGraph_PushNode,
+  ShaderGraph_PopNode,
 };
 
 struct Event {

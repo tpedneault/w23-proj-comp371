@@ -9,6 +9,8 @@
 #include <map>
 #include <queue>
 #include <cstdint>
+#include <algorithm>
+#include <utility>
 #include <fmt/core.h>
 
 #include "Core/Logger.h"

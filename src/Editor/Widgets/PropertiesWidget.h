@@ -82,7 +82,7 @@ class PropertiesWidget : public Widget {
       for(auto & model : models) {
         bool isSelected = currentSelection == model->name.c_str();
         if(ImGui::Selectable(model->name.c_str(), isSelected)) {
-          PublishEvent({ EventCode::ChangeSelectedActorModel, &model->name });
+          PublishEvent({EventCode::Editor_ChangeSelectedActorModel, &model->name });
         }
         if(isSelected) {
           ImGui::SetItemDefaultFocus();

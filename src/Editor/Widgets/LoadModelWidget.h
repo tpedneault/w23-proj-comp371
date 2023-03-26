@@ -23,12 +23,12 @@ class LoadModelWidget : public Widget {
       ImGui::Dummy({0.0f, 2.0f});
 
       if(ImGui::Button("Load")) {
-        PublishEvent({EventCode::ImportModel, m_LoadModelSpecs });
-        PublishEvent({ EventCode::CloseLoadModelWindow });
+        PublishEvent({EventCode::Editor_ImportModel, m_LoadModelSpecs });
+        PublishEvent({ EventCode::Editor_CloseLoadModelWindow });
       }
       ImGui::SameLine();
       if(ImGui::Button("Close")) {
-        PublishEvent({ EventCode::CloseLoadModelWindow });
+        PublishEvent({ EventCode::Editor_CloseLoadModelWindow });
       }
     }
     ImGui::End();

@@ -45,9 +45,12 @@ file(GLOB imgui_backends
 include_directories(extern/ImGuiColorTextEdit)
 file(GLOB imgui_text_edit_src "extern/ImGuiColorTextEdit/*.cpp")
 
+include_directories(extern/imnodes)
+file(GLOB imnodes_src "extern/imnodes/*.cpp")
+
 # Add Zoom Engine source files.
 include_directories(src)
 file(GLOB_RECURSE ambrosia_src "src/**.cpp")
 
-add_executable(ambrosia ${ambrosia_src} ${imgui_src} ${imgui_backends} ${imgui_text_edit_src} src/Assets/Material.h src/Assets/Material.cpp src/Editor/Widgets/LoadModelWidget.h src/Renderer/Modules/Camera.h)
+add_executable(ambrosia ${ambrosia_src} ${imgui_src} ${imgui_backends} ${imgui_text_edit_src} ${imnodes_src} src/Editor/Widget.cpp)
 target_link_libraries(ambrosia ${OPENGL_LIBRARIES} glfw libglew_static glm assimp fmt)

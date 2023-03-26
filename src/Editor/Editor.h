@@ -11,6 +11,7 @@
 #include "Editor/Widgets/ShaderEditorWidget.h"
 #include "Editor/Widgets/CreateEntityWidget.h"
 #include "Editor/Widgets/LoadModelWidget.h"
+#include "Editor/Widgets/ShaderGraph/ShaderGraphWidget.h"
 
 namespace ambr {
 
@@ -40,7 +41,6 @@ class Editor final : public System {
   std::vector<Widget *> m_Widgets;
 
   void DeleteWidget(const String& id);
-
   static void ConfigureIO();
   static void ConfigureStyle();
 };

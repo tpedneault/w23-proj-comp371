@@ -27,14 +27,14 @@ std::vector<std::shared_ptr<System>> ECS::GetDependencies() const {
 
 void ECS::ProcessEvent(const Event &e) {
   switch (e.code) {
-    case EventCode::ChangeSelectedActorModel:
+    case EventCode::Editor_ChangeSelectedActorModel:
       OnChangeSelectedActorModel(*(static_cast<String *>(e.data)));
       break;
-    case EventCode::ChangeSelectedEntity:
+    case EventCode::Editor_ChangeSelectedEntity:
       OnChangeSelectedEntity(*(static_cast<EntityIndexInfo *>(e.data)));
       delete (EntityIndexInfo *) e.data;
       break;
-    case EventCode::CreateActorEntity: {
+    case EventCode::Editor_CreateActorEntity: {
       auto actor = std::make_shared<Actor>();
       actor->name = "New Actor";
       actor->transform = {
@@ -49,7 +49,7 @@ void ECS::ProcessEvent(const Event &e) {
       m_SelectedEntity.index = m_Actors.size() - 1;
       break;
     }
-    case EventCode::CreateLightEntity: {
+    case EventCode::Editor_CreateLightEntity: {
       auto light = std::make_shared<Light>();
       light->name = "New Light";
       light->position = {0.0f, 0.0f, 0.0f};
@@ -61,7 +61,7 @@ void ECS::ProcessEvent(const Event &e) {
       m_SelectedEntity.index = m_Lights.size() - 1;
       break;
     }
-    case EventCode::CreateCameraEntity: {
+    case EventCode::Editor_CreateCameraEntity: {
       auto camera = std::make_shared<Camera>();
       camera->name = "New Camera";
       camera->position = {0.0f, 0.0f, 0.0f};

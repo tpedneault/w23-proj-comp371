@@ -12,6 +12,7 @@ void Editor::OnInitialization(void *specs) {
   m_Widgets.push_back(new PropertiesWidget("properties"));
   m_Widgets.push_back(new HierarchyWidget("hierarchy"));
   m_Widgets.push_back(new ViewportWidget("scene_viewport"));
+  m_Widgets.push_back(new ShaderGraphWidget("shader_graph"));
 
   // Sets up the style of ImGui.
   ConfigureIO();
@@ -85,12 +86,18 @@ void Editor::DeleteShader(const String &id) {
 
 void Editor::ProcessEvent(const Event &e) {
   switch (e.code) {
-    case EventCode::OpenLoadModelWindow:
+    case EventCode::Editor_OpenLoadModelWindow:
       m_Widgets.push_back(new LoadModelWidget("load_model"));
       break;
-    case EventCode::CloseLoadModelWindow:
+    case EventCode::Editor_CloseLoadModelWindow:
       DeleteWidget("load_model");
       break;
+    default:
+      break;
+  }
+
+  for(const auto& widget : m_Widgets) {
+    widget->ProcessEvent(e);
   }
 }
 
