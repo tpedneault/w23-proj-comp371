@@ -6,7 +6,7 @@ namespace ambr {
 
 class LoadModelWidget : public Widget {
  public:
-  explicit LoadModelWidget(const String& id) : Widget(id), m_LoadModelSpecs(new LoadModelEventSpecs()) {}
+  explicit LoadModelWidget(const String& id) : Widget(id), m_LoadModelSpecs(new Editor_LoadModelEventSpecifications()) {}
 
   ~LoadModelWidget() override {
     delete m_LoadModelSpecs;
@@ -35,7 +35,7 @@ class LoadModelWidget : public Widget {
   }
 
  private:
-  LoadModelEventSpecs* m_LoadModelSpecs;
+  Editor_LoadModelEventSpecifications* m_LoadModelSpecs;
 };
 
 };

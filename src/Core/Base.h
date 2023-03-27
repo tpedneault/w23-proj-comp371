@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <utility>
 #include <fmt/core.h>
+#include <glm/glm.hpp>
 
 #include "Core/Logger.h"
 

@@ -14,10 +14,20 @@ class ConstantShaderGraphNode : public ShaderGraphNode {
   void OnInitialize() override {
     m_OutputAttributes.clear();
 
-    m_Value = 0;
+    if(typeid(T) == typeid(glm::vec3)) {
+      PushStaticAttribute("X_Slider");
+      PushOutputAttribute("X");
 
-    PushStaticAttribute("Constant_Slider");
-    PushOutputAttribute("Constant");
+      PushStaticAttribute("Y_Slider");
+      PushOutputAttribute("Y");
+
+      PushStaticAttribute("Z_Slider");
+      PushOutputAttribute("Z");
+    }
+    else {
+      PushStaticAttribute("Constant_Slider");
+      PushOutputAttribute("Constant");
+    }
 
     m_Title = fmt::format("Constant<{}>", GetTypeName<decltype(m_Value)>());
   }
@@ -99,6 +109,32 @@ template<> inline void ConstantShaderGraphNode<I16>::RenderConstantSlider(I32 of
 template<> inline void ConstantShaderGraphNode<I8>::RenderConstantSlider(I32 offset, const ShaderGraphNodeAttribute& attribute) {
   const char* label = fmt::format("##{}{}", m_ID << offset, attribute.ID).c_str();
   ImGui::DragScalar(label, ImGuiDataType_S8, static_cast<I8*>(&m_Value), 1, 0, 0, "%d");
+}
+
+template<> inline void ConstantShaderGraphNode<glm::vec3>::RenderConstantSlider(I32 offset, const ShaderGraphNodeAttribute& attribute) {
+  const char* label = fmt::format("##{}{}", m_ID << offset, attribute.ID).c_str();
+  switch(attribute.ID) {
+    case 0:
+      ImGui::DragScalar(label, ImGuiDataType_Float, reinterpret_cast<float*>(&m_Value.x), 0.01f, 0, 0, "%.2f");
+      break;
+    case 1:
+      ImGui::DragScalar(label, ImGuiDataType_Float, reinterpret_cast<float*>(&m_Value.y), 0.01f, 0, 0, "%.2f");
+      break;
+    case 2:
+      ImGui::DragScalar(label, ImGuiDataType_Float, reinterpret_cast<float*>(&m_Value.z), 0.01f, 0, 0, "%.2f");
+      break;
+  }
+}
+
+template<> inline void* ConstantShaderGraphNode<glm::vec3>::GetOutputAttributeValue(I32 outputAttribute) {
+  switch(outputAttribute) {
+    case 0:
+      return reinterpret_cast<float*>(&m_Value.x);
+    case 1:
+      return reinterpret_cast<float*>(&m_Value.y);
+    default:
+      return reinterpret_cast<float*>(&m_Value.z);
+  }
 }
 
 };  // namespace ambr

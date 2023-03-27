@@ -19,7 +19,7 @@ void ModelManager::OnDestroy() {}
 void ModelManager::ProcessEvent(const Event &e) {
   switch (e.code) {
     case EventCode::Editor_ImportModel: {
-      auto specs = static_cast<LoadModelEventSpecs *>(e.data);
+      auto specs = static_cast<Editor_LoadModelEventSpecifications *>(e.data);
       m_Models.push_back(LoadModel(specs->name, specs->path));
       break;
     }

@@ -8,7 +8,7 @@ namespace ambr {
 
 class ShaderGraphWidget : public Widget {
  public:
-  ShaderGraphWidget(const String& id) : Widget(id) {}
+  ShaderGraphWidget(const String &id) : Widget(id) {}
 
   ~ShaderGraphWidget() override {
     ImNodes::DestroyContext();
@@ -18,9 +18,8 @@ class ShaderGraphWidget : public Widget {
     ImNodes::CreateContext();
     ImNodes::PushAttributeFlag(ImNodesAttributeFlags_EnableLinkDetachWithDragClick);
 
-    PushNode<ConstantShaderGraphNode<float>>();
-    PushNode<ConstantShaderGraphNode<float>>();
-    PushNode<ConstantShaderGraphNode<float>>();
+    PushNode<ConstantShaderGraphNode<glm::vec3>>();
+
     PushNode<ColorShaderGraphNode>();
   }
 
@@ -30,11 +29,11 @@ class ShaderGraphWidget : public Widget {
       ImNodes::BeginNodeEditor();
 
       // Perform the operations that need to be performed on a Node to Node basis.
-      for(auto& node : m_Nodes) {
-        if(auto colorNode = std::dynamic_pointer_cast<ColorShaderGraphNode>(node)) {
-          for(I32 i = 0; i < colorNode->GetInputAttributeCount(); i++) {
+      for (auto &node : m_Nodes) {
+        if (auto colorNode = std::dynamic_pointer_cast<ColorShaderGraphNode>(node)) {
+          for (I32 i = 0; i < colorNode->GetInputAttributeCount(); i++) {
             auto [outputNode, outputAttr] = FindConnectedNodeAndAttribute(colorNode->GetID(), i);
-            if(outputNode) {
+            if (outputNode) {
               auto value = outputNode->GetOutputAttributeValue(outputAttr);
               colorNode->SetInputAttributeValue(i, value);
             }
@@ -46,8 +45,8 @@ class ShaderGraphWidget : public Widget {
       }
 
       // Render the existing links between two nodes.
-      for(int i = 0; i < m_Links.size(); i++) {
-        const auto& link = m_Links[i];
+      for (int i = 0; i < m_Links.size(); i++) {
+        const auto &link = m_Links[i];
         ImNodes::Link(i, link.first, link.second);
       }
 
@@ -55,13 +54,13 @@ class ShaderGraphWidget : public Widget {
 
       // Check if a link was created between two attributes.
       I32 startAttribute, endAttribute;
-      if(ImNodes::IsLinkCreated(&startAttribute, &endAttribute)) {
+      if (ImNodes::IsLinkCreated(&startAttribute, &endAttribute)) {
         m_Links.emplace_back(startAttribute, endAttribute);
       }
 
       // Check if a link was destroyed in the current frame.
       I32 removedLinkIndex;
-      if(ImNodes::IsLinkDestroyed(&removedLinkIndex)) {
+      if (ImNodes::IsLinkDestroyed(&removedLinkIndex)) {
         m_Links.erase(m_Links.begin() + removedLinkIndex);
       }
     }
@@ -69,14 +68,39 @@ class ShaderGraphWidget : public Widget {
     ImGui::End();
   }
 
-  void ProcessEvent(const Event& e) override {
-    switch(e.code) {
+  void ProcessEvent(const Event &e) override {
+    switch (e.code) {
       case EventCode::ShaderGraph_PopNode:
         PopNode();
         break;
-      case EventCode::ShaderGraph_PushNode:
-        PushNode<ShaderGraphNode>();
+      case EventCode::ShaderGraph_PushNode: {
+        auto specs = static_cast<ShaderGraph_PushNodeEventSpecifications*>(e.data);
+        if (specs->nodeType == "constant") {
+          if (specs->templateTypeName == typeid(glm::vec3).name()) {
+            PushNode<ConstantShaderGraphNode<glm::vec3>>();
+          } else if (specs->templateTypeName == typeid(float).name()) {
+            PushNode<ConstantShaderGraphNode<float>>();
+          } else if (specs->templateTypeName == typeid(double).name()) {
+            PushNode<ConstantShaderGraphNode<double>>();
+          } else if (specs->templateTypeName == typeid(U32).name()) {
+            PushNode<ConstantShaderGraphNode<U32>>();
+          } else if (specs->templateTypeName == typeid(U16).name()) {
+            PushNode<ConstantShaderGraphNode<U16>>();
+          } else if (specs->templateTypeName == typeid(U8).name()) {
+            PushNode<ConstantShaderGraphNode<U8>>();
+          } else if (specs->templateTypeName == typeid(I32).name()) {
+            PushNode<ConstantShaderGraphNode<I32>>();
+          } else if (specs->templateTypeName == typeid(U16).name()) {
+            PushNode<ConstantShaderGraphNode<I16>>();
+          } else if (specs->templateTypeName == typeid(I8).name()) {
+            PushNode<ConstantShaderGraphNode<I8>>();
+          }
+        } else if (specs->nodeType == "color") {
+          PushNode<ColorShaderGraphNode>();
+        }
+        delete specs;
         break;
+      }
       default:
         break;
     }
@@ -88,7 +112,7 @@ class ShaderGraphWidget : public Widget {
 
   I32 m_NextNodeID = 0;
 
-  template <typename T>
+  template<typename T>
   void PushNode() {
     static_assert(std::is_base_of_v<ShaderGraphNode, T>,
                   "Class T must inherit from the ShaderGraphNode class.");
@@ -98,7 +122,7 @@ class ShaderGraphWidget : public Widget {
   }
 
   void PopNode() {
-    if(!m_Nodes.empty()) {
+    if (!m_Nodes.empty()) {
       RemoveFloatingLinks(m_Nodes.back()->GetID());
       m_Nodes.pop_back();
       m_NextNodeID--;
@@ -107,13 +131,13 @@ class ShaderGraphWidget : public Widget {
   }
 
   void RemoveFloatingLinks(I32 deletedNode) {
-    for(I32 i = 0; i < m_Links.size(); i++) {
-      const auto& link = m_Links[i];
+    for (I32 i = 0; i < m_Links.size(); i++) {
+      const auto &link = m_Links[i];
       I32 lhs, rhs;
       lhs = GetNodeIDFromLinkID(ShaderGraphAttributeType::Output, link.first);
       rhs = GetNodeIDFromLinkID(ShaderGraphAttributeType::Input, link.second);
 
-      if(lhs == deletedNode || rhs == deletedNode) {
+      if (lhs == deletedNode || rhs == deletedNode) {
         m_Links.erase(m_Links.begin() + i);
         i--;
       }

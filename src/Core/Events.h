@@ -31,9 +31,16 @@ struct Event {
 /// EVENT SPECIFICATIONS ///
 ////////////////////////////
 
-struct LoadModelEventSpecs {
+struct Editor_LoadModelEventSpecifications {
   String name;
   String path;
 };
+
+struct ShaderGraph_PushNodeEventSpecifications {
+  String nodeType;
+  String templateTypeName;
+};
+
+
 
 };  // namespace ambr

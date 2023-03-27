@@ -24,14 +24,64 @@ class MenuBar : public Widget {
       }
 
       if(ImGui::BeginMenu("Shader Graph")) {
-        if(ImGui::MenuItem("Add Node")) {
-          PublishEvent({ EventCode::ShaderGraph_PushNode });
+        if(ImGui::BeginMenu("Add Node")) {
+          auto* specs = new ShaderGraph_PushNodeEventSpecifications;
+          if(ImGui::BeginMenu("Constant Node")) {
+            specs->nodeType = "constant";
+            if(ImGui::MenuItem("Vector3f")) {
+              specs->templateTypeName = typeid(glm::vec3).name();
+              PublishEvent({ EventCode::ShaderGraph_PushNode, specs });
+            }
+            else if(ImGui::MenuItem("float")) {
+              specs->templateTypeName = typeid(float).name();
+              PublishEvent({ EventCode::ShaderGraph_PushNode, specs });
+            }
+            else if(ImGui::MenuItem("double")) {
+              specs->templateTypeName = typeid(double).name();
+              PublishEvent({ EventCode::ShaderGraph_PushNode, specs });
+            }
+            else if(ImGui::MenuItem("U32")) {
+              specs->templateTypeName = typeid(U32).name();
+              PublishEvent({ EventCode::ShaderGraph_PushNode, specs });
+            }
+            else if(ImGui::MenuItem("U16")) {
+              specs->templateTypeName = typeid(U16).name();
+              PublishEvent({ EventCode::ShaderGraph_PushNode, specs });
+            }
+            else if(ImGui::MenuItem("U8")) {
+              specs->templateTypeName = typeid(U8).name();
+              PublishEvent({ EventCode::ShaderGraph_PushNode, specs });
+            }
+            else if(ImGui::MenuItem("I32")) {
+              specs->templateTypeName = typeid(I32).name();
+              PublishEvent({ EventCode::ShaderGraph_PushNode, specs });
+            }
+            else if(ImGui::MenuItem("I16")) {
+              specs->templateTypeName = typeid(I16).name();
+              PublishEvent({ EventCode::ShaderGraph_PushNode, specs });
+            }
+            else if(ImGui::MenuItem("I8")) {
+              specs->templateTypeName = typeid(I8).name();
+              PublishEvent({ EventCode::ShaderGraph_PushNode, specs });
+            }
+            else {
+              delete specs;
+            }
+            ImGui::EndMenu();
+          }
+          else if(ImGui::MenuItem("Color Node")) {
+            specs->nodeType = "color";
+            PublishEvent({ EventCode::ShaderGraph_PushNode, specs });
+          }
+          else {
+            delete specs;
+          }
+          ImGui::EndMenu();
         }
 
         if(ImGui::MenuItem("Remove Node")) {
           PublishEvent({ EventCode::ShaderGraph_PopNode });
         }
-
         ImGui::EndMenu();
       }
 
