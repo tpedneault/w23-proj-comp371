@@ -58,6 +58,12 @@ class ShaderGraphNode {
     ImNodes::EndNode();
   }
 
+  virtual void SetInputAttributeValue(I32 inputAttribute, void* value) {}
+
+  virtual void* GetOutputAttributeValue(I32 outputAttribute) {
+    return nullptr;
+  }
+
   void SetID(I32 id) {
     m_ID = id;
   }
@@ -68,6 +74,18 @@ class ShaderGraphNode {
 
   [[nodiscard]] const String& GetTitle() const {
     return m_Title;
+  }
+
+  [[nodiscard]] U32 GetInputAttributeCount() const {
+    return m_InputAttributes.size();
+  }
+
+  [[nodiscard]] U32 GetStaticAttributeCount() const {
+    return m_StaticAttributes.size();
+  }
+
+  [[nodiscard]] U32 GetOutputAttributeCount() const {
+    return m_OutputAttributes.size();
   }
 
  protected:
