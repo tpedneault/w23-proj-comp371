@@ -58,6 +58,10 @@ class ShaderGraphNode {
     ImNodes::EndNode();
   }
 
+  virtual void OnNodeLinkDelete(I32 inputAttribute) {
+
+  }
+
   virtual void SetInputAttributeValue(I32 inputAttribute, void* value) {}
 
   virtual void* GetOutputAttributeValue(I32 outputAttribute) {

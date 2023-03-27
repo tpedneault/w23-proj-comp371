@@ -8,17 +8,16 @@ namespace ambr {
 class ColorShaderGraphNode : public ShaderGraphNode {
  public:
   ColorShaderGraphNode() : ShaderGraphNode() {}
-  virtual ~ColorShaderGraphNode() = default;
 
   void OnInitialize() override {
     m_OutputAttributes.clear();
     m_Title = "Color";
 
-    PushInputAttribute("R");
-    PushInputAttribute("G");
-    PushInputAttribute("B");
+    PushInputAttribute("R (float)");
+    PushInputAttribute("G (float)");
+    PushInputAttribute("B (float)");
 
-    PushOutputAttribute("Color");
+    PushOutputAttribute("Color (Vector3f)");
   }
 
   void OnRender() override {
@@ -44,12 +43,10 @@ class ColorShaderGraphNode : public ShaderGraphNode {
     }
 
     {
-      static I32 offset = static_cast<I32>(ShaderGraphAttributeType::Input);
+      static I32 offset = static_cast<I32>(ShaderGraphAttributeType::Static);
       const char* label = fmt::format("##{}{}", m_ID << offset, 10).c_str();
       ImGui::ColorButton(label, m_Color, ImGuiColorEditFlags_NoBorder, ImVec2(120, 120));
     }
-
-    m_Color = ImVec4();
 
     ImNodes::EndNode();
   }
@@ -69,6 +66,10 @@ class ColorShaderGraphNode : public ShaderGraphNode {
       default:
         break;
     }
+  }
+
+  void *GetOutputAttributeValue(I32 outputAttribute) override {
+    return reinterpret_cast<void *>(&m_Color);
   }
 
  protected:

@@ -3,6 +3,7 @@
 #include "Editor/Widget.h"
 #include "Nodes/ConstantShaderGraphNode.h"
 #include "Nodes/ColorShaderGraphNode.h"
+#include "Nodes/CheckerboardShaderGraphNode.h"
 
 namespace ambr {
 
@@ -17,10 +18,6 @@ class ShaderGraphWidget : public Widget {
   void OnInitialization() override {
     ImNodes::CreateContext();
     ImNodes::PushAttributeFlag(ImNodesAttributeFlags_EnableLinkDetachWithDragClick);
-
-    PushNode<ConstantShaderGraphNode<glm::vec3>>();
-
-    PushNode<ColorShaderGraphNode>();
   }
 
   void Render() override {
@@ -30,13 +27,11 @@ class ShaderGraphWidget : public Widget {
 
       // Perform the operations that need to be performed on a Node to Node basis.
       for (auto &node : m_Nodes) {
-        if (auto colorNode = std::dynamic_pointer_cast<ColorShaderGraphNode>(node)) {
-          for (I32 i = 0; i < colorNode->GetInputAttributeCount(); i++) {
-            auto [outputNode, outputAttr] = FindConnectedNodeAndAttribute(colorNode->GetID(), i);
-            if (outputNode) {
-              auto value = outputNode->GetOutputAttributeValue(outputAttr);
-              colorNode->SetInputAttributeValue(i, value);
-            }
+        for (I32 i = 0; i < node->GetInputAttributeCount(); i++) {
+          auto [outputNode, outputAttr] = FindConnectedNodeAndAttribute(node->GetID(), i);
+          if (outputNode) {
+            auto value = outputNode->GetOutputAttributeValue(outputAttr);
+            node->SetInputAttributeValue(i, value);
           }
         }
 
@@ -61,6 +56,20 @@ class ShaderGraphWidget : public Widget {
       // Check if a link was destroyed in the current frame.
       I32 removedLinkIndex;
       if (ImNodes::IsLinkDestroyed(&removedLinkIndex)) {
+        auto& link = m_Links[removedLinkIndex];
+
+        // Find the information of the node which takes in the input.
+        I32 inputNodeID = GetNodeIDFromLinkID(ShaderGraphAttributeType::Input, link.second);
+        I32 inputAttribute = GetAttributeIDFromLinkID(ShaderGraphAttributeType::Input, link.second);
+
+        // Call the OnNodeLinkDelete function to inform the node that its input connection was severed.
+        for (const auto &node : m_Nodes) {
+          if (node->GetID() == inputNodeID) {
+            node->OnNodeLinkDelete(inputAttribute);
+            break;
+          }
+        }
+
         m_Links.erase(m_Links.begin() + removedLinkIndex);
       }
     }
@@ -97,6 +106,8 @@ class ShaderGraphWidget : public Widget {
           }
         } else if (specs->nodeType == "color") {
           PushNode<ColorShaderGraphNode>();
+        } else if(specs->nodeType == "checkerboard") {
+          PushNode<CheckerboardShaderGraphNode>();
         }
         delete specs;
         break;

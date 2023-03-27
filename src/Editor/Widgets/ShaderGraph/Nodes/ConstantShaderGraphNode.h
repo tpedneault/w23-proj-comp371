@@ -15,18 +15,13 @@ class ConstantShaderGraphNode : public ShaderGraphNode {
     m_OutputAttributes.clear();
 
     if(typeid(T) == typeid(glm::vec3)) {
-      PushStaticAttribute("X_Slider");
-      PushOutputAttribute("X");
-
-      PushStaticAttribute("Y_Slider");
-      PushOutputAttribute("Y");
-
-      PushStaticAttribute("Z_Slider");
-      PushOutputAttribute("Z");
+      PushOutputAttribute("X (float)");
+      PushOutputAttribute("Y (float)");
+      PushOutputAttribute("Z (float)");
+      PushOutputAttribute("Vector (Vector3f)");
     }
     else {
-      PushStaticAttribute("Constant_Slider");
-      PushOutputAttribute("Constant");
+      PushOutputAttribute("Value");
     }
 
     m_Title = fmt::format("Constant<{}>", GetTypeName<decltype(m_Value)>());
@@ -42,10 +37,10 @@ class ConstantShaderGraphNode : public ShaderGraphNode {
     for (const auto &attr : m_OutputAttributes) {
       static I32 offset = static_cast<I32>(ShaderGraphAttributeType::Output);
       ImNodes::BeginOutputAttribute((m_ID << offset) + attr.ID);
-      ImGui::PushItemWidth(120.0f);
+      ImGui::PushItemWidth(140.0f);
       RenderConstantSlider(offset, attr);
       ImGui::SameLine();
-      ImGui::Indent(240.0f - ImGui::CalcTextSize(attr.title.c_str()).x);
+      ImGui::Indent(300.0f - ImGui::CalcTextSize(attr.title.c_str()).x);
       ImGui::TextUnformatted(attr.title.c_str());
       ImNodes::EndOutputAttribute();
     }
@@ -123,6 +118,9 @@ template<> inline void ConstantShaderGraphNode<glm::vec3>::RenderConstantSlider(
     case 2:
       ImGui::DragScalar(label, ImGuiDataType_Float, reinterpret_cast<float*>(&m_Value.z), 0.01f, 0, 0, "%.2f");
       break;
+    case 3:
+      ImGui::Dummy({5.0f, 5.0f});
+      break;
   }
 }
 
@@ -132,8 +130,12 @@ template<> inline void* ConstantShaderGraphNode<glm::vec3>::GetOutputAttributeVa
       return reinterpret_cast<float*>(&m_Value.x);
     case 1:
       return reinterpret_cast<float*>(&m_Value.y);
-    default:
+    case 2:
       return reinterpret_cast<float*>(&m_Value.z);
+    case 3:
+      return reinterpret_cast<glm::vec3*>(&m_Value);
+    default:
+      return nullptr;
   }
 }
 

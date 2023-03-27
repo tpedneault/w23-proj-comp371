@@ -73,6 +73,10 @@ class MenuBar : public Widget {
             specs->nodeType = "color";
             PublishEvent({ EventCode::ShaderGraph_PushNode, specs });
           }
+          else if(ImGui::MenuItem("Checkerboard Node")) {
+            specs->nodeType = "checkerboard";
+            PublishEvent({ EventCode::ShaderGraph_PushNode, specs });
+          }
           else {
             delete specs;
           }
