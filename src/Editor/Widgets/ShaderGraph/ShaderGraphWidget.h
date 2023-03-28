@@ -1,15 +1,16 @@
 #pragma once
 
 #include "Editor/Widget.h"
-#include "Nodes/ConstantShaderGraphNode.h"
-#include "Nodes/ColorShaderGraphNode.h"
-#include "Nodes/CheckerboardShaderGraphNode.h"
+#include "Nodes/ConstantNode.h"
+#include "Nodes/ColorNode.h"
+#include "Nodes/CheckerboardTextureNode.h"
+#include "Nodes/RegisterTextureNode.h"
 
 namespace ambr {
 
 class ShaderGraphWidget : public Widget {
  public:
-  ShaderGraphWidget(const String &id) : Widget(id) {}
+  explicit ShaderGraphWidget(const String &id) : Widget(id) {}
 
   ~ShaderGraphWidget() override {
     ImNodes::DestroyContext();
@@ -18,6 +19,8 @@ class ShaderGraphWidget : public Widget {
   void OnInitialization() override {
     ImNodes::CreateContext();
     ImNodes::PushAttributeFlag(ImNodesAttributeFlags_EnableLinkDetachWithDragClick);
+
+    PushNode<ConstantNode<glm::vec3>>();
   }
 
   void Render() override {
@@ -33,6 +36,12 @@ class ShaderGraphWidget : public Widget {
             auto value = outputNode->GetOutputAttributeValue(outputAttr);
             node->SetInputAttributeValue(i, value);
           }
+        }
+
+        // Forward the events created in the node.
+        auto events = node->ForwardEvents();
+        for (const auto &event : events) {
+          m_EventQueue.push_back(event);
         }
 
         // Render the node.
@@ -51,12 +60,25 @@ class ShaderGraphWidget : public Widget {
       I32 startAttribute, endAttribute;
       if (ImNodes::IsLinkCreated(&startAttribute, &endAttribute)) {
         m_Links.emplace_back(startAttribute, endAttribute);
+        auto link = m_Links.back();
+
+        // Find the information of the node which takes in the input.
+        I32 inputNodeID = GetNodeIDFromLinkID(ShaderGraphAttributeType::Input, link.second);
+        I32 inputAttribute = GetAttributeIDFromLinkID(ShaderGraphAttributeType::Input, link.second);
+
+        // Call the OnNodeLinkDelete function to inform the node that its input connection was severed.
+        for (const auto &node : m_Nodes) {
+          if (node->GetID() == inputNodeID) {
+            node->OnNodeLinkCreate(inputAttribute);
+            break;
+          }
+        }
       }
 
       // Check if a link was destroyed in the current frame.
       I32 removedLinkIndex;
       if (ImNodes::IsLinkDestroyed(&removedLinkIndex)) {
-        auto& link = m_Links[removedLinkIndex];
+        auto &link = m_Links[removedLinkIndex];
 
         // Find the information of the node which takes in the input.
         I32 inputNodeID = GetNodeIDFromLinkID(ShaderGraphAttributeType::Input, link.second);
@@ -83,37 +105,43 @@ class ShaderGraphWidget : public Widget {
         PopNode();
         break;
       case EventCode::ShaderGraph_PushNode: {
-        auto specs = static_cast<ShaderGraph_PushNodeEventSpecifications*>(e.data);
+        auto specs = static_cast<ShaderGraph_PushNodeEventSpecifications *>(e.data);
         if (specs->nodeType == "constant") {
           if (specs->templateTypeName == typeid(glm::vec3).name()) {
-            PushNode<ConstantShaderGraphNode<glm::vec3>>();
+            PushNode<ConstantNode<glm::vec3>>();
           } else if (specs->templateTypeName == typeid(float).name()) {
-            PushNode<ConstantShaderGraphNode<float>>();
+            PushNode<ConstantNode<float>>();
           } else if (specs->templateTypeName == typeid(double).name()) {
-            PushNode<ConstantShaderGraphNode<double>>();
+            PushNode<ConstantNode<double>>();
           } else if (specs->templateTypeName == typeid(U32).name()) {
-            PushNode<ConstantShaderGraphNode<U32>>();
+            PushNode<ConstantNode<U32>>();
           } else if (specs->templateTypeName == typeid(U16).name()) {
-            PushNode<ConstantShaderGraphNode<U16>>();
+            PushNode<ConstantNode<U16>>();
           } else if (specs->templateTypeName == typeid(U8).name()) {
-            PushNode<ConstantShaderGraphNode<U8>>();
+            PushNode<ConstantNode<U8>>();
           } else if (specs->templateTypeName == typeid(I32).name()) {
-            PushNode<ConstantShaderGraphNode<I32>>();
+            PushNode<ConstantNode<I32>>();
           } else if (specs->templateTypeName == typeid(U16).name()) {
-            PushNode<ConstantShaderGraphNode<I16>>();
+            PushNode<ConstantNode<I16>>();
           } else if (specs->templateTypeName == typeid(I8).name()) {
-            PushNode<ConstantShaderGraphNode<I8>>();
+            PushNode<ConstantNode<I8>>();
           }
         } else if (specs->nodeType == "color") {
-          PushNode<ColorShaderGraphNode>();
-        } else if(specs->nodeType == "checkerboard") {
-          PushNode<CheckerboardShaderGraphNode>();
+          PushNode<ColorNode>();
+        } else if (specs->nodeType == "checkerboard") {
+          PushNode<CheckerboardTextureNode>();
+        } else if (specs->nodeType == "register_texture") {
+          PushNode<RegisterTextureNode>();
         }
         delete specs;
         break;
       }
       default:
         break;
+    }
+
+    for (const auto &node : m_Nodes) {
+      node->ProcessEvent(e);
     }
   }
 
@@ -135,16 +163,17 @@ class ShaderGraphWidget : public Widget {
   void PopNode() {
     if (!m_Nodes.empty()) {
       RemoveFloatingLinks(m_Nodes.back()->GetID());
+      m_Nodes.back()->OnDestroy();
       m_Nodes.pop_back();
       m_NextNodeID--;
     }
-
   }
 
   void RemoveFloatingLinks(I32 deletedNode) {
     for (I32 i = 0; i < m_Links.size(); i++) {
       const auto &link = m_Links[i];
       I32 lhs, rhs;
+
       lhs = GetNodeIDFromLinkID(ShaderGraphAttributeType::Output, link.first);
       rhs = GetNodeIDFromLinkID(ShaderGraphAttributeType::Input, link.second);
 
@@ -178,6 +207,7 @@ class ShaderGraphWidget : public Widget {
     }
     return {nullptr, -1};
   }
+
 };
 
 };

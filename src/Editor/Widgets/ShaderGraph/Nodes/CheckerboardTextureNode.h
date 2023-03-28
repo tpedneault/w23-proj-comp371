@@ -6,12 +6,11 @@
 
 namespace ambr {
 
-class CheckerboardShaderGraphNode : public ShaderGraphNode {
+class CheckerboardTextureNode : public ShaderGraphNode {
  public:
-  CheckerboardShaderGraphNode() : ShaderGraphNode() {}
+  CheckerboardTextureNode() : ShaderGraphNode() {}
 
   void OnInitialize() override {
-    m_OutputAttributes.clear();
     m_Title = "Checkerboard";
 
     PushInputAttribute("Grid Size (U32)");
@@ -88,7 +87,7 @@ class CheckerboardShaderGraphNode : public ShaderGraphNode {
   }
 
   void *GetOutputAttributeValue(I32 outputAttribute) override {
-    return reinterpret_cast<void *>(m_TextureID);
+    return reinterpret_cast<void *>(&m_TextureID);
   }
 
  private:

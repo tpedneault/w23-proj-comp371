@@ -77,6 +77,10 @@ class MenuBar : public Widget {
             specs->nodeType = "checkerboard";
             PublishEvent({ EventCode::ShaderGraph_PushNode, specs });
           }
+          else if(ImGui::MenuItem("Register Texture")) {
+            specs->nodeType = "register_texture";
+            PublishEvent({ EventCode::ShaderGraph_PushNode, specs });
+          }
           else {
             delete specs;
           }

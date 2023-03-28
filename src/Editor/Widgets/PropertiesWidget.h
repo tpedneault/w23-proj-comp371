@@ -92,6 +92,24 @@ class PropertiesWidget : public Widget {
     }
     ImGui::EndGroup();
 
+    ImGui::BeginGroup();
+    ImGui::Text("Texture");
+    const std::shared_ptr<GraphTexture>& currentTexture = actor->texture;
+    if(ImGui::BeginCombo("##Texture", currentTexture ? currentTexture->title.c_str() : "")) {
+      auto textures = SystemLocator<ECS>::Get()->GetRegisteredTextures();
+      for(auto & texture : textures) {
+        bool isSelected = currentTexture && currentTexture->nodeID == texture->nodeID;
+        if(ImGui::Selectable(texture->title.c_str(), isSelected)) {
+          PublishEvent({EventCode::Editor_ChangeSelectedActorTexture, &texture->nodeID });
+        }
+        if(isSelected) {
+          ImGui::SetItemDefaultFocus();
+        }
+      }
+      ImGui::EndCombo();
+    }
+    ImGui::EndGroup();
+
     ImGui::Dummy(ImVec2(0.0f, 5.0f));
     ImGui::Separator();
     ImGui::Dummy(ImVec2(0.0f, 5.0f));

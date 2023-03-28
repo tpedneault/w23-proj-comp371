@@ -58,6 +58,8 @@ void Application::ProcessEvent(const Event& e) {
     case EventCode::ExitApplication:
       m_IsRunning = false;
       break;
+    default:
+      break;
   }
 }
 

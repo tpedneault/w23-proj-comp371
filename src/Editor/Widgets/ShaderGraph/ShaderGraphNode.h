@@ -58,6 +58,14 @@ class ShaderGraphNode {
     ImNodes::EndNode();
   }
 
+  virtual void OnDestroy() {
+
+  }
+
+  virtual void OnNodeLinkCreate(I32 inputAttribute) {
+
+  }
+
   virtual void OnNodeLinkDelete(I32 inputAttribute) {
 
   }
@@ -66,6 +74,35 @@ class ShaderGraphNode {
 
   virtual void* GetOutputAttributeValue(I32 outputAttribute) {
     return nullptr;
+  }
+
+  /**
+   * \brief Retrieves and clears the widget's event queue.
+   * \return A vector containing the queued events.
+   */
+  virtual std::vector<Event> ForwardEvents() {
+    std::vector<Event> events;
+    for (const Event e : m_EventQueue) {
+      events.push_back(e);
+    }
+    m_EventQueue.clear();
+    return events;
+  }
+
+  /**
+   * \brief Adds an event to the widget's event queue.
+   * \param e The event to be added to the queue.
+   */
+  virtual void PublishEvent(const Event &e) {
+    m_EventQueue.push_back(e);
+  }
+
+  /**
+   * \brief Processes an incoming event.
+   * \param e The event to be processed.
+   */
+  virtual void ProcessEvent(const Event &e) {
+
   }
 
   void SetID(I32 id) {
@@ -133,6 +170,9 @@ class ShaderGraphNode {
     m_OutputAttributes.pop_back();
     m_NextOutputAttributeID--;
   }
+
+ protected:
+  std::vector<Event> m_EventQueue; ///< The event queue used to store widget-related events.
 };
 
 };

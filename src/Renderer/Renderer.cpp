@@ -29,6 +29,20 @@ void Renderer::OnInitialization(void *specs) {
   m_SceneCamera.target = glm::vec3(-4.0f, -4.0f, -4.0f);
   m_SceneCamera.up = glm::vec3(0.0f, -1.0f, 0.0f);
 
+  glGenTextures(1, &m_DefaultTexture);
+  glBindTexture(GL_TEXTURE_2D, m_DefaultTexture);
+
+  GLubyte whitePixel[] = { 255, 255, 255, 255 }; // RGBA
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, whitePixel);
+
+  // Set texture parameters
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+  glBindTexture(GL_TEXTURE_2D, 0);
+
   glEnable(GL_DEPTH_TEST);
 
   SetViewportSize(m_Specs.viewportWidth, m_Specs.viewportHeight);
@@ -77,9 +91,16 @@ void Renderer::OnUpdate() {
     for (const auto &mesh : actor->model->meshes) {
       glm::mat4 meshTransform = model * mesh->transform;
       m_ShaderProgram->SetUniform("model", meshTransform);
+      glActiveTexture(GL_TEXTURE0);
+      if(actor->texture) {
+        glBindTexture(GL_TEXTURE_2D, actor->texture->textureID);
+      } else {
+        glBindTexture(GL_TEXTURE_2D, m_DefaultTexture);
+      }
       glBindVertexArray(mesh->vertexArray);
       glDrawElements(GL_TRIANGLES, mesh->indexCount * 3, GL_UNSIGNED_INT, nullptr);
       glBindVertexArray(0);
+      glBindTexture(GL_TEXTURE_2D, 0);
     }
   }
 

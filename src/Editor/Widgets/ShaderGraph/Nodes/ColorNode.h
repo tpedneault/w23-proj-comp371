@@ -5,9 +5,9 @@
 
 namespace ambr {
 
-class ColorShaderGraphNode : public ShaderGraphNode {
+class ColorNode : public ShaderGraphNode {
  public:
-  ColorShaderGraphNode() : ShaderGraphNode() {}
+  ColorNode() : ShaderGraphNode() {}
 
   void OnInitialize() override {
     m_OutputAttributes.clear();
@@ -49,6 +49,22 @@ class ColorShaderGraphNode : public ShaderGraphNode {
     }
 
     ImNodes::EndNode();
+  }
+
+  void OnNodeLinkDelete(I32 inputAttribute) override {
+    switch (inputAttribute) {
+      case 0:
+        m_Color.x = 0.0f;
+        break;
+      case 1:
+        m_Color.y = 0.0f;
+        break;
+      case 2:
+        m_Color.z = 0.0f;
+        break;
+      default:
+        break;
+    }
   }
 
   void SetInputAttributeValue(I32 inputAttribute, void* value) override {

@@ -26,6 +26,6 @@ void main() {
 	vec3 diffuse = diff * light.color;
 
 	vec4 textureColor = texture2D(texture, TextureCoord);
-	vec3 result = (ambient + diffuse) * vec3(0.7f, 0.6f, 0.5f);
+	vec3 result = (ambient + diffuse) * vec3(textureColor.x, textureColor.y, textureColor.z);
 	fColor = vec4(result, 1.0f);
 }

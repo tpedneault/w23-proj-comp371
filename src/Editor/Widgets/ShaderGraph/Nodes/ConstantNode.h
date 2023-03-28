@@ -6,10 +6,10 @@
 namespace ambr {
 
 template <typename T>
-class ConstantShaderGraphNode : public ShaderGraphNode {
+class ConstantNode : public ShaderGraphNode {
  public:
-  ConstantShaderGraphNode() : ShaderGraphNode() {}
-  virtual ~ConstantShaderGraphNode() = default;
+  ConstantNode() : ShaderGraphNode() {}
+  virtual ~ConstantNode() = default;
 
   void OnInitialize() override {
     m_OutputAttributes.clear();
@@ -66,47 +66,47 @@ class ConstantShaderGraphNode : public ShaderGraphNode {
   T m_Value;
 };
 
-template<> inline void ConstantShaderGraphNode<float>::RenderConstantSlider(I32 offset, const ShaderGraphNodeAttribute& attribute) {
+template<> inline void ConstantNode<float>::RenderConstantSlider(I32 offset, const ShaderGraphNodeAttribute& attribute) {
   const char* label = fmt::format("##{}{}", m_ID << offset, attribute.ID).c_str();
   ImGui::DragScalar(label, ImGuiDataType_Float, static_cast<float*>(&m_Value), 0.1f, 0, 0, "%.2f");
 }
 
-template<> inline void ConstantShaderGraphNode<double>::RenderConstantSlider(I32 offset, const ShaderGraphNodeAttribute& attribute) {
+template<> inline void ConstantNode<double>::RenderConstantSlider(I32 offset, const ShaderGraphNodeAttribute& attribute) {
   const char* label = fmt::format("##{}{}", m_ID << offset, attribute.ID).c_str();
   ImGui::DragScalar(label, ImGuiDataType_Double, static_cast<double*>(&m_Value), 0.1f, 0, 0, "%.2f");
 }
 
-template<> inline void ConstantShaderGraphNode<U32>::RenderConstantSlider(I32 offset, const ShaderGraphNodeAttribute& attribute) {
+template<> inline void ConstantNode<U32>::RenderConstantSlider(I32 offset, const ShaderGraphNodeAttribute& attribute) {
   const char* label = fmt::format("##{}{}", m_ID << offset, attribute.ID).c_str();
   ImGui::DragScalar(label, ImGuiDataType_U32, static_cast<U32*>(&m_Value), 1, 0, 0, "%d");
 }
 
-template<> inline void ConstantShaderGraphNode<U16>::RenderConstantSlider(I32 offset, const ShaderGraphNodeAttribute& attribute) {
+template<> inline void ConstantNode<U16>::RenderConstantSlider(I32 offset, const ShaderGraphNodeAttribute& attribute) {
   const char* label = fmt::format("##{}{}", m_ID << offset, attribute.ID).c_str();
   ImGui::DragScalar(label, ImGuiDataType_U16, static_cast<U16*>(&m_Value), 1, 0, 0, "%d");
 }
 
-template<> inline void ConstantShaderGraphNode<U8>::RenderConstantSlider(I32 offset, const ShaderGraphNodeAttribute& attribute) {
+template<> inline void ConstantNode<U8>::RenderConstantSlider(I32 offset, const ShaderGraphNodeAttribute& attribute) {
   const char* label = fmt::format("##{}{}", m_ID << offset, attribute.ID).c_str();
   ImGui::DragScalar(label, ImGuiDataType_U8, static_cast<U8*>(&m_Value), 1, 0, 0, "%d");
 }
 
-template<> inline void ConstantShaderGraphNode<I32>::RenderConstantSlider(I32 offset, const ShaderGraphNodeAttribute& attribute) {
+template<> inline void ConstantNode<I32>::RenderConstantSlider(I32 offset, const ShaderGraphNodeAttribute& attribute) {
   const char* label = fmt::format("##{}{}", m_ID << offset, attribute.ID).c_str();
   ImGui::DragScalar(label, ImGuiDataType_S32, static_cast<I32*>(&m_Value), 1, 0, 0, "%d");
 }
 
-template<> inline void ConstantShaderGraphNode<I16>::RenderConstantSlider(I32 offset, const ShaderGraphNodeAttribute& attribute) {
+template<> inline void ConstantNode<I16>::RenderConstantSlider(I32 offset, const ShaderGraphNodeAttribute& attribute) {
   const char* label = fmt::format("##{}{}", m_ID << offset, attribute.ID).c_str();
   ImGui::DragScalar(label, ImGuiDataType_S16, static_cast<I16*>(&m_Value), 1, 0, 0, "%d");
 }
 
-template<> inline void ConstantShaderGraphNode<I8>::RenderConstantSlider(I32 offset, const ShaderGraphNodeAttribute& attribute) {
+template<> inline void ConstantNode<I8>::RenderConstantSlider(I32 offset, const ShaderGraphNodeAttribute& attribute) {
   const char* label = fmt::format("##{}{}", m_ID << offset, attribute.ID).c_str();
   ImGui::DragScalar(label, ImGuiDataType_S8, static_cast<I8*>(&m_Value), 1, 0, 0, "%d");
 }
 
-template<> inline void ConstantShaderGraphNode<glm::vec3>::RenderConstantSlider(I32 offset, const ShaderGraphNodeAttribute& attribute) {
+template<> inline void ConstantNode<glm::vec3>::RenderConstantSlider(I32 offset, const ShaderGraphNodeAttribute& attribute) {
   const char* label = fmt::format("##{}{}", m_ID << offset, attribute.ID).c_str();
   switch(attribute.ID) {
     case 0:
@@ -124,7 +124,7 @@ template<> inline void ConstantShaderGraphNode<glm::vec3>::RenderConstantSlider(
   }
 }
 
-template<> inline void* ConstantShaderGraphNode<glm::vec3>::GetOutputAttributeValue(I32 outputAttribute) {
+template<> inline void* ConstantNode<glm::vec3>::GetOutputAttributeValue(I32 outputAttribute) {
   switch(outputAttribute) {
     case 0:
       return reinterpret_cast<float*>(&m_Value.x);

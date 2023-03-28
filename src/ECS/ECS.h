@@ -3,7 +3,7 @@
 #include "Core/System.h"
 
 #include "ECS/Components/Transform.h"
-#include "ECS/Components/Color.h"
+#include "ECS/Components/GraphTexture.h"
 
 #include "Assets/Model.h"
 
@@ -20,6 +20,7 @@ struct Actor {
   String name{};
   Transform transform{};
   std::shared_ptr<Model> model;
+  std::shared_ptr<GraphTexture> texture = nullptr;
   bool isVisible = true;
 };
 
@@ -60,17 +61,23 @@ class ECS final : public System {
 
   [[nodiscard]] bool IsEntitySelected() const;
   [[nodiscard]] EntityIndexInfo GetSelectedEntityInfo() const;
+  [[nodiscard]] std::shared_ptr<GraphTexture> GetRegisteredTextureByID(U32 id);
   [[nodiscard]] std::vector<std::shared_ptr<Actor>> GetActors() const;
   [[nodiscard]] std::vector<std::shared_ptr<Light>> GetLights() const;
   [[nodiscard]] std::vector<std::shared_ptr<Camera>> GetCameras() const;
+  [[nodiscard]] std::vector<std::shared_ptr<GraphTexture>> GetRegisteredTextures() const;
 
  private:
   void OnChangeSelectedEntity(EntityIndexInfo entityInfo);
   void OnChangeSelectedActorModel(const String& modelId);
+  void OnChangeSelectedActorTexture(U32 nodeID);
+  void OnRegisterTexture(const GraphTexture& texture);
+  void OnUnregisterTexture(U32 nodeID);
 
   std::vector<std::shared_ptr<Actor>> m_Actors;
   std::vector<std::shared_ptr<Light>> m_Lights;
   std::vector<std::shared_ptr<Camera>> m_Cameras;
+  std::vector<std::shared_ptr<GraphTexture>> m_RegisteredGraphTextures;
 
   bool m_HasSelectedEntity;
   EntityIndexInfo m_SelectedEntity;

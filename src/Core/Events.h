@@ -10,6 +10,7 @@ enum class EventCode : U16 {
 
   Editor_ChangeSelectedEntity,
   Editor_ChangeSelectedActorModel,
+  Editor_ChangeSelectedActorTexture,
   Editor_OpenLoadModelWindow,
   Editor_CloseLoadModelWindow,
   Editor_ImportModel,
@@ -19,6 +20,8 @@ enum class EventCode : U16 {
 
   ShaderGraph_PushNode,
   ShaderGraph_PopNode,
+  ShaderGraph_RegisterTexture,
+  ShaderGraph_UnregisterTexture,
 };
 
 struct Event {
@@ -41,6 +44,14 @@ struct ShaderGraph_PushNodeEventSpecifications {
   String templateTypeName;
 };
 
+struct ShaderGraph_RegisterTexture {
+  I32 nodeID;
+  String textureName;
+  U32 textureID;
+};
 
+struct ShaderGraph_UnregisterTexture {
+  I32 nodeID;
+};
 
 };  // namespace ambr

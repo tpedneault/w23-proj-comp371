@@ -79,7 +79,7 @@ class Renderer : public System {
   void OnKeyPressed(I32 keyCode) override;
 
  private:
-  U32 m_SceneGridVAO;
+  U32 m_SceneGridVAO, m_DefaultTexture;
 
   std::shared_ptr<ShaderProgram> m_ShaderProgram;
   std::shared_ptr<ShaderProgram> m_LightShaderProgram;

@@ -25,7 +25,6 @@ struct Transform {
     matrix = glm::rotate(matrix, glm::radians(transform.rotation.z), glm::vec3(1.0f, 0.0f, 0.0f));
     matrix = glm::scale(matrix, transform.scale * transform.scaleMultiplier);
 
-    // TODO: Implement rotation by converting the rotation Euler angles to Quaternions.
     return matrix;
   }
 };
