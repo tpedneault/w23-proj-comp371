@@ -6,7 +6,7 @@ void ECS::OnInitialization(void *specs) {
   auto light = std::make_shared<Light>();
   light->name = "Default Light";
   light->position = glm::vec3(-5.0f, 5.0f, 0.0f);
-  light->color = glm::vec3(1.0f, 1.0f, 1.0f);
+  light->color = glm::vec3(0.9f, 0.9f, 1.0f);
   light->ambientStrength = 0.8f;
   m_Lights.push_back(light);
   m_HasSelectedEntity = false;

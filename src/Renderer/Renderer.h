@@ -1,6 +1,9 @@
 #pragma once
 
 #include <GL/glew.h>
+#include "stb_image.h"
+#include "imgui.h"
+#include "imgui_internal.h"
 
 #include "Core/System.h"
 
@@ -12,7 +15,7 @@
 
 namespace ambr {
 
-constexpr float SCENE_CAMERA_MOVE_SPEED = 10.0f;
+constexpr float SCENE_CAMERA_MOVE_SPEED = 25.0f;
 
 // If I want to expand this in the future to use Vulkan or DirectX.
 enum class RendererImplementation : U8 { OpenGL };
@@ -52,6 +55,8 @@ class Renderer : public System {
    */
   void OnDestroy() override;
 
+  void OnViewportClicked(ImGuiIO& io, ImVec2 topLeft, ImVec2 viewportSize);
+
   /**
    * \brief Updates the current viewport dimensions.
    * \param width of the viewport
@@ -79,15 +84,20 @@ class Renderer : public System {
   void OnKeyPressed(I32 keyCode) override;
 
  private:
-  U32 m_SceneGridVAO, m_DefaultTexture;
+  U32 m_SceneGridVAO, m_SkyboxVAO;
+  U32 m_DefaultTexture, m_SkyboxTexture;
 
   std::shared_ptr<ShaderProgram> m_ShaderProgram;
   std::shared_ptr<ShaderProgram> m_LightShaderProgram;
+  std::shared_ptr<ShaderProgram> m_SkyboxProgram;
 
   Camera m_SceneCamera; // TODO: This should be moved somewhere else.
 
   Framebuffer m_Framebuffer;
   RendererSystemSpecifications m_Specs{};
+
+  void LoadDefaultTexture();
+  void LoadSkyboxCubemap();
 };
 
 };  // namespace ambr

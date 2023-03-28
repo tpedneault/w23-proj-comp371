@@ -25,23 +25,21 @@ void Renderer::OnInitialization(void *specs) {
     delete frag;
   }
 
+  {
+    auto vertex = Shader::Create(ShaderType::Vertex, "assets/shaders/skybox.vertex.glsl");
+    auto frag = Shader::Create(ShaderType::Fragment, "assets/shaders/skybox.fragment.glsl");
+    m_SkyboxProgram = ShaderProgram::Create({vertex, frag});
+
+    delete vertex;
+    delete frag;
+  }
+
   m_SceneCamera.position = glm::vec3(4.0f, 4.0f, 4.0f);
   m_SceneCamera.target = glm::vec3(-4.0f, -4.0f, -4.0f);
   m_SceneCamera.up = glm::vec3(0.0f, -1.0f, 0.0f);
 
-  glGenTextures(1, &m_DefaultTexture);
-  glBindTexture(GL_TEXTURE_2D, m_DefaultTexture);
-
-  GLubyte whitePixel[] = { 255, 255, 255, 255 }; // RGBA
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, whitePixel);
-
-  // Set texture parameters
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-  glBindTexture(GL_TEXTURE_2D, 0);
+  LoadDefaultTexture();
+  LoadSkyboxCubemap();
 
   glEnable(GL_DEPTH_TEST);
 
@@ -63,12 +61,13 @@ void Renderer::OnUpdate() {
 
   m_ShaderProgram->Use();
 
-  const glm::mat4 projection = glm::perspective(
+  glm::mat4 projection = glm::perspective(
       glm::radians(m_SceneCamera.fov),
       static_cast<float>(m_Framebuffer.GetWidth()) / m_Framebuffer.GetHeight(),
       m_SceneCamera.nearPlane, m_SceneCamera.farPlane);
 
-  const auto view = glm::lookAt(m_SceneCamera.position, m_SceneCamera.position + m_SceneCamera.target, m_SceneCamera.up);
+  auto
+      view = glm::lookAt(m_SceneCamera.position, m_SceneCamera.position + m_SceneCamera.target, m_SceneCamera.up);
 
   auto light = SystemLocator<ECS>::Get()->GetLights()[0];
 
@@ -92,7 +91,7 @@ void Renderer::OnUpdate() {
       glm::mat4 meshTransform = model * mesh->transform;
       m_ShaderProgram->SetUniform("model", meshTransform);
       glActiveTexture(GL_TEXTURE0);
-      if(actor->texture) {
+      if (actor->texture) {
         glBindTexture(GL_TEXTURE_2D, actor->texture->textureID);
       } else {
         glBindTexture(GL_TEXTURE_2D, m_DefaultTexture);
@@ -123,6 +122,30 @@ void Renderer::OnUpdate() {
     glDrawElements(GL_TRIANGLES, model->meshes[0]->indexCount * 3, GL_UNSIGNED_INT, nullptr);
     glBindVertexArray(0);
   }
+
+  // Render the skybox.
+  glDepthFunc(GL_LEQUAL);
+
+  static Transform skyboxModel;
+  skyboxModel.scale = { 1.0f, 1.0f, 1.0f };
+  skyboxModel.translation = m_SceneCamera.position;
+  skyboxModel.scaleMultiplier = 49.0f;
+
+  m_SkyboxProgram->Use();
+  m_SkyboxProgram->SetUniform("projection", projection);
+  view = glm::lookAt(m_SceneCamera.position, m_SceneCamera.target, m_SceneCamera.up);
+  m_SkyboxProgram->SetUniform("view", view);
+  m_SkyboxProgram->SetUniform("model", Transform::GetTransformationMatrix(skyboxModel));
+
+  glBindVertexArray(m_SkyboxVAO);
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, m_SkyboxTexture);
+  glDrawArrays(GL_TRIANGLES, 0, 36);
+  glBindVertexArray(0);
+  glDepthFunc(GL_LESS);
+
+  glDepthFunc(GL_LEQUAL);
+
 
   if (m_Specs.useFramebuffer) {
     m_Framebuffer.Unbind();
@@ -161,21 +184,157 @@ void Renderer::ProcessEvent(const Event &e) {
 
 void Renderer::OnKeyPressed(I32 keyCode) {
   float dt = SystemLocator<Window>::Get()->GetDeltaTime();
+
+  // Calculate the camera's front, right, and up vectors
+  glm::vec3 front = glm::normalize(m_SceneCamera.target - m_SceneCamera.position);
+  glm::vec3 right = glm::normalize(glm::cross(front, m_SceneCamera.up));
+  glm::vec3 up = glm::normalize(glm::cross(right, front));
+
   switch (keyCode) {
     case GLFW_KEY_A:
-      m_SceneCamera.position.x -= SCENE_CAMERA_MOVE_SPEED * dt;
+      m_SceneCamera.position -= right * SCENE_CAMERA_MOVE_SPEED * dt;
       break;
     case GLFW_KEY_W:
-      m_SceneCamera.position.z -= SCENE_CAMERA_MOVE_SPEED * dt;
+      m_SceneCamera.position += front * SCENE_CAMERA_MOVE_SPEED * dt;
       break;
     case GLFW_KEY_D:
-      m_SceneCamera.position.x += SCENE_CAMERA_MOVE_SPEED * dt;
+      m_SceneCamera.position += right * SCENE_CAMERA_MOVE_SPEED * dt;
       break;
     case GLFW_KEY_S:
-      m_SceneCamera.position.z += SCENE_CAMERA_MOVE_SPEED * dt;
+      m_SceneCamera.position -= front * SCENE_CAMERA_MOVE_SPEED * dt;
       break;
     default:
       break;
+  }
+}
+
+void Renderer::LoadSkyboxCubemap() {
+  static std::vector<String> faces = {
+      "assets/skybox/right.bmp",
+      "assets/skybox/left.bmp",
+      "assets/skybox/top.bmp",
+      "assets/skybox/bottom.bmp",
+      "assets/skybox/front.bmp",
+      "assets/skybox/back.bmp"
+  };
+
+  glGenTextures(1, &m_SkyboxTexture);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, m_SkyboxTexture);
+
+  stbi_set_flip_vertically_on_load(false);
+  I32 width, height, numChannels;
+  for (U32 i = 0; i < faces.size(); i++) {
+    U8 *data = stbi_load(faces[i].c_str(), &width, &height, &numChannels, 0);
+    if (data) {
+      glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    } else {
+      AMBR_LOG_ERROR(fmt::format("Failed to load cubemap texture: {}.", faces[i].c_str()));
+    }
+    stbi_image_free(data);
+  }
+  stbi_set_flip_vertically_on_load(true);
+
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+  // Create the VAO and VBO for the Skybox.
+  float skyboxVertices[] = {
+      // positions
+      -1.0f,  1.0f, -1.0f,
+      -1.0f, -1.0f, -1.0f,
+      1.0f, -1.0f, -1.0f,
+      1.0f, -1.0f, -1.0f,
+      1.0f,  1.0f, -1.0f,
+      -1.0f,  1.0f, -1.0f,
+
+      -1.0f, -1.0f,  1.0f,
+      -1.0f, -1.0f, -1.0f,
+      -1.0f,  1.0f, -1.0f,
+      -1.0f,  1.0f, -1.0f,
+      -1.0f,  1.0f,  1.0f,
+      -1.0f, -1.0f,  1.0f,
+
+      1.0f, -1.0f, -1.0f,
+      1.0f, -1.0f,  1.0f,
+      1.0f,  1.0f,  1.0f,
+      1.0f,  1.0f,  1.0f,
+      1.0f,  1.0f, -1.0f,
+      1.0f, -1.0f, -1.0f,
+
+      -1.0f, -1.0f,  1.0f,
+      -1.0f,  1.0f,  1.0f,
+      1.0f,  1.0f,  1.0f,
+      1.0f,  1.0f,  1.0f,
+      1.0f, -1.0f,  1.0f,
+      -1.0f, -1.0f,  1.0f,
+
+      -1.0f,  1.0f, -1.0f,
+      1.0f,  1.0f, -1.0f,
+      1.0f,  1.0f,  1.0f,
+      1.0f,  1.0f,  1.0f,
+      -1.0f,  1.0f,  1.0f,
+      -1.0f,  1.0f, -1.0f,
+
+      -1.0f, -1.0f, -1.0f,
+      -1.0f, -1.0f,  1.0f,
+      1.0f, -1.0f, -1.0f,
+      1.0f, -1.0f, -1.0f,
+      -1.0f, -1.0f,  1.0f,
+      1.0f, -1.0f,  1.0f
+  };
+
+  U32 vbo;
+  glGenVertexArrays(1, &m_SkyboxVAO);
+  glGenBuffers(1, &vbo);
+  glBindVertexArray(m_SkyboxVAO);
+  glBindBuffer(GL_ARRAY_BUFFER, vbo);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindVertexArray(0);
+}
+
+void Renderer::LoadDefaultTexture() {
+  glGenTextures(1, &m_DefaultTexture);
+  glBindTexture(GL_TEXTURE_2D, m_DefaultTexture);
+
+  GLubyte whitePixel[] = {255, 255, 255, 255}; // RGBA
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, whitePixel);
+
+  // Set texture parameters
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+  glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void Renderer::OnViewportClicked(ImGuiIO &io, ImVec2 topLeft, ImVec2 viewportSize) {
+  ImVec2 mousePos = io.MousePos;
+  ImVec2 imageBottomRight = ImVec2(topLeft.x + viewportSize.x, topLeft.y + viewportSize.y);
+
+  if (io.MouseDown[0] && mousePos.x >= topLeft.x && mousePos.y >= topLeft.y && mousePos.x <= imageBottomRight.x
+      && mousePos.y <= imageBottomRight.y) {
+    ImVec2 delta = io.MouseDelta;
+
+    // Define your camera's sensitivity and speed
+    float sensitivity = -0.015f;
+
+    // Calculate the vector from the camera's position to its target
+    glm::vec3 camDir = m_SceneCamera.target - m_SceneCamera.position;
+
+    // Calculate the camera's right and up vectors
+    glm::vec3 camRight = glm::normalize(glm::cross(camDir, m_SceneCamera.up));
+    glm::vec3 camUp = glm::normalize(glm::cross(camRight, camDir));
+
+    // Update the camera's target based on the mouse movement
+    m_SceneCamera.target += camRight * -delta.x * sensitivity;
+    m_SceneCamera.target += camUp * delta.y * (sensitivity * -1);
   }
 }
 
