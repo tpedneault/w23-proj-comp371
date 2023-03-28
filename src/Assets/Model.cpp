@@ -210,13 +210,42 @@ void ModelManager::LoadMesh(const String &name,
       aiString baseColor;
       auto material = scene->mMaterials[mesh->mMaterialIndex];
 
-      aiReturn result = material->GetTexture(AI_MATKEY_BASE_COLOR_TEXTURE, &baseColor);
+      aiReturn result = material->GetTexture(aiTextureType_DIFFUSE, 0, &baseColor);
       if (result != AI_SUCCESS) {
         AMBR_LOG_WARN("Failed to load the texture for the current mesh.");
       }
 
-      auto texture = scene->GetEmbeddedTextureAndIndex(baseColor.C_Str());
-      modelMesh->textureIndex = texture.second;
+      auto texture = scene->GetEmbeddedTexture(baseColor.C_Str());
+
+      if (texture != nullptr) {
+        int width, height, numChannels;
+
+        // Check if the embedded texture has non-zero height (compressed)
+        if (texture->mHeight != 0) {
+          // Texture is uncompressed, use mWidth * mHeight as the data size
+          unsigned char *data = reinterpret_cast<unsigned char*>(texture->pcData);
+          modelMesh->texture = stbi_load_from_memory(data, texture->mWidth * texture->mHeight, &width, &height, &numChannels, 0);
+        } else {
+          // Texture is compressed, use mWidth as the data size
+          unsigned char *data = reinterpret_cast<unsigned char*>(texture->pcData);
+          modelMesh->texture = stbi_load_from_memory(data, texture->mWidth * sizeof(aiTexel), &width, &height, &numChannels, 0);
+        }
+
+        // Generate OpenGL texture and set parameters
+        glGenTextures(1, &modelMesh->textureID);
+        glBindTexture(GL_TEXTURE_2D, modelMesh->textureID);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        // Upload texture data to GPU
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, modelMesh->texture);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        // Free the loaded texture data
+        stbi_image_free(modelMesh->texture);
+      }
     }
 
     model->meshes.push_back(modelMesh);

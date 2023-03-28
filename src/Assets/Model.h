@@ -27,7 +27,8 @@ struct ModelMesh {
   U32 textureCoordsBuffer;
   U32 normalBuffer;
   U32 materialIndex;
-  U32 textureIndex;
+  U32 textureID;
+  U8* texture;
 };
 
 struct Model {

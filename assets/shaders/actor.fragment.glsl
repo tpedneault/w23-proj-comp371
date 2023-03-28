@@ -34,7 +34,8 @@ void main() {
 
 	// Add specular lighting
 	float specularStrength = 0.5f;
-	vec3 viewDirection = normalize(cameraPosition - fragmentPositionInViewSpace);
+	vec3 viewPositionInViewSpace = (view * vec4(cameraPosition, 1.0)).xyz;
+	vec3 viewDirection = normalize(viewPositionInViewSpace - fragmentPositionInViewSpace);
 	vec3 reflectDirection = reflect(-lightDirection, normalInViewSpace);
 	float spec = pow(max(dot(viewDirection, reflectDirection), 0.0), 32);
 	vec3 specular = specularStrength * spec * light.color;

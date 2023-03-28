@@ -97,7 +97,9 @@ void Renderer::OnUpdate() {
       m_ShaderProgram->SetUniform("normalMatrix", normalMatrix);
 
       glActiveTexture(GL_TEXTURE0);
-      if (actor->texture) {
+      if(mesh->texture) {
+        glBindTexture(GL_TEXTURE_2D, mesh->textureID);
+      } else if (actor->texture) {
         glBindTexture(GL_TEXTURE_2D, actor->texture->textureID);
       } else {
         glBindTexture(GL_TEXTURE_2D, m_DefaultTexture);
