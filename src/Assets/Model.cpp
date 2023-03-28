@@ -37,8 +37,7 @@ std::shared_ptr<Model> ModelManager::LoadModel(const String &name,
   static Assimp::Importer s_Importer;
 
   const aiScene *scene = s_Importer.ReadFile(path.c_str(),
-                                             aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_FlipUVs
-                                                 | aiProcess_JoinIdenticalVertices);
+                                             aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_FlipUVs);
   if (!scene) {
     AMBR_LOG_ERROR(
         fmt::format("Failed to load file {}, error string: {}", name, s_Importer.GetErrorString()));
@@ -171,7 +170,7 @@ void ModelManager::LoadMesh(const String &name,
     I32 textureCoordsSize = mesh->mNumVertices * sizeof(aiVector3D);
     glGenBuffers(1, &modelMesh->textureCoordsBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, modelMesh->textureCoordsBuffer);
-    glBufferData(GL_ARRAY_BUFFER, textureCoordsSize, mesh->mTextureCoords, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, textureCoordsSize, mesh->mTextureCoords[0], GL_STATIC_DRAW);
     glVertexAttribPointer(static_cast<U32>(OpenGLBufferType::TextureCoordsBuffer),
                           3,
                           GL_FLOAT,
