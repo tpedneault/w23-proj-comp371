@@ -13,9 +13,73 @@ enum class ShaderGraphAttributeType : I32 {
   Output = 24
 };
 
+enum class ShaderGraphAttributeDataType : I32 {
+  None,
+  Vector3f,
+  Float,
+  Double,
+  U32,
+  U16,
+  U8,
+  I32,
+  I16,
+  I8,
+};
+
+static String ShaderGraphAttributeDataTypeToString(ShaderGraphAttributeDataType type) {
+  switch (type) {
+    case ShaderGraphAttributeDataType::Vector3f:
+      return "Vector3f";
+    case ShaderGraphAttributeDataType::Float:
+      return "Float";
+    case ShaderGraphAttributeDataType::Double:
+      return "Double";
+    case ShaderGraphAttributeDataType::U32:
+      return "U32";
+    case ShaderGraphAttributeDataType::U16:
+      return "U16";
+    case ShaderGraphAttributeDataType::U8:
+      return "U8";
+    case ShaderGraphAttributeDataType::I32:
+      return "I32";
+    case ShaderGraphAttributeDataType::I16:
+      return "I16";
+    case ShaderGraphAttributeDataType::I8:
+      return "I8";
+    default:
+      return "Unknown";
+  }
+}
+
+template <typename T>
+static ShaderGraphAttributeDataType ShaderGraphAttributeDataTypeFromTypeID() {
+  if(typeid(T) == typeid(glm::vec3)) {
+    return ShaderGraphAttributeDataType::Vector3f;
+  } else if(typeid(T) == typeid(float)) {
+    return ShaderGraphAttributeDataType::Float;
+  } else if(typeid(T) == typeid(double)) {
+    return ShaderGraphAttributeDataType::Double;
+  } else if(typeid(T) == typeid(U32)) {
+    return ShaderGraphAttributeDataType::U32;
+  } else if(typeid(T) == typeid(U16)) {
+    return ShaderGraphAttributeDataType::U16;
+  } else if(typeid(T) == typeid(U8)) {
+    return ShaderGraphAttributeDataType::U8;
+  } else if(typeid(T) == typeid(I32)) {
+    return ShaderGraphAttributeDataType::I32;
+  } else if(typeid(T) == typeid(I16)) {
+    return ShaderGraphAttributeDataType::I16;
+  } else if(typeid(T) == typeid(I8)) {
+    return ShaderGraphAttributeDataType::I8;
+  } else {
+    return ShaderGraphAttributeDataType::None;
+  }
+}
+
 struct ShaderGraphNodeAttribute {
   I32 ID;
   String title;
+  ShaderGraphAttributeDataType dataType;
 };
 
 class ShaderGraphNode {
@@ -117,6 +181,18 @@ class ShaderGraphNode {
     return m_Title;
   }
 
+  [[nodiscard]] const ShaderGraphNodeAttribute& GetAttribute(ShaderGraphAttributeType type, I32 index) {
+    switch(type) {
+      case ShaderGraphAttributeType::Input:
+        return m_InputAttributes[index];
+      case ShaderGraphAttributeType::Static:
+        return m_StaticAttributes[index];
+      case ShaderGraphAttributeType::Output:
+        return m_OutputAttributes[index];
+    }
+    return ShaderGraphNodeAttribute();
+  }
+
   [[nodiscard]] U32 GetInputAttributeCount() const {
     return m_InputAttributes.size();
   }
@@ -141,18 +217,20 @@ class ShaderGraphNode {
   std::vector<ShaderGraphNodeAttribute> m_StaticAttributes;
   std::vector<ShaderGraphNodeAttribute> m_OutputAttributes;
 
-  I32 PushInputAttribute(const String& title) {
-    m_InputAttributes.push_back({ m_NextInputAttributeID++, title });
+  I32 PushInputAttribute(const String& title, ShaderGraphAttributeDataType type) {
+    String typeStr = ShaderGraphAttributeDataTypeToString(type);
+    m_InputAttributes.push_back({ m_NextInputAttributeID++, fmt::format("{} [{}]", title, typeStr), type });
     return m_InputAttributes.back().ID;
   }
 
   I32 PushStaticAttribute(const String& title) {
-    m_StaticAttributes.push_back({ m_NextStaticAttributeID++, title });
+    m_StaticAttributes.push_back({ m_NextStaticAttributeID++, title, ShaderGraphAttributeDataType::None });
     return m_StaticAttributes.back().ID;
   }
 
-  I32 PushOutputAttribute(const String& title) {
-    m_OutputAttributes.push_back({ m_NextOutputAttributeID++, title });
+  I32 PushOutputAttribute(const String& title, ShaderGraphAttributeDataType type) {
+    String typeStr = ShaderGraphAttributeDataTypeToString(type);
+    m_OutputAttributes.push_back({ m_NextOutputAttributeID++, fmt::format("{} [{}]", title, typeStr), type });
     return m_OutputAttributes.back().ID;
   }
 

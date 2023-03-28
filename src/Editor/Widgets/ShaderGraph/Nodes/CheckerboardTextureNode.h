@@ -13,11 +13,11 @@ class CheckerboardTextureNode : public ShaderGraphNode {
   void OnInitialize() override {
     m_Title = "Checkerboard";
 
-    PushInputAttribute("Grid Size (U32)");
-    PushInputAttribute("Color #1 (Vector3f)");
-    PushInputAttribute("Color #2 (Vector3f)");
+    PushInputAttribute("Grid Size", ShaderGraphAttributeDataType::U32);
+    PushInputAttribute("Color #1", ShaderGraphAttributeDataType::Vector3f);
+    PushInputAttribute("Color #2", ShaderGraphAttributeDataType::Vector3f);
 
-    PushOutputAttribute("Texture ID (U32)");
+    PushOutputAttribute("Texture ID", ShaderGraphAttributeDataType::U32);
   }
 
   void OnRender() override {

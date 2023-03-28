@@ -11,7 +11,7 @@ class RegisterTextureNode : public ShaderGraphNode {
 
   void OnInitialize() override {
     m_Title = "Register Texture";
-    PushInputAttribute("Texture ID (U32)");
+    PushInputAttribute("Texture ID", ShaderGraphAttributeDataType::U32);
     m_Texture.nodeID = m_ID;
   }
 

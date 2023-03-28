@@ -13,11 +13,11 @@ class ColorNode : public ShaderGraphNode {
     m_OutputAttributes.clear();
     m_Title = "Color";
 
-    PushInputAttribute("R (float)");
-    PushInputAttribute("G (float)");
-    PushInputAttribute("B (float)");
+    PushInputAttribute("R", ShaderGraphAttributeDataType::Float);
+    PushInputAttribute("G", ShaderGraphAttributeDataType::Float);
+    PushInputAttribute("B", ShaderGraphAttributeDataType::Float);
 
-    PushOutputAttribute("Color (Vector3f)");
+    PushOutputAttribute("Color", ShaderGraphAttributeDataType::Vector3f);
   }
 
   void OnRender() override {

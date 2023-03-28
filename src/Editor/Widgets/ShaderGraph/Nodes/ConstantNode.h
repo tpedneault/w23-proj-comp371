@@ -15,13 +15,13 @@ class ConstantNode : public ShaderGraphNode {
     m_OutputAttributes.clear();
 
     if(typeid(T) == typeid(glm::vec3)) {
-      PushOutputAttribute("X (float)");
-      PushOutputAttribute("Y (float)");
-      PushOutputAttribute("Z (float)");
-      PushOutputAttribute("Vector (Vector3f)");
+      PushOutputAttribute("X", ShaderGraphAttributeDataType::Float);
+      PushOutputAttribute("Y", ShaderGraphAttributeDataType::Float);
+      PushOutputAttribute("Z", ShaderGraphAttributeDataType::Float);
+      PushOutputAttribute("Vector", ShaderGraphAttributeDataType::Vector3f);
     }
     else {
-      PushOutputAttribute("Value");
+      PushOutputAttribute("Value", ShaderGraphAttributeDataTypeFromTypeID<T>());
     }
 
     m_Title = fmt::format("Constant<{}>", GetTypeName<decltype(m_Value)>());

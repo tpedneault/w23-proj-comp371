@@ -59,18 +59,23 @@ class ShaderGraphWidget : public Widget {
       // Check if a link was created between two attributes.
       I32 startAttribute, endAttribute;
       if (ImNodes::IsLinkCreated(&startAttribute, &endAttribute)) {
-        m_Links.emplace_back(startAttribute, endAttribute);
-        auto link = m_Links.back();
+        auto startType = GetAttributeFromLinkID(ShaderGraphAttributeType::Output, startAttribute).dataType;
+        auto endType = GetAttributeFromLinkID(ShaderGraphAttributeType::Input, endAttribute).dataType;
 
-        // Find the information of the node which takes in the input.
-        I32 inputNodeID = GetNodeIDFromLinkID(ShaderGraphAttributeType::Input, link.second);
-        I32 inputAttribute = GetAttributeIDFromLinkID(ShaderGraphAttributeType::Input, link.second);
+        if(startType == endType) {
+          m_Links.emplace_back(startAttribute, endAttribute);
+          auto link = m_Links.back();
 
-        // Call the OnNodeLinkDelete function to inform the node that its input connection was severed.
-        for (const auto &node : m_Nodes) {
-          if (node->GetID() == inputNodeID) {
-            node->OnNodeLinkCreate(inputAttribute);
-            break;
+          // Find the information of the node which takes in the input.
+          I32 inputNodeID = GetNodeIDFromLinkID(ShaderGraphAttributeType::Input, link.second);
+          I32 inputAttribute = GetAttributeIDFromLinkID(ShaderGraphAttributeType::Input, link.second);
+
+          // Call the OnNodeLinkDelete function to inform the node that its input connection was severed.
+          for (const auto &node : m_Nodes) {
+            if (node->GetID() == inputNodeID) {
+              node->OnNodeLinkCreate(inputAttribute);
+              break;
+            }
           }
         }
       }
@@ -190,6 +195,12 @@ class ShaderGraphWidget : public Widget {
 
   static I32 GetAttributeIDFromLinkID(ShaderGraphAttributeType attributeType, I32 id) {
     return id - (GetNodeIDFromLinkID(attributeType, id) << static_cast<I32>(attributeType));
+  }
+
+  const ShaderGraphNodeAttribute& GetAttributeFromLinkID(ShaderGraphAttributeType type, I32 id) {
+    I32 nodeIndex = GetNodeIDFromLinkID(type, id);
+    I32 attributeIndex = GetAttributeIDFromLinkID(type, id);
+    return m_Nodes[nodeIndex]->GetAttribute(type, attributeIndex);
   }
 
   std::pair<std::shared_ptr<ShaderGraphNode>, I32> FindConnectedNodeAndAttribute(I32 nodeID, I32 inputAttr) {
