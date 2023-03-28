@@ -86,12 +86,13 @@ class Renderer : public System {
  private:
   U32 m_SceneGridVAO, m_SkyboxVAO;
   U32 m_DefaultTexture, m_SkyboxTexture;
+  U32 m_SkyboxNumberIndices;
 
   std::shared_ptr<ShaderProgram> m_ShaderProgram;
   std::shared_ptr<ShaderProgram> m_LightShaderProgram;
   std::shared_ptr<ShaderProgram> m_SkyboxProgram;
 
-  Camera m_SceneCamera; // TODO: This should be moved somewhere else.
+  Camera m_SceneCamera;
 
   Framebuffer m_Framebuffer;
   RendererSystemSpecifications m_Specs{};

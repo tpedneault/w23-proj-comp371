@@ -40,6 +40,7 @@ class ShaderProgram final {
   virtual ~ShaderProgram() = default;
 
   I32 SetUniform(const String& name, const glm::mat4& value) const;
+  I32 SetUniform(const String& name, const glm::mat3& value) const;
   I32 SetUniform(const String& name, const glm::vec3& value) const;
   I32 SetUniform(const String& name, float value) const;
   I32 SetUniform(const String& name, U32 value) const;

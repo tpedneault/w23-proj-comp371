@@ -74,6 +74,7 @@ void Renderer::OnUpdate() {
   m_ShaderProgram->Use();
   m_ShaderProgram->SetUniform("projection", projection);
   m_ShaderProgram->SetUniform("view", view);
+  m_ShaderProgram->SetUniform("cameraPosition", m_SceneCamera.position);
   m_ShaderProgram->SetUniform("light.position", light->position);
   m_ShaderProgram->SetUniform("light.color", light->color);
   m_ShaderProgram->SetUniform("light.ambientStrength", light->ambientStrength);
@@ -90,6 +91,11 @@ void Renderer::OnUpdate() {
     for (const auto &mesh : actor->model->meshes) {
       glm::mat4 meshTransform = model * mesh->transform;
       m_ShaderProgram->SetUniform("model", meshTransform);
+
+      glm::mat4 modelViewMatrix = view * model;
+      glm::mat3 normalMatrix = glm::transpose(glm::inverse(glm::mat3(modelViewMatrix)));
+      m_ShaderProgram->SetUniform("normalMatrix", normalMatrix);
+
       glActiveTexture(GL_TEXTURE0);
       if (actor->texture) {
         glBindTexture(GL_TEXTURE_2D, actor->texture->textureID);
@@ -137,15 +143,13 @@ void Renderer::OnUpdate() {
   m_SkyboxProgram->SetUniform("view", view);
   m_SkyboxProgram->SetUniform("model", Transform::GetTransformationMatrix(skyboxModel));
 
+  glDepthFunc(GL_LEQUAL);
   glBindVertexArray(m_SkyboxVAO);
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_CUBE_MAP, m_SkyboxTexture);
-  glDrawArrays(GL_TRIANGLES, 0, 36);
+  glDrawElements(GL_TRIANGLES, m_SkyboxNumberIndices, GL_UNSIGNED_INT, 0);
   glBindVertexArray(0);
   glDepthFunc(GL_LESS);
-
-  glDepthFunc(GL_LEQUAL);
-
 
   if (m_Specs.useFramebuffer) {
     m_Framebuffer.Unbind();
@@ -240,61 +244,51 @@ void Renderer::LoadSkyboxCubemap() {
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-  // Create the VAO and VBO for the Skybox.
-  float skyboxVertices[] = {
-      // positions
-      -1.0f,  1.0f, -1.0f,
-      -1.0f, -1.0f, -1.0f,
-      1.0f, -1.0f, -1.0f,
-      1.0f, -1.0f, -1.0f,
-      1.0f,  1.0f, -1.0f,
-      -1.0f,  1.0f, -1.0f,
+  std::vector<float> cubeVertices = {
+      // positions          // texture coordinates
+      -1.0f, -1.0f, -1.0f,  0.0f, 0.0f,
+       1.0f, -1.0f, -1.0f,  1.0f, 0.0f,
+       1.0f,  1.0f, -1.0f,  1.0f, 1.0f,
+      -1.0f,  1.0f, -1.0f,  0.0f, 1.0f,
 
-      -1.0f, -1.0f,  1.0f,
-      -1.0f, -1.0f, -1.0f,
-      -1.0f,  1.0f, -1.0f,
-      -1.0f,  1.0f, -1.0f,
-      -1.0f,  1.0f,  1.0f,
-      -1.0f, -1.0f,  1.0f,
-
-      1.0f, -1.0f, -1.0f,
-      1.0f, -1.0f,  1.0f,
-      1.0f,  1.0f,  1.0f,
-      1.0f,  1.0f,  1.0f,
-      1.0f,  1.0f, -1.0f,
-      1.0f, -1.0f, -1.0f,
-
-      -1.0f, -1.0f,  1.0f,
-      -1.0f,  1.0f,  1.0f,
-      1.0f,  1.0f,  1.0f,
-      1.0f,  1.0f,  1.0f,
-      1.0f, -1.0f,  1.0f,
-      -1.0f, -1.0f,  1.0f,
-
-      -1.0f,  1.0f, -1.0f,
-      1.0f,  1.0f, -1.0f,
-      1.0f,  1.0f,  1.0f,
-      1.0f,  1.0f,  1.0f,
-      -1.0f,  1.0f,  1.0f,
-      -1.0f,  1.0f, -1.0f,
-
-      -1.0f, -1.0f, -1.0f,
-      -1.0f, -1.0f,  1.0f,
-      1.0f, -1.0f, -1.0f,
-      1.0f, -1.0f, -1.0f,
-      -1.0f, -1.0f,  1.0f,
-      1.0f, -1.0f,  1.0f
+      -1.0f, -1.0f,  1.0f,  0.0f, 0.0f,
+       1.0f, -1.0f,  1.0f,  1.0f, 0.0f,
+       1.0f,  1.0f,  1.0f,  1.0f, 1.0f,
+      -1.0f,  1.0f,  1.0f,  0.0f, 1.0f,
   };
 
-  U32 vbo;
+  std::vector<unsigned int> cubeIndices = {
+      0, 1, 2, 0, 2, 3, // Front face
+      4, 5, 6, 4, 6, 7, // Back face
+      4, 5, 1, 4, 1, 0, // Bottom face
+      7, 6, 2, 7, 2, 3, // Top face
+      7, 4, 0, 7, 0, 3, // Left face
+      6, 5, 1, 6, 1, 2  // Right face
+  };
+
+  m_SkyboxNumberIndices = cubeIndices.size();
+
+  GLuint cubeVBO, cubeEBO;
   glGenVertexArrays(1, &m_SkyboxVAO);
-  glGenBuffers(1, &vbo);
+  glGenBuffers(1, &cubeVBO);
+  glGenBuffers(1, &cubeEBO);
+
   glBindVertexArray(m_SkyboxVAO);
-  glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
+
+  glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
+  glBufferData(GL_ARRAY_BUFFER, cubeVertices.size() * sizeof(float), cubeVertices.data(), GL_STATIC_DRAW);
+
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cubeEBO);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, cubeIndices.size() * sizeof(unsigned int), cubeIndices.data(), GL_STATIC_DRAW);
+
+  // Vertex positions
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+
+  // Texture coordinates
+  glEnableVertexAttribArray(1);
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+
   glBindVertexArray(0);
 }
 
@@ -322,8 +316,7 @@ void Renderer::OnViewportClicked(ImGuiIO &io, ImVec2 topLeft, ImVec2 viewportSiz
       && mousePos.y <= imageBottomRight.y) {
     ImVec2 delta = io.MouseDelta;
 
-    // Define your camera's sensitivity and speed
-    float sensitivity = -0.015f;
+    static float sensitivity = -0.015f;
 
     // Calculate the vector from the camera's position to its target
     glm::vec3 camDir = m_SceneCamera.target - m_SceneCamera.position;

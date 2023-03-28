@@ -86,6 +86,16 @@ I32 ShaderProgram::SetUniform(const String& name, const glm::mat4& value) const 
   return location;
 }
 
+I32 ShaderProgram::SetUniform(const String &name, const glm::mat3 &value) const {
+  I32 location = glGetUniformLocation(m_Id, name.c_str());
+  if(location >= 0) {
+    glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(value));
+  } else {
+    AMBR_LOG_WARN(fmt::format("Failed to load uniform {}.", name));
+  }
+  return location;
+}
+
 I32 ShaderProgram::SetUniform(const String& name, const glm::vec3& value) const {
   I32 location = glGetUniformLocation(m_Id, name.c_str());
   if(location >= 0) {
