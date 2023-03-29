@@ -84,13 +84,14 @@ class Renderer : public System {
   void OnKeyPressed(I32 keyCode) override;
 
  private:
-  U32 m_SceneGridVAO, m_SkyboxVAO;
+  U32 m_SceneGridVAO, m_SkyboxVAO, m_GridVAO;
   U32 m_DefaultTexture, m_SkyboxTexture;
   U32 m_SkyboxNumberIndices;
 
   std::shared_ptr<ShaderProgram> m_ShaderProgram;
   std::shared_ptr<ShaderProgram> m_LightShaderProgram;
   std::shared_ptr<ShaderProgram> m_SkyboxProgram;
+  std::shared_ptr<ShaderProgram> m_GridProgram;
 
   Camera m_SceneCamera;
 
@@ -99,6 +100,7 @@ class Renderer : public System {
 
   void LoadDefaultTexture();
   void LoadSkyboxCubemap();
+  void LoadGridData();
 };
 
 };  // namespace ambr

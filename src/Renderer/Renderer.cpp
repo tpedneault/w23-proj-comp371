@@ -34,12 +34,22 @@ void Renderer::OnInitialization(void *specs) {
     delete frag;
   }
 
+  {
+    auto vertex = Shader::Create(ShaderType::Vertex, "assets/shaders/grid.vertex.glsl");
+    auto frag = Shader::Create(ShaderType::Fragment, "assets/shaders/grid.fragment.glsl");
+    m_GridProgram = ShaderProgram::Create({vertex, frag});
+
+    delete vertex;
+    delete frag;
+  }
+
   m_SceneCamera.position = glm::vec3(4.0f, 4.0f, 4.0f);
   m_SceneCamera.target = glm::vec3(-4.0f, -4.0f, -4.0f);
   m_SceneCamera.up = glm::vec3(0.0f, -1.0f, 0.0f);
 
   LoadDefaultTexture();
   LoadSkyboxCubemap();
+  LoadGridData();
 
   glEnable(GL_DEPTH_TEST);
 
@@ -97,7 +107,7 @@ void Renderer::OnUpdate() {
       m_ShaderProgram->SetUniform("normalMatrix", normalMatrix);
 
       glActiveTexture(GL_TEXTURE0);
-      if(mesh->texture) {
+      if (mesh->texture) {
         glBindTexture(GL_TEXTURE_2D, mesh->textureID);
       } else if (actor->texture) {
         glBindTexture(GL_TEXTURE_2D, actor->texture->textureID);
@@ -131,18 +141,33 @@ void Renderer::OnUpdate() {
     glBindVertexArray(0);
   }
 
+  // Render the grid.
+  glm::mat4 model = glm::scale(glm::mat4(1.0f), glm::vec3(100.0f, 0.0f, 100.0f));
+
+  m_GridProgram->Use();
+  m_GridProgram->SetUniform("model", model);
+  m_GridProgram->SetUniform("view", view);
+  m_GridProgram->SetUniform("projection", projection);
+
+  m_GridProgram->SetUniform("gridSize", 100.0f);
+  m_GridProgram->SetUniform("lineWidth", 0.01f);
+  m_GridProgram->SetUniform("lineColor", glm::vec3(0.3f, 0.3f, 0.3f));
+
+  glBindVertexArray(m_GridVAO);
+  glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+  glBindVertexArray(0);
+
   // Render the skybox.
   glDepthFunc(GL_LEQUAL);
-
   static Transform skyboxModel;
-  skyboxModel.scale = { 1.0f, 1.0f, 1.0f };
+  skyboxModel.scale = {1.0f, 1.0f, 1.0f};
   skyboxModel.translation = m_SceneCamera.position;
   skyboxModel.scaleMultiplier = 49.0f;
 
   m_SkyboxProgram->Use();
   m_SkyboxProgram->SetUniform("projection", projection);
-  view = glm::lookAt(m_SceneCamera.position, m_SceneCamera.target, m_SceneCamera.up);
-  m_SkyboxProgram->SetUniform("view", view);
+  glm::mat4 skyboxView = glm::lookAt(m_SceneCamera.position, m_SceneCamera.target, m_SceneCamera.up);
+  m_SkyboxProgram->SetUniform("view", skyboxView);
   m_SkyboxProgram->SetUniform("model", Transform::GetTransformationMatrix(skyboxModel));
 
   glDepthFunc(GL_LEQUAL);
@@ -248,15 +273,15 @@ void Renderer::LoadSkyboxCubemap() {
 
   std::vector<float> cubeVertices = {
       // positions          // texture coordinates
-      -1.0f, -1.0f, -1.0f,  0.0f, 0.0f,
-       1.0f, -1.0f, -1.0f,  1.0f, 0.0f,
-       1.0f,  1.0f, -1.0f,  1.0f, 1.0f,
-      -1.0f,  1.0f, -1.0f,  0.0f, 1.0f,
+      -1.0f, -1.0f, -1.0f, 0.0f, 0.0f,
+      1.0f, -1.0f, -1.0f, 1.0f, 0.0f,
+      1.0f, 1.0f, -1.0f, 1.0f, 1.0f,
+      -1.0f, 1.0f, -1.0f, 0.0f, 1.0f,
 
-      -1.0f, -1.0f,  1.0f,  0.0f, 0.0f,
-       1.0f, -1.0f,  1.0f,  1.0f, 0.0f,
-       1.0f,  1.0f,  1.0f,  1.0f, 1.0f,
-      -1.0f,  1.0f,  1.0f,  0.0f, 1.0f,
+      -1.0f, -1.0f, 1.0f, 0.0f, 0.0f,
+      1.0f, -1.0f, 1.0f, 1.0f, 0.0f,
+      1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+      -1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
   };
 
   std::vector<unsigned int> cubeIndices = {
@@ -285,11 +310,11 @@ void Renderer::LoadSkyboxCubemap() {
 
   // Vertex positions
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) 0);
 
   // Texture coordinates
   glEnableVertexAttribArray(1);
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) (3 * sizeof(float)));
 
   glBindVertexArray(0);
 }
@@ -331,6 +356,39 @@ void Renderer::OnViewportClicked(ImGuiIO &io, ImVec2 topLeft, ImVec2 viewportSiz
     m_SceneCamera.target += camRight * -delta.x * sensitivity;
     m_SceneCamera.target += camUp * delta.y * (sensitivity * -1);
   }
+}
+
+void Renderer::LoadGridData() {
+  static float gridQuadVertices[] = {
+      -0.5f, 0.0f, -0.5f,
+      0.5f, 0.0f, -0.5f,
+      0.5f, 0.0f,  0.5f,
+      -0.5f, 0.0f,  0.5f
+  };
+
+  static U32 gridQuadIndices[] = {
+      0, 1, 2,
+      0, 2, 3
+  };
+
+  U32 vbo, ebo;
+  glGenVertexArrays(1, &m_GridVAO);
+  glGenBuffers(1, &vbo);
+  glGenBuffers(1, &ebo);
+
+  glBindVertexArray(m_GridVAO);
+
+  glBindBuffer(GL_ARRAY_BUFFER, vbo);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(gridQuadVertices), gridQuadVertices, GL_STATIC_DRAW);
+
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(gridQuadIndices), gridQuadIndices, GL_STATIC_DRAW);
+
+  // Position attribute
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+  glEnableVertexAttribArray(0);
+
+  glBindVertexArray(0);
 }
 
 };  // namespace ambr

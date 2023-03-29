@@ -20,7 +20,9 @@ class ViewportWidget final : public Widget {
       const ImVec2 topLeft = ImGui::GetCursorScreenPos();
       const U64 textureID = SystemLocator<Renderer>::Get()->GetFramebufferTextureID();
       ImGui::Image(reinterpret_cast<void*>(textureID), availableRegion);
-      SystemLocator<Renderer>::Get()->OnViewportClicked(ImGui::GetIO(), topLeft, availableRegion);
+      if(ImGui::IsItemHovered()) {
+        SystemLocator<Renderer>::Get()->OnViewportClicked(ImGui::GetIO(), topLeft, availableRegion);
+      }
     }
     ImGui::End();
   }

@@ -182,6 +182,7 @@ class ShaderGraphNode {
   }
 
   [[nodiscard]] const ShaderGraphNodeAttribute& GetAttribute(ShaderGraphAttributeType type, I32 index) {
+    static const ShaderGraphNodeAttribute defaultAttribute{};
     switch(type) {
       case ShaderGraphAttributeType::Input:
         return m_InputAttributes[index];
@@ -190,7 +191,7 @@ class ShaderGraphNode {
       case ShaderGraphAttributeType::Output:
         return m_OutputAttributes[index];
     }
-    return ShaderGraphNodeAttribute();
+    return defaultAttribute;
   }
 
   [[nodiscard]] U32 GetInputAttributeCount() const {
