@@ -50,7 +50,8 @@ class Framebuffer {
   [[nodiscard]] U32 GetHeight() const;
 
  private:
-  U32 m_FBO{}, m_DepthAttachment{}, m_ColorAttachment{};
+  U32 m_FBO{}, m_BlitFBO{};
+  U32 m_DepthAttachment{}, m_ColorAttachment{}, m_BlitColorAttachment{};
   U32 m_Width{}, m_Height{};
 };
 

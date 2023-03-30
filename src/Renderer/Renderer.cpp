@@ -44,7 +44,7 @@ void Renderer::OnInitialization(void *specs) {
   }
 
   m_SceneCamera.position = glm::vec3(4.0f, 4.0f, 4.0f);
-  m_SceneCamera.target = glm::vec3(-4.0f, -4.0f, -4.0f);
+  m_SceneCamera.orientation = glm::vec3(-4.0f, -4.0f, -4.0f);
   m_SceneCamera.up = glm::vec3(0.0f, -1.0f, 0.0f);
 
   LoadDefaultTexture();
@@ -60,6 +60,8 @@ void Renderer::OnUpdate() {
   // Clear the main window.
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  UpdateSceneCamera();
 
   // !! ANYTHING FROM THIS POINT ON IS RENDERED TO THE FRAMEBUFFER !!.
   if (m_Specs.useFramebuffer) {
@@ -77,7 +79,7 @@ void Renderer::OnUpdate() {
       m_SceneCamera.nearPlane, m_SceneCamera.farPlane);
 
   auto
-      view = glm::lookAt(m_SceneCamera.position, m_SceneCamera.position + m_SceneCamera.target, m_SceneCamera.up);
+      view = glm::lookAt(m_SceneCamera.position, m_SceneCamera.position + m_SceneCamera.orientation, m_SceneCamera.up);
 
   auto light = SystemLocator<ECS>::Get()->GetLights()[0];
 
@@ -159,22 +161,17 @@ void Renderer::OnUpdate() {
 
   // Render the skybox.
   glDepthFunc(GL_LEQUAL);
-  static Transform skyboxModel;
-  skyboxModel.scale = {1.0f, 1.0f, 1.0f};
-  skyboxModel.translation = m_SceneCamera.position;
-  skyboxModel.scaleMultiplier = 49.0f;
 
   m_SkyboxProgram->Use();
-  m_SkyboxProgram->SetUniform("projection", projection);
-  glm::mat4 skyboxView = glm::lookAt(m_SceneCamera.position, m_SceneCamera.target, m_SceneCamera.up);
+  glm::mat4 skyboxView = glm::mat4(glm::mat3(glm::lookAt(glm::vec3(0.0f), m_SceneCamera.orientation, m_SceneCamera.up)));
   m_SkyboxProgram->SetUniform("view", skyboxView);
-  m_SkyboxProgram->SetUniform("model", Transform::GetTransformationMatrix(skyboxModel));
+  m_SkyboxProgram->SetUniform("projection", projection);
 
   glDepthFunc(GL_LEQUAL);
   glBindVertexArray(m_SkyboxVAO);
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_CUBE_MAP, m_SkyboxTexture);
-  glDrawElements(GL_TRIANGLES, m_SkyboxNumberIndices, GL_UNSIGNED_INT, 0);
+  glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
   glBindVertexArray(0);
   glDepthFunc(GL_LESS);
 
@@ -202,41 +199,37 @@ std::vector<std::shared_ptr<System>> Renderer::GetDependencies() const {
 
 void Renderer::ProcessEvent(const Event &e) {
   switch (e.code) {
-    case EventCode::KeyPressed: {
-      I32 keyCode = *(static_cast<I32 *>(e.data));
-      OnKeyPressed(keyCode);
-      delete static_cast<I32 *>(e.data);
-      break;
-    }
     default:
       break;
   }
 }
 
-void Renderer::OnKeyPressed(I32 keyCode) {
+void Renderer::UpdateSceneCamera() {
   float dt = SystemLocator<Window>::Get()->GetDeltaTime();
+  GLFWwindow *window = SystemLocator<Window>::Get()->GetWindow();
 
   // Calculate the camera's front, right, and up vectors
-  glm::vec3 front = glm::normalize(m_SceneCamera.target - m_SceneCamera.position);
+  glm::vec3 front = glm::normalize(m_SceneCamera.orientation);
   glm::vec3 right = glm::normalize(glm::cross(front, m_SceneCamera.up));
   glm::vec3 up = glm::normalize(glm::cross(right, front));
 
-  switch (keyCode) {
-    case GLFW_KEY_A:
-      m_SceneCamera.position -= right * SCENE_CAMERA_MOVE_SPEED * dt;
-      break;
-    case GLFW_KEY_W:
-      m_SceneCamera.position += front * SCENE_CAMERA_MOVE_SPEED * dt;
-      break;
-    case GLFW_KEY_D:
-      m_SceneCamera.position += right * SCENE_CAMERA_MOVE_SPEED * dt;
-      break;
-    case GLFW_KEY_S:
-      m_SceneCamera.position -= front * SCENE_CAMERA_MOVE_SPEED * dt;
-      break;
-    default:
-      break;
+  glm::vec3 displacement(0.0f);
+
+  if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+    displacement -= right * SCENE_CAMERA_MOVE_SPEED * dt;
   }
+  if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+    displacement += front * SCENE_CAMERA_MOVE_SPEED * dt;
+  }
+  if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+    displacement += right * SCENE_CAMERA_MOVE_SPEED * dt;
+  }
+  if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+    displacement -= front * SCENE_CAMERA_MOVE_SPEED * dt;
+  }
+
+  // Update both the camera position and target
+  m_SceneCamera.position += displacement;
 }
 
 void Renderer::LoadSkyboxCubemap() {
@@ -271,29 +264,40 @@ void Renderer::LoadSkyboxCubemap() {
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-  std::vector<float> cubeVertices = {
-      // positions          // texture coordinates
-      -1.0f, -1.0f, -1.0f, 0.0f, 0.0f,
-      1.0f, -1.0f, -1.0f, 1.0f, 0.0f,
-      1.0f, 1.0f, -1.0f, 1.0f, 1.0f,
-      -1.0f, 1.0f, -1.0f, 0.0f, 1.0f,
-
-      -1.0f, -1.0f, 1.0f, 0.0f, 0.0f,
-      1.0f, -1.0f, 1.0f, 1.0f, 0.0f,
-      1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-      -1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+  std::vector<float> skyboxVertices = {
+      //   Coordinates
+      -1.0f, -1.0f, 1.0f,//        7--------6
+      1.0f, -1.0f, 1.0f,//       /|       /|
+      1.0f, -1.0f, -1.0f,//      4--------5 |
+      -1.0f, -1.0f, -1.0f,//      | |      | |
+      -1.0f, 1.0f, 1.0f,//      | 3------|-2
+      1.0f, 1.0f, 1.0f,//      |/       |/
+      1.0f, 1.0f, -1.0f,//      0--------1
+      -1.0f, 1.0f, -1.0f
   };
 
-  std::vector<unsigned int> cubeIndices = {
-      0, 1, 2, 0, 2, 3, // Front face
-      4, 5, 6, 4, 6, 7, // Back face
-      4, 5, 1, 4, 1, 0, // Bottom face
-      7, 6, 2, 7, 2, 3, // Top face
-      7, 4, 0, 7, 0, 3, // Left face
-      6, 5, 1, 6, 1, 2  // Right face
+  std::vector<U32> skyboxIndices = {
+      // Right
+      1, 2, 6,
+      6, 5, 1,
+      // Left
+      0, 4, 7,
+      7, 3, 0,
+      // Top
+      4, 5, 6,
+      6, 7, 4,
+      // Bottom
+      0, 3, 2,
+      2, 1, 0,
+      // Back
+      0, 1, 5,
+      5, 4, 0,
+      // Front
+      3, 7, 6,
+      6, 2, 3
   };
 
-  m_SkyboxNumberIndices = cubeIndices.size();
+  m_SkyboxNumberIndices = skyboxIndices.size();
 
   GLuint cubeVBO, cubeEBO;
   glGenVertexArrays(1, &m_SkyboxVAO);
@@ -303,18 +307,14 @@ void Renderer::LoadSkyboxCubemap() {
   glBindVertexArray(m_SkyboxVAO);
 
   glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
-  glBufferData(GL_ARRAY_BUFFER, cubeVertices.size() * sizeof(float), cubeVertices.data(), GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, skyboxVertices.size() * sizeof(float), skyboxVertices.data(), GL_STATIC_DRAW);
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cubeEBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, cubeIndices.size() * sizeof(unsigned int), cubeIndices.data(), GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, skyboxIndices.size() * sizeof(U32), skyboxIndices.data(), GL_STATIC_DRAW);
 
   // Vertex positions
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) 0);
-
-  // Texture coordinates
-  glEnableVertexAttribArray(1);
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) (3 * sizeof(float)));
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *) 0);
 
   glBindVertexArray(0);
 }
@@ -345,16 +345,19 @@ void Renderer::OnViewportClicked(ImGuiIO &io, ImVec2 topLeft, ImVec2 viewportSiz
 
     static float sensitivity = -0.015f;
 
-    // Calculate the vector from the camera's position to its target
-    glm::vec3 camDir = m_SceneCamera.target - m_SceneCamera.position;
+    // Normalize the orientation vector
+    glm::vec3 camDir = glm::normalize(m_SceneCamera.orientation);
 
     // Calculate the camera's right and up vectors
     glm::vec3 camRight = glm::normalize(glm::cross(camDir, m_SceneCamera.up));
     glm::vec3 camUp = glm::normalize(glm::cross(camRight, camDir));
 
-    // Update the camera's target based on the mouse movement
-    m_SceneCamera.target += camRight * -delta.x * sensitivity;
-    m_SceneCamera.target += camUp * delta.y * (sensitivity * -1);
+    // Update the camera's orientation based on the mouse movement
+    glm::vec3 deltaOrientation = (camRight * -delta.x * sensitivity) + (camUp * delta.y * (sensitivity * -1));
+    m_SceneCamera.orientation += deltaOrientation;
+
+    // Re-normalize the orientation vector after the update
+    m_SceneCamera.orientation = glm::normalize(m_SceneCamera.orientation);
   }
 }
 
@@ -362,8 +365,8 @@ void Renderer::LoadGridData() {
   static float gridQuadVertices[] = {
       -0.5f, 0.0f, -0.5f,
       0.5f, 0.0f, -0.5f,
-      0.5f, 0.0f,  0.5f,
-      -0.5f, 0.0f,  0.5f
+      0.5f, 0.0f, 0.5f,
+      -0.5f, 0.0f, 0.5f
   };
 
   static U32 gridQuadIndices[] = {
@@ -385,7 +388,7 @@ void Renderer::LoadGridData() {
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(gridQuadIndices), gridQuadIndices, GL_STATIC_DRAW);
 
   // Position attribute
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *) 0);
   glEnableVertexAttribArray(0);
 
   glBindVertexArray(0);

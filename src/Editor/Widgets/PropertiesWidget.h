@@ -128,6 +128,12 @@ class PropertiesWidget : public Widget {
         "##Position",
         reinterpret_cast<float*>(&light->position),
         0.1f, 0.0f, 0.0f, "%.2f");
+
+    ImGui::Text("Color");
+    ImGui::DragFloat3(
+        "##Color",
+        reinterpret_cast<float*>(&light->color),
+        0.05f, 0.0f, 1.0f, "%.2f");
   }
 
   inline void RenderCameraProperties(std::shared_ptr<Camera> camera) {
@@ -147,7 +153,7 @@ class PropertiesWidget : public Widget {
     ImGui::Text("Target");
     ImGui::DragFloat3(
         "##Target",
-        reinterpret_cast<float*>(&camera->target),
+        reinterpret_cast<float*>(&camera->orientation),
         0.1f, 0.0f, 0.0f, "%.2f");
 
     ImGui::Text("Up");

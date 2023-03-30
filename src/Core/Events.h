@@ -6,7 +6,6 @@ namespace ambr {
 
 enum class EventCode : U16 {
   ExitApplication,
-  KeyPressed,
 
   Editor_ChangeSelectedEntity,
   Editor_ChangeSelectedActorModel,

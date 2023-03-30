@@ -81,7 +81,7 @@ class Renderer : public System {
   void ProcessEvent(const Event &e) override;
 
  protected:
-  void OnKeyPressed(I32 keyCode) override;
+  void UpdateSceneCamera();
 
  private:
   U32 m_SceneGridVAO, m_SkyboxVAO, m_GridVAO;

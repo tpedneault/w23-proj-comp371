@@ -13,18 +13,6 @@ void FramebufferSizeCallback(GLFWwindow* window, const I32 width,
   SystemLocator<Renderer>::Get()->SetViewportSize(width, height);
 }
 
-void KeyCallback(GLFWwindow* window, I32 key, I32 scanCode, I32 action, I32 mods) {
-  // Forward W, A, S, D events to the other subsystems.
-  switch(key) {
-    case GLFW_KEY_A:
-    case GLFW_KEY_W:
-    case GLFW_KEY_S:
-    case GLFW_KEY_D:
-      SystemLocator<Window>::Get()->PublishEvent({ EventCode::KeyPressed, new I32(key) });
-      break;
-  }
-}
-
 void Window::OnInitialization(void* specs) {
   glfwSetErrorCallback(ErrorCallbackGLFW);
   if (!glfwInit()) {
@@ -41,8 +29,6 @@ void Window::OnInitialization(void* specs) {
   const auto [width, height, title] =
       *(static_cast<WindowSystemSpecifications*>(specs));
   m_Window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
-
-  glfwSetKeyCallback(m_Window, ambr::KeyCallback);
 
   glfwMakeContextCurrent(m_Window);
   glfwSwapInterval(1);  // Enables V-Sync.

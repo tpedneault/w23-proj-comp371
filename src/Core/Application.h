@@ -21,6 +21,8 @@ class Application {
   std::queue<Event> m_EventQueue;
   std::map<std::shared_ptr<System>, void*> m_Specifications;
 
+  void TestSceneDataImportExportLib();
+
 public:
   Application() = default;
   virtual ~Application() = default;

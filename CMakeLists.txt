@@ -28,6 +28,9 @@ add_subdirectory(extern/glew-cmake)
 add_subdirectory(extern/glm)
 add_subdirectory(extern/assimp)
 add_subdirectory(extern/fmt)
+#add_subdirectory(extern/scene-import-and-export)
+
+#include_directories(extern/scene-import-and-export/src)
 include_directories(extern/stb)
 
 # Add the ImGui library with the appropriate backends.
@@ -52,5 +55,5 @@ file(GLOB imnodes_src "extern/imnodes/*.cpp")
 include_directories(src)
 file(GLOB_RECURSE ambrosia_src "src/**.cpp")
 
-add_executable(ambrosia ${ambrosia_src} ${imgui_src} ${imgui_backends} ${imgui_text_edit_src} ${imnodes_src} src/Editor/Widgets/ShaderGraph/Nodes/RegisterTextureNode.h src/ECS/Components/GraphTexture.h src/ECS/Components/GraphTexture.h)
+add_executable(ambrosia ${ambrosia_src} ${imgui_src} ${imgui_backends} ${imgui_text_edit_src} ${imnodes_src})
 target_link_libraries(ambrosia ${OPENGL_LIBRARIES} glfw libglew_static glm assimp fmt)
